@@ -1,23 +1,25 @@
 package heist.thief;
 
-import heist.utils.UUID;
-
 public class MasterThief extends Thread
 {
-    private final String uuid;
+    private static int IDCounter = 0;
+    
+    private int id;
     private MasterThiefState state;
     
     public MasterThief()
     {
-        this.uuid = UUID.generate();
+        this.id = IDCounter++;
         this.state = MasterThiefState.PLANNING_THE_HEIST;
     }
     
-    public String getUUID()
+    //Get id
+    public int getID()
     {
-        return this.uuid;
+        return this.id;
     }
     
+    //Get Master thief state
     public MasterThiefState state()
     {
         return this.state;
@@ -61,23 +63,22 @@ public class MasterThief extends Thread
     @Override
     public void run()
     {
-        System.out.println("MasterThief " + this.uuid + " started");
+        System.out.println("MasterThief " + this.id + " started");
         
         while(true)
         {
             try
             {
-                this.sleep(1000);
-                System.out.println("MasterThief " + this.uuid + " updated");
+                System.out.println("MasterThief " + this.id + " updated");
             }
             catch(Exception e)
             {
-                System.out.println("MasterThief " + this.uuid + " error");
+                System.out.println("MasterThief " + this.id + " error");
                 e.printStackTrace();
                 break;
             }
         }
         
-        System.out.println("MasterThief " + this.uuid + " terminated");
+        System.out.println("MasterThief " + this.id + " terminated");
     }
 }

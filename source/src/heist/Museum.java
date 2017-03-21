@@ -1,31 +1,41 @@
 package heist;
 
-import heist.utils.UUID;
-
 public class Museum
 {
+    private static int IDCount = 0;
+    
     private final Room[] rooms;
-    private final String uuid;
+    
     
     public Museum(int size)
     {
         this.rooms = new Room[size];
-        this.uuid = UUID.generate();
     }
     
-    public String getUUID()
-    {
-        return this.uuid;
-    }
-    
-    public Room[] getRooms()
+    /**
+     * Get room array
+     * @return Array of Room objects
+     */
+    public synchronized Room[] getRooms()
     {
         return this.rooms;
     }
     
-    @Override
-    public String toString()
+    /**
+     * Get room from room position, returns null if there is no room at that position
+     * @param position
+     * @return Room object, null if not found
+     */
+    public synchronized Room getRoom(int position)
     {
-        return "Museum";
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(this.rooms[i].getPosition() == position)
+            {
+                return this.rooms[i];
+            }
+        }
+        
+        return null;
     }
 }

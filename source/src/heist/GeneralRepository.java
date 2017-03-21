@@ -8,63 +8,98 @@ import java.util.Iterator;
 /**
  * The general repository stores all the components of the system.
  * It is also responsible for starting and killing all running instances.
- * 
- * @author Tentone
  */
 public class GeneralRepository
 {   
-    private MasterThief master;
+    private MasterThief masterThief;
     private Queue<OrdinaryThief> thiefs;
-    
+    private Queue<Party> parties;
     private Museum museum;
     private CollectionSite collection;
     private ConcentrationSite concentration;
     
+    /**
+     * General repository constructor
+     * 
+     * @param museumSize
+     * @param thiefCount
+     * @param partySize 
+     */
     public GeneralRepository(int museumSize, int thiefCount, int partySize)
     {
-        museum = new Museum(museumSize);
+        this.museum = new Museum(museumSize);
         
-        thiefs = new Queue<>();
-        concentration = new ConcentrationSite();
+        this.thiefs = new Queue<>();
+        this.concentration = new ConcentrationSite();
         for(int i = 0; i < thiefCount; i++)
         {
             OrdinaryThief thief = new OrdinaryThief();
-            thiefs.push(thief);
-            concentration.addThief(thief);
+            this.thiefs.push(thief);
+            this.concentration.addThief(thief);
         }
         
-        master = new MasterThief();
-        collection = new CollectionSite(master);
+        this.parties = new Queue<>();
+        
+        this.masterThief = new MasterThief();
+        this.collection = new CollectionSite(masterThief);
     }
     
+    /**
+     * Starts the simulation, calls the start method in all thieves
+     */
     public void start()
     {
-        master.start();
+       this.masterThief.start();
         
-        Iterator<OrdinaryThief> it = thiefs.iterator();
+        Iterator<OrdinaryThief> it = this.thiefs.iterator();
         while(it.hasNext())
         {
             it.next().start();
         }
     }
     
-    public MasterThief getMasterThief()
+    /**
+     * Add a new party to the party list
+     * @param party 
+     */
+    public synchronized void addParty(Party party)
     {
-        return master;
+        this.parties.push(party);
     }
     
-    public Museum getMuseum()
+    /**
+     * Get master thief object
+     * @return 
+     */
+    public synchronized MasterThief getMasterThief()
     {
-        return museum;
+        return this.masterThief;
     }
     
-    public CollectionSite getCollectionSite()
+    /**
+     * Get museum object
+     * @return 
+     */
+    public synchronized Museum getMuseum()
     {
-        return collection;
+        return this.museum;
     }
     
-    public ConcentrationSite getConcentrationSite()
+    /**
+     * Get collection site object
+     * @return 
+     */
+    public synchronized CollectionSite getCollectionSite()
     {
-        return concentration;
+        return this.collection;
+    }
+    
+    /**
+     * Get concentration site object
+     * @return 
+     */
+    public synchronized ConcentrationSite getConcentrationSite()
+    {
+        return this.concentration;
     }
 }

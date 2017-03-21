@@ -1,41 +1,39 @@
 package heist;
 
-import heist.utils.UUID;
-
 public class Room
 {
-    private final String uuid, museum;
-    private final int distance;
+    private static int IDCounter = 0;
+    
+    private final int id;
+    private final int position;
     private int paintings;
 
-    public Room(String museum, int distance, int paintings)
+    public Room(int position, int paintings)
     {
-        this.uuid = UUID.generate();
-        this.museum = museum;
-        this.distance = distance;
+        this.id = IDCounter++;
+        this.position = position;
         this.paintings = paintings;
     }
     
-    public String getUUID()
+    //Return room id
+    public synchronized int getID()
     {
-        return this.uuid;
+        return this.id;
     }
     
-    public String getMuseum()
+    //Return room position
+    public synchronized int getPosition()
     {
-        return this.museum;
+        return this.position;
     }
     
-    public int getDistance()
-    {
-        return this.distance;
-    }
-    
+    //True if room still has paintings
     public synchronized boolean hasPainting()
     {
         return this.paintings > 0;
     }
     
+    //Remove a painting from the room
     public synchronized boolean getPaiting()
     {
         if(this.paintings > 0)

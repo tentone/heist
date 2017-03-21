@@ -2,36 +2,47 @@ package heist;
 
 import heist.thief.OrdinaryThief;
 import heist.utils.UUID;
-import java.util.ArrayList;
 
 public class Party
 {
-    final private ArrayList<OrdinaryThief> elements;
-    final private String uuid;
-    final private int target;
+    private static int IDCounter = 0;
     
-    public Party(int target)
+    private final int id;
+    private int target;
+    private OrdinaryThief[] elements;
+    private int numberElements;
+
+    public Party(int size, int target)
     {
-        this.uuid = UUID.generate();
-        this.elements = new ArrayList<>();
+        this.id = IDCounter++;
         this.target = target;
+        this.elements = new OrdinaryThief[size];
+        this.numberElements = 0;
     }
     
-    //Get party UUID
-    public String getUUID()
+    //Check if the party is full
+    public boolean partyFull()
     {
-        return uuid;
+        return this.elements.length == this.numberElements;
+    }
+    
+    //Get party id
+    public synchronized int getID()
+    {
+        return this.id;
+    }
+    
+    //Get party target room
+    public synchronized int getTarget()
+    {
+        return this.target;
     }
     
     //Add thief to party
     public synchronized void addThief(OrdinaryThief thief)
     {
-        this.elements.add(thief);
-    }
-    
-    //Remove thief from party
-    public synchronized void removeThief(OrdinaryThief thief)
-    {
-        this.elements.remove(thief);
+        thief.setParty(this.id);
+        
+        //TODO <ADD THIEF TO ELEMENTS ARRAY>
     }
 }

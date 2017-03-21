@@ -2,26 +2,20 @@ package heist;
 
 import heist.struct.Queue;
 import heist.thief.OrdinaryThief;
-import heist.utils.UUID;
 
+//The concentration site is where thiefs wait for the master thief to assign them a party
 public class ConcentrationSite
 {
-    private final Queue<OrdinaryThief> queue;
-    private final String uuid;
+    private Queue<OrdinaryThief> queue;
     
     public ConcentrationSite()
     {   
-        this.uuid = UUID.generate();
         this.queue = new Queue<>();
     }
     
+    //Add thief to the concentration site
     public void addThief(OrdinaryThief thief)
     {
         this.queue.push(thief);
-    }
-    
-    public String getUUID()
-    {
-        return this.uuid;
     }
 }

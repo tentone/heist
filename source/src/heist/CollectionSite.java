@@ -5,31 +5,25 @@ import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import heist.utils.UUID;
 
+//The collection site is where the OrdinaryThiefs deliver the canvas to the MasterThief
 public class CollectionSite
 {
-    private final MasterThief master;
-    private final Queue<OrdinaryThief> queue;
-    private final String uuid;
-    
+    private MasterThief master;
+    private Queue<OrdinaryThief> queue;
+
     public CollectionSite(MasterThief master)
     {   
-        this.uuid = UUID.generate();
         this.queue = new Queue<>();
         this.master = master;
     }
     
-    public void pushThief(OrdinaryThief thief)
+    public synchronized void pushThief(OrdinaryThief thief)
     {
         //TODO <ADD CODE HERE>
     }
     
-    public boolean hasThief()
+    public synchronized boolean hasThief()
     {
         return !queue.isEmpty();
-    }
-    
-    public String getUUID()
-    {
-        return this.uuid;
     }
 }
