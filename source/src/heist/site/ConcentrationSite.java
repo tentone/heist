@@ -28,6 +28,16 @@ public class ConcentrationSite
     {
         this.queue.push(thief);
     }
+
+    /**
+     * Check if there are enough thieves to form a new assault party.
+     * @param partySize Assault party size.
+     * @return True number of thieves bigger or equal to assault party size.
+     */
+    public synchronized boolean hasEnoughToCreateParty(int partySize)
+    {
+        return this.queue.size() >= partySize;
+    }
     
     /**
      * Check if there is some thief in the concentration site.
@@ -40,7 +50,7 @@ public class ConcentrationSite
     
     /**
      * Remove thief from the concentration site.
-     * @return OrdinaryThief object.
+     * @return Removed thief.
      */
     public synchronized OrdinaryThief removeThief()
     {

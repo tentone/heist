@@ -1,5 +1,6 @@
 package heist;
 
+import heist.log.Logger;
 import heist.museum.Museum;
 import heist.thief.AssaultParty;
 import heist.site.CollectionSite;
@@ -23,25 +24,29 @@ public class GeneralRepository
     private CollectionSite collection;
     private ConcentrationSite concentration;
     
+    private Logger logger;
+    
     /**
      * General repository constructor
      * @param conf Configuration for the simulation
      */
     public GeneralRepository(Configuration conf)
     {
+        this.logger = new Logger(this);
+        
         this.museum = new Museum(conf.numberRooms);
         
         this.thiefs = new Queue<>();
         this.parties = new Queue<>();
         
-        this.masterThief = new MasterThief();
+        this.masterThief = new MasterThief(this);
         
         this.concentration = new ConcentrationSite();
         this.collection = new CollectionSite(masterThief);
         
         for(int i = 0; i < conf.numberThieves; i++)
         {
-            OrdinaryThief thief = new OrdinaryThief();
+            OrdinaryThief thief = new OrdinaryThief(this);
             this.thiefs.push(thief);
             this.concentration.addThief(thief);
         }
@@ -60,6 +65,14 @@ public class GeneralRepository
         {
             it.next().start();
         }
+    }
+    
+    /**
+     * Generate new log entry.
+     */
+    public synchronized void log()
+    {
+        this.logger.log();
     }
     
     /**

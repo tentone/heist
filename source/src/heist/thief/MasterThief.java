@@ -1,5 +1,7 @@
 package heist.thief;
 
+import heist.GeneralRepository;
+
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
  * It creates parties of Thieves and sends them to get Paintings from the Museum.
@@ -11,13 +13,16 @@ public class MasterThief extends Thread
     
     private int id;
     private MasterThiefState state;
+    private GeneralRepository repository;
     
     /**
      * MasterThief constructor
+     * @param repository GeneralRepository
      */
-    public MasterThief()
+    public MasterThief(GeneralRepository repository)
     {
         this.id = IDCounter++;
+        this.repository = repository;
         this.state = MasterThiefState.PLANNING_THE_HEIST;
     }
     

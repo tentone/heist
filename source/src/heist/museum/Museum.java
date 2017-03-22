@@ -26,7 +26,7 @@ public class Museum
      * Get museum id.
      * @return Museum id.
      */
-    public synchronized int getID()
+    public int getID()
     {
         return this.id;
     }
@@ -35,7 +35,7 @@ public class Museum
      * Get room array
      * @return Array of Room objects
      */
-    public synchronized Room[] getRooms()
+    public Room[] getRooms()
     {
         return this.rooms;
     }
@@ -45,7 +45,7 @@ public class Museum
      * @param position Room position
      * @return Room object, null if not found
      */
-    public synchronized Room getRoom(int position)
+    public Room getRoom(int position)
     {
         for(int i = 0; i < this.rooms.length; i++)
         {

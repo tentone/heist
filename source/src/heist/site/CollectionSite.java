@@ -40,13 +40,4 @@ public class CollectionSite
     {
         return !queue.isEmpty();
     }
-    
-    /**
-     * Set CollectionSite master thief.
-     * @param master Master thief
-     */
-    public synchronized void setMasterThief(MasterThief master)
-    {
-        this.master = master;
-    }
 }

@@ -12,7 +12,7 @@ public class Configuration
     public final Range thiefDisplacement, roomDistance, numberPaintings;
     
     /**
-     * Default constructor for Configuration with predefined values
+     * Default constructor for Configuration with default values.
      */
     public Configuration()
     {

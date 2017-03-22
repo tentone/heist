@@ -1,5 +1,7 @@
 package heist.thief;
 
+import heist.GeneralRepository;
+
 /**
  * OrdinaryThief represents a thief active entity.
  * Thieves enter the museum stole canvas and come back to return it to the MasterThief.
@@ -12,17 +14,20 @@ public class OrdinaryThief extends Thread
     
     private OrdinaryThiefState state;
     private AssaultParty party;
+    private GeneralRepository repository;
     
     private final int id;
     private int position;
     private boolean hasCanvas = false;
 
     /**
-     * OrdinaryThief constructor
+     * OrdinaryThief constructor.
+     * @param repository General repository.
      */
-    public OrdinaryThief()
+    public OrdinaryThief(GeneralRepository repository)
     {
         this.id = IDCounter++;
+        this.repository = repository;
         this.state = OrdinaryThiefState.OUTSIDE;
         
         this.position = -1;
@@ -41,19 +46,19 @@ public class OrdinaryThief extends Thread
     }
 
     /**
-     * Set party
-     * @param party Party.
+     * Set assault party.
+     * @param party Assault party.
      */
-    public synchronized void setParty(AssaultParty party)
+    public void setParty(AssaultParty party)
     {
         this.party = party;
     }
-
+    
     /**
      * Get the thief position
      * @return Thief position, -1 if outside
      */
-    public synchronized int getPosition()
+    public int getPosition()
     {
         return this.position;
     }
@@ -62,7 +67,7 @@ public class OrdinaryThief extends Thread
      * Get thief ID
      * @return Thief ID
      */
-    public synchronized int getID()
+    public int getID()
     {
         return this.id;
     }
@@ -71,7 +76,7 @@ public class OrdinaryThief extends Thread
      * Set thief state
      * @param state
      */
-    private synchronized void setState(OrdinaryThiefState state)
+    private void setState(OrdinaryThiefState state)
     {
         this.state = state;
     }
@@ -79,18 +84,20 @@ public class OrdinaryThief extends Thread
     /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
      */
-    private synchronized void prepareExecution() throws InterruptedException
+    private void prepareExecution()
     {
-        this.setState(OrdinaryThiefState.CRAWLING_INWARDS);
-        this.position = 0;
+        //TODO <GET ASSAULT PARTY>
         
-        this.wait();
+        //TODO <GET OUT OF THE CONCENTRATION SITE>
+        
+        this.position = 0;
+        this.setState(OrdinaryThiefState.CRAWLING_INWARDS);
     }
     
     /**
      * Updates thief position inside the museum and set thief back to sleep, until another thief wakes it up.
      */
-    private synchronized void crawlIn()
+    private void crawlIn()
     {
         //TODO <ADD CODE HERE>
         
@@ -103,7 +110,7 @@ public class OrdinaryThief extends Thread
     /**
      * Try to collect a canvas from the room and reverse direction after.
      */
-    private synchronized void rollACanvas()
+    private void rollACanvas()
     {
         //TODO <ADD CODE HERE>
         
@@ -113,7 +120,7 @@ public class OrdinaryThief extends Thread
     /**
      * Change state to crawling outwards.
      */
-    private synchronized void reverseDirection()
+    private void reverseDirection()
     {
         this.setState(OrdinaryThiefState.CRAWLING_OUTWARDS);
     }
@@ -121,7 +128,7 @@ public class OrdinaryThief extends Thread
     /**
      * Update position crawling out of the museum.
      */
-    private synchronized void crawlOut()
+    private void crawlOut()
     {
         //TODO <ADD CODE HERE>
     }
@@ -129,7 +136,7 @@ public class OrdinaryThief extends Thread
     /**
      * Hand the canvas (if there is one) to the master thief.
      */
-    private synchronized void handACanvas()
+    private void handACanvas()
     {
         //TODO <HAND THE CANVAS TO THE MASTER THIEF, ENTER THE COLLECTION SITE AND SLEEP>
     }
@@ -137,7 +144,7 @@ public class OrdinaryThief extends Thread
     /**
      * Check if the thief is still needed (check if every room has been emptied)
      */
-    private synchronized boolean amINeeded()
+    private boolean amINeeded()
     {
         //TODO <CHECK IF THE THIEF IS STILL NEEDED>
         return true;

@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * Generic node based FIFO structure.
  * @author Jose Manuel
- * @param <T> Type of Queue elements
+ * @param <T> Type of FIFO elements.
  */
 @SuppressWarnings("unchecked")
 public class Queue<T> 
