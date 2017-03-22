@@ -24,7 +24,7 @@ public class Museum
     
     /**
      * Get museum id.
-     * @param id Museum id.
+     * @return Museum id.
      */
     public synchronized int getID()
     {
@@ -42,7 +42,7 @@ public class Museum
     
     /**
      * Get room from room position, returns null if there is no room at that position
-     * @param position
+     * @param position Room position
      * @return Room object, null if not found
      */
     public synchronized Room getRoom(int position)

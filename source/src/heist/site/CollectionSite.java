@@ -11,11 +11,11 @@ import heist.thief.OrdinaryThief;
 public class CollectionSite
 {
     private MasterThief master;
-    private Queue<OrdinaryThief> queue;
+    private final Queue<OrdinaryThief> queue;
 
     /**
      * Collection site constructor
-     * @param master 
+     * @param master Master thief.
      */
     public CollectionSite(MasterThief master)
     {   
@@ -25,11 +25,11 @@ public class CollectionSite
     
     /**
      * Add thief to the collection site and wake up the master thief
-     * @param thief 
+     * @param thief Thief to be added.
      */
     public synchronized void addThief(OrdinaryThief thief)
     {
-        //TODO <ADD CODE HERE>
+        this.queue.push(thief);
     }
     
     /**
@@ -39,5 +39,14 @@ public class CollectionSite
     public synchronized boolean hasThief()
     {
         return !queue.isEmpty();
+    }
+    
+    /**
+     * Set CollectionSite master thief.
+     * @param master Master thief
+     */
+    public synchronized void setMasterThief(MasterThief master)
+    {
+        this.master = master;
     }
 }

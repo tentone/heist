@@ -1,7 +1,6 @@
 package heist.thief;
 
 import heist.struct.Queue;
-import heist.thief.OrdinaryThief;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
@@ -14,24 +13,24 @@ public class AssaultParty
     
     private final int id;
     private final int size, target;
-    private Queue<OrdinaryThief> elements;
+    private final Queue<OrdinaryThief> elements;
     
     /**
-     * AssaultParty constructor, assault parties are constructed by the MasterThief
-     * @param size
-     * @param target 
+     * AssaultParty constructor, assault parties are constructed by the MasterThief.
+     * @param size Assault party size.
+     * @param target Target room.
      */
     public AssaultParty(int size, int target)
     {
         this.id = IDCounter++;
-        this.target = target;
         this.elements = new Queue<>();
+        this.target = target;
         this.size = size;
     }
     
     /**
      * Check if the party is full.
-     * @return True if the party element queue has the same size as the party size
+     * @return True if the party element queue has the same size as the party size.
      */
     public boolean partyFull()
     {
@@ -39,7 +38,19 @@ public class AssaultParty
     }
     
     /**
+     * Move first element of the FIFO to the end of the FIFO.
+     */
+    public void moveFirstToEnd()
+    {
+        if(!this.elements.isEmpty())
+        {
+            this.elements.push(this.elements.pop());
+        }
+    }
+    
+    /**
      * Get party id
+     * @return Party ID
      */
     public synchronized int getID()
     {
@@ -47,7 +58,8 @@ public class AssaultParty
     }
     
     /**
-     * Get assault party target room
+     * Get assault party target room.
+     * @return Target room.
      */
     public synchronized int getTarget()
     {
@@ -55,7 +67,8 @@ public class AssaultParty
     }
     
     /**
-     * Add thief to party if the party is full the thief is not added
+     * Add thief to party if the party is full the thief is not added.
+     * @param thief Thief to be added to the party.
      */
     public synchronized void addThief(OrdinaryThief thief)
     {

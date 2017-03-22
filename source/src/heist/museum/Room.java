@@ -27,7 +27,7 @@ public class Room
     
     /**
      * Get room ID.
-     * @return 
+     * @return Room id.
      */
     public synchronized int getID()
     {
@@ -36,7 +36,7 @@ public class Room
     
     /**
      * Get room position inside the museum.
-     * @return 
+     * @return Room position.
      */
     public synchronized int getPosition()
     {

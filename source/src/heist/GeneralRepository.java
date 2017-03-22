@@ -25,7 +25,7 @@ public class GeneralRepository
     
     /**
      * General repository constructor
-     * @param configuration Configuration for the simulation
+     * @param conf Configuration for the simulation
      */
     public GeneralRepository(Configuration conf)
     {

@@ -33,7 +33,7 @@ public class OrdinaryThief extends Thread
     
     /**
      * Get ordinary thief state
-     * @return 
+     * @return Thief state.
      */
     public OrdinaryThiefState state()
     {
@@ -42,7 +42,7 @@ public class OrdinaryThief extends Thread
 
     /**
      * Set party
-     * @param party 
+     * @param party Party.
      */
     public synchronized void setParty(AssaultParty party)
     {

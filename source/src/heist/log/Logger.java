@@ -16,8 +16,8 @@ public class Logger
     
     /**
      * Constructor from repository and specific PrintStream object to be used to display log messages as they are created.
-     * @param repository
-     * @param stream 
+     * @param repository GeneralRepository to be logged.
+     * @param out PrintStream to write log to.
      */
     public Logger(GeneralRepository repository, PrintStream out)
     {
@@ -28,7 +28,7 @@ public class Logger
     
     /**
      * Constructor from general repository object that uses System.out as PrintStream to display log messages.
-     * @param repository 
+     * @param repository GeneralRepository to be logged.
      */
     public Logger(GeneralRepository repository)
     {
@@ -50,6 +50,7 @@ public class Logger
         out.println("    RId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
         out.println("####  #### #  #    #### #  #    #### #  #    #### #  #    #### #  #    #### #  #");
         out.println("     #    #  ##  #   #  ##  #   #  ##  #   #    #  ##  #   #  ##  #   #  ##  #   ## ##   ## ##   ## ##   ## ##   ## ##");
+        
         out.println("My friends, tonight's effort produced ## priceless paintings!");
         
         /*Legend:

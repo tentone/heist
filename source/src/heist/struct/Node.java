@@ -3,7 +3,7 @@ package heist.struct;
 /**
  * Class to represent a node
  * @author Jose Manuel
- * @param <T> 
+ * @param <T> Generic type.
  */
 public class Node<T> 
 {
