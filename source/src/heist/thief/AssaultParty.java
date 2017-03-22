@@ -7,7 +7,6 @@ import heist.thief.OrdinaryThief;
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
  * Its used as a synchronisation point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
- * @author Jose Manuel
  */
 public class AssaultParty
 {

@@ -6,6 +6,7 @@ public class Heist
     {
         Configuration configuration = new Configuration();
         
-        new GeneralRepository(30, 9, 3).start();
+        GeneralRepository repository = new GeneralRepository(configuration);
+        repository.start();
     } 
 }

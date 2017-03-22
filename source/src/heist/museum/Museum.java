@@ -1,4 +1,4 @@
-package heist;
+package heist.museum;
 
 /**
  * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.

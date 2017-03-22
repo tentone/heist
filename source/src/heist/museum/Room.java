@@ -1,4 +1,4 @@
-package heist;
+package heist.museum;
 
 /**
  * Rooms contains painting that can be stolen by the Thieves attacking the museum.

@@ -4,7 +4,6 @@ package heist.thief;
  * MasterThief is an active entity responsible from planning and prepare the Heist.
  * It creates parties of Thieves and sends them to get Paintings from the Museum.
  * The MasterThief does not know how many paintings exist inside each Room but knows how many rooms there are inside the Museum and where they are.
- * @author Jose Manuel
  */
 public class MasterThief extends Thread
 {
@@ -53,7 +52,7 @@ public class MasterThief extends Thread
      * Analyse the situation and take a decision.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
      */
-    private void appraiseSit()
+    private synchronized void appraiseSit()
     {
         //TODO <ADD CODE HERE>
     }
@@ -61,9 +60,8 @@ public class MasterThief extends Thread
     /**
      * This is the first state change in the MasterThief life cycle it changes the MasterThief state to deciding what to do. 
      */
-    private void startOperations()
+    private synchronized void startOperations()
     {
-        //TODO <ADD CODE HERE>
         this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
     }
     
@@ -71,7 +69,7 @@ public class MasterThief extends Thread
      * Sum up the heist results, prepare a log of the heist and end the hole simulation.
      * Stop all thieves.
      */
-    private void sumUpResults()
+    private synchronized void sumUpResults()
     {
         //TODO <ADD CODE HERE>
     }
@@ -79,25 +77,38 @@ public class MasterThief extends Thread
     /**
      * Collect canvas from thieve waiting in the collection site.
      */
-    private void collectCanvas()
+    private synchronized void collectCanvas()
     {
         //TODO <ADD CODE HERE>
+        
+        this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
     }
     
     /**
      * Suspend the MasterThief activity until is awaken by another Thief.
      */
-    private void takeARest()
+    private synchronized void takeARest() throws InterruptedException
+    {
+        this.wait();
+    }
+    
+    /**
+     * Assembly an assault party with thieves from the ConcentrationSite.
+     */
+    private synchronized void prepareAssaultParty()
     {
         //TODO <ADD CODE HERE>
     }
     
     /**
-     * Assembly and send assault party with thieves from the ConcentrationSite
+     * Send assault party with thieves from the party created.
+     * Wakes up the first thief in the party. That thief will wake the other thieves.
      */
-    private void sendAssaultParty()
+    private synchronized void sendAssaultParty()
     {
         //TODO <ADD CODE HERE>
+        
+        this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
     }
     
     @Override
@@ -105,19 +116,34 @@ public class MasterThief extends Thread
     {
         System.out.println("MasterThief " + this.id + " started");
         
-        while(true)
+        try
         {
-            try
-            {
+            this.startOperations();
 
-            }
-            catch(Exception e)
+            while(this.state != MasterThiefState.PRESENTING_THE_REPORT)
             {
-                System.out.println("MasterThief " + this.id + " error");
-                e.printStackTrace();
-                break;
+                this.appraiseSit();
+
+                if(this.state == MasterThiefState.WAITING_FOR_GROUP_ARRIVAL)
+                {
+                    this.takeARest();
+                    this.collectCanvas();
+                }
+                else if(this.state == MasterThiefState.ASSEMBLING_A_GROUP)
+                {
+                    this.prepareAssaultParty();
+                    this.sendAssaultParty();
+                }
             }
+            
+            this.sumUpResults();
         }
+        catch(Exception e)
+        {
+            System.out.println("MasterThief " + this.id + " error");
+            e.printStackTrace();
+        }
+
         
         System.out.println("MasterThief " + this.id + " terminated");
     }
@@ -125,7 +151,6 @@ public class MasterThief extends Thread
 
 /**
  * Represents a MasterThief state.
- * @author Jose Manuel
  */
 enum MasterThiefState
 {

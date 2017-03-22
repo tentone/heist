@@ -1,5 +1,6 @@
 package heist;
 
+import heist.museum.Museum;
 import heist.thief.AssaultParty;
 import heist.site.CollectionSite;
 import heist.site.ConcentrationSite;
@@ -13,37 +14,38 @@ import java.util.Iterator;
  * It is also responsible for starting and killing all running instances.
  */
 public class GeneralRepository
-{   
+{
     private MasterThief masterThief;
     private Queue<OrdinaryThief> thiefs;
     private Queue<AssaultParty> parties;
+    
     private Museum museum;
     private CollectionSite collection;
     private ConcentrationSite concentration;
     
     /**
      * General repository constructor
-     * @param museumSize The museum size
-     * @param thiefCount How many thieves to create
-     * @param partySize The party size for reach assault party
+     * @param configuration Configuration for the simulation
      */
-    public GeneralRepository(int museumSize, int thiefCount, int partySize)
+    public GeneralRepository(Configuration conf)
     {
-        this.museum = new Museum(museumSize);
+        this.museum = new Museum(conf.numberRooms);
         
         this.thiefs = new Queue<>();
+        this.parties = new Queue<>();
+        
+        this.masterThief = new MasterThief();
+        
         this.concentration = new ConcentrationSite();
-        for(int i = 0; i < thiefCount; i++)
+        this.collection = new CollectionSite(masterThief);
+        
+        for(int i = 0; i < conf.numberThieves; i++)
         {
             OrdinaryThief thief = new OrdinaryThief();
             this.thiefs.push(thief);
             this.concentration.addThief(thief);
         }
         
-        this.parties = new Queue<>();
-        
-        this.masterThief = new MasterThief();
-        this.collection = new CollectionSite(masterThief);
     }
     
     /**

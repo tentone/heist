@@ -5,7 +5,6 @@ package heist.thief;
  * Thieves enter the museum stole canvas and come back to return it to the MasterThief.
  * Thieves attack in parties defined by the MasterThief and cannot move their comrades behind.
  * After taking a step the thief wakes up the last thief in the Party queue to make a step.
- * @author Jose Manuel
  */
 public class OrdinaryThief extends Thread
 {
@@ -78,17 +77,18 @@ public class OrdinaryThief extends Thread
     }
     
     /**
-     * Prepare execution, assign party to thief and change state to crawling inwards.
+     * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
      */
-    private synchronized void prepareExecution()
+    private synchronized void prepareExecution() throws InterruptedException
     {
-        //TODO <ADD CODE HERE>
-        
         this.setState(OrdinaryThiefState.CRAWLING_INWARDS);
+        this.position = 0;
+        
+        this.wait();
     }
     
     /**
-     * Update position inside the museum.
+     * Updates thief position inside the museum and set thief back to sleep, until another thief wakes it up.
      */
     private synchronized void crawlIn()
     {
@@ -127,6 +127,23 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Hand the canvas (if there is one) to the master thief.
+     */
+    private synchronized void handACanvas()
+    {
+        //TODO <HAND THE CANVAS TO THE MASTER THIEF, ENTER THE COLLECTION SITE AND SLEEP>
+    }
+    
+    /**
+     * Check if the thief is still needed (check if every room has been emptied)
+     */
+    private synchronized boolean amINeeded()
+    {
+        //TODO <CHECK IF THE THIEF IS STILL NEEDED>
+        return true;
+    }
+    
+    /**
      * Thread run method
      */
     @Override
@@ -134,38 +151,26 @@ public class OrdinaryThief extends Thread
     {
         System.out.println("Thief " + this.id + " started");
         
-        while(true)
+        try
         {
-            try
+            while(this.amINeeded())
             {
-                if(this.state == OrdinaryThiefState.OUTSIDE)
-                {
-                    //handACanvas
-                    //amINeeded
+                this.prepareExecution();
 
-                    //prepareExecution
-                }
-                else if(this.state == OrdinaryThiefState.CRAWLING_INWARDS)
-                {
-                    //crawlIn
-                }
-                else if(this.state == OrdinaryThiefState.AT_A_ROOM)
-                {
-                    //rollACanvas
+                this.crawlIn();
 
-                    reverseDirection();
-                }
-                else if(this.state == OrdinaryThiefState.CRAWLING_OUTWARDS)
-                {
+                this.rollACanvas();
+                this.reverseDirection();
 
-                }
+                this.crawlOut();
+
+                this.handACanvas();
             }
-            catch(Exception e)
-            {
-                System.out.println("Thief " + this.id + " error");
-                e.printStackTrace();
-                break;
-            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Thief " + this.id + " error");
+            e.printStackTrace();
         }
         
         System.out.println("Thief " + this.id + " terminated");
@@ -174,7 +179,6 @@ public class OrdinaryThief extends Thread
 
 /**
  * Represents OrdinaryThief state.
- * @author Jose Manuel
  */
 enum OrdinaryThiefState
 {
