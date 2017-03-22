@@ -109,7 +109,7 @@ public class MasterThief extends Thread
         {
             try
             {
-                System.out.println("MasterThief " + this.id + " updated");
+
             }
             catch(Exception e)
             {
