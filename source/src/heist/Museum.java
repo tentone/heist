@@ -1,15 +1,34 @@
 package heist;
 
+/**
+ * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
+ * Museum is shared memory region.
+ * @author Jose Manuel
+ */
 public class Museum
 {
     private static int IDCount = 0;
     
     private final Room[] rooms;
+    private final int id;
     
-    
+    /**
+     * Museum constructor
+     * @param size Number of rooms inside the museum
+     */
     public Museum(int size)
     {
         this.rooms = new Room[size];
+        this.id = IDCount++;
+    }
+    
+    /**
+     * Get museum id.
+     * @param id Museum id.
+     */
+    public synchronized int getID()
+    {
+        return this.id;
     }
     
     /**

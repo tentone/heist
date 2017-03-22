@@ -1,57 +1,85 @@
 package heist.thief;
 
+/**
+ * OrdinaryThief represents a thief active entity.
+ * Thieves enter the museum stole canvas and come back to return it to the MasterThief.
+ * Thieves attack in parties defined by the MasterThief and cannot move their comrades behind.
+ * After taking a step the thief wakes up the last thief in the Party queue to make a step.
+ * @author Jose Manuel
+ */
 public class OrdinaryThief extends Thread
 {
     private static int IDCounter = 0;
     
     private OrdinaryThiefState state;
-    private int party;
+    private AssaultParty party;
     
     private final int id;
     private int position;
     private boolean hasCanvas = false;
 
+    /**
+     * OrdinaryThief constructor
+     */
     public OrdinaryThief()
     {
-        this.position = -1;
         this.id = IDCounter++;
         this.state = OrdinaryThiefState.OUTSIDE;
         
-        this.party = -1;
+        this.position = -1;
         this.hasCanvas = false;
+        
+        this.party = null;
     }
     
-    //Get ordinarty thief state
+    /**
+     * Get ordinary thief state
+     * @return 
+     */
     public OrdinaryThiefState state()
     {
         return this.state;
     }
 
-    //Set party (by its id)
-    public void setParty(int party)
+    /**
+     * Set party
+     * @param party 
+     */
+    public synchronized void setParty(AssaultParty party)
     {
         this.party = party;
     }
-    
-    //Get thief position (-1 if its outside the museum)
-    public int getPosition()
+
+    /**
+     * Get the thief position
+     * @return Thief position, -1 if outside
+     */
+    public synchronized int getPosition()
     {
         return this.position;
     }
     
-    //Get thief if
+    /**
+     * Get thief ID
+     * @return Thief ID
+     */
     public synchronized int getID()
     {
         return this.id;
     }
     
-    //Set thief state
-    private void setState(OrdinaryThiefState state)
+    /**
+     * Set thief state
+     * @param state
+     */
+    private synchronized void setState(OrdinaryThiefState state)
     {
         this.state = state;
     }
     
-    //Prepare execution, assign party to thief and change state to crawlinginwars
+    /**
+     * Prepare execution, assign party to thief and change state to crawling inwards.
+     */
     private synchronized void prepareExecution()
     {
         //TODO <ADD CODE HERE>
@@ -59,7 +87,9 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThiefState.CRAWLING_INWARDS);
     }
     
-    //Update position inside the museum
+    /**
+     * Update position inside the museum.
+     */
     private synchronized void crawlIn()
     {
         //TODO <ADD CODE HERE>
@@ -70,25 +100,35 @@ public class OrdinaryThief extends Thread
         //}
     }
     
-    //Try to collect a canvas from the room
+    /**
+     * Try to collect a canvas from the room and reverse direction after.
+     */
     private synchronized void rollACanvas()
     {
         //TODO <ADD CODE HERE>
+        
+        this.reverseDirection();
     }
     
-    //Change state to crawling outwards
+    /**
+     * Change state to crawling outwards.
+     */
     private synchronized void reverseDirection()
     {
         this.setState(OrdinaryThiefState.CRAWLING_OUTWARDS);
     }
     
-    //Update position
+    /**
+     * Update position crawling out of the museum.
+     */
     private synchronized void crawlOut()
     {
         //TODO <ADD CODE HERE>
     }
     
-    //Thread runs at fixed rate defined by the period variable, and calls the update method
+    /**
+     * Thread run method
+     */
     @Override
     public void run()
     {
@@ -130,4 +170,13 @@ public class OrdinaryThief extends Thread
         
         System.out.println("Thief " + this.id + " terminated");
     }
+}
+
+/**
+ * Represents OrdinaryThief state.
+ * @author Jose Manuel
+ */
+enum OrdinaryThiefState
+{
+    OUTSIDE, CRAWLING_INWARDS, AT_A_ROOM, CRAWLING_OUTWARDS
 }

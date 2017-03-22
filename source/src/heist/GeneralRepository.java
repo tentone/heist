@@ -1,29 +1,31 @@
 package heist;
 
+import heist.thief.AssaultParty;
+import heist.site.CollectionSite;
+import heist.site.ConcentrationSite;
 import heist.struct.Queue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import java.util.Iterator;
 
 /**
- * The general repository stores all the components of the system.
+ * The general repository stores all the components of the system. It is a shared memory region that is accessed by every active entity in the system.
  * It is also responsible for starting and killing all running instances.
  */
 public class GeneralRepository
 {   
     private MasterThief masterThief;
     private Queue<OrdinaryThief> thiefs;
-    private Queue<Party> parties;
+    private Queue<AssaultParty> parties;
     private Museum museum;
     private CollectionSite collection;
     private ConcentrationSite concentration;
     
     /**
      * General repository constructor
-     * 
-     * @param museumSize
-     * @param thiefCount
-     * @param partySize 
+     * @param museumSize The museum size
+     * @param thiefCount How many thieves to create
+     * @param partySize The party size for reach assault party
      */
     public GeneralRepository(int museumSize, int thiefCount, int partySize)
     {
@@ -59,46 +61,46 @@ public class GeneralRepository
     }
     
     /**
-     * Add a new party to the party list
-     * @param party 
+     * Add a new party to the party list.
+     * @param party Party to be added to the list.
      */
-    public synchronized void addParty(Party party)
+    public synchronized void addParty(AssaultParty party)
     {
         this.parties.push(party);
     }
     
     /**
-     * Get master thief object
-     * @return 
+     * Get master thief.
+     * @return MasterThief
      */
-    public synchronized MasterThief getMasterThief()
+    public MasterThief getMasterThief()
     {
         return this.masterThief;
     }
     
     /**
-     * Get museum object
-     * @return 
+     * Get museum.
+     * @return Museum
      */
-    public synchronized Museum getMuseum()
+    public Museum getMuseum()
     {
         return this.museum;
     }
     
     /**
-     * Get collection site object
-     * @return 
+     * Get collection site.
+     * @return CollectionSite
      */
-    public synchronized CollectionSite getCollectionSite()
+    public CollectionSite getCollectionSite()
     {
         return this.collection;
     }
     
     /**
-     * Get concentration site object
-     * @return 
+     * Get concentration site.
+     * @return ConcentrationSite
      */
-    public synchronized ConcentrationSite getConcentrationSite()
+    public ConcentrationSite getConcentrationSite()
     {
         return this.concentration;
     }
