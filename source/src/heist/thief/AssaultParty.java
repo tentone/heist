@@ -4,7 +4,7 @@ import heist.struct.Queue;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
- * Its used as a synchronisation point between thieves.
+ * Its used as a synchronization point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
  */
 public class AssaultParty
@@ -32,7 +32,7 @@ public class AssaultParty
      * Check if the party is full.
      * @return True if the party element queue has the same size as the party size.
      */
-    public boolean partyFull()
+    public synchronized boolean partyFull()
     {
         return this.elements.size() == this.size;
     }
@@ -40,30 +40,12 @@ public class AssaultParty
     /**
      * Move first element of the FIFO to the end of the FIFO.
      */
-    public void moveFirstToEnd()
+    public synchronized void moveFirstToEnd()
     {
         if(!this.elements.isEmpty())
         {
             this.elements.push(this.elements.pop());
         }
-    }
-    
-    /**
-     * Get party id
-     * @return Party ID
-     */
-    public synchronized int getID()
-    {
-        return this.id;
-    }
-    
-    /**
-     * Get assault party target room.
-     * @return Target room.
-     */
-    public synchronized int getTarget()
-    {
-        return this.target;
     }
     
     /**
@@ -76,5 +58,23 @@ public class AssaultParty
         {
             this.elements.push(thief);
         }
+    }
+    
+    /**
+     * Get party id
+     * @return Party ID
+     */
+    public int getID()
+    {
+        return this.id;
+    }
+    
+    /**
+     * Get assault party target room.
+     * @return Target room.
+     */
+    public int getTarget()
+    {
+        return this.target;
     }
 }

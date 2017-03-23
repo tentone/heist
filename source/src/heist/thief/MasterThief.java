@@ -1,6 +1,8 @@
 package heist.thief;
 
 import heist.GeneralRepository;
+import heist.site.CollectionSite;
+import heist.site.ConcentrationSite;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
@@ -11,9 +13,17 @@ public class MasterThief extends Thread
 {
     private static int IDCounter = 0;
     
+    public static final int PLANNING_THE_HEIST = 1000;
+    public static final int DECIDING_WHAT_TO_DO = 2000;
+    public static final int ASSEMBLING_A_GROUP = 3000;
+    public static final int WAITING_FOR_GROUP_ARRIVAL = 4000;
+    public static final int PRESENTING_THE_REPORT = 5000;
+            
     private int id;
     private MasterThiefState state;
-    private GeneralRepository repository;
+    
+    private CollectionSite collection;
+    private ConcentrationSite concentration;
     
     /**
      * MasterThief constructor
@@ -22,7 +32,8 @@ public class MasterThief extends Thread
     public MasterThief(GeneralRepository repository)
     {
         this.id = IDCounter++;
-        this.repository = repository;
+        this.collection = repository.getCollectionSite();
+        this.concentration = repository.getConcentrationSite();
         this.state = MasterThiefState.PLANNING_THE_HEIST;
     }
     
@@ -56,37 +67,44 @@ public class MasterThief extends Thread
     /**
      * This is the first state change in the MasterThief life cycle it changes the MasterThief state to deciding what to do. 
      */
-    private synchronized void startOperations()
+    private void startOperations()
     {
         this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
     }
     
     /**
-     * Analyse the situation and take a decision.
+     * Analyze the situation and take a decision.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
      */
-    private synchronized void appraiseSit()
+    private void appraiseSit()
     {
-        if(this.repository.getConcentrationSite().hasEnoughToCreateParty(id))
+        if(false) //TODO <CHECK IF ALL ROOMS HAVE BEN EMPTIED>
         {
-            
+            this.setState(MasterThiefState.PRESENTING_THE_REPORT);
         }
-        //TODO <ADD CODE HERE>
+        else if(this.concentration.hasEnoughToCreateParty(id))
+        {
+            this.setState(MasterThiefState.ASSEMBLING_A_GROUP);
+        }
+        else
+        {
+            this.setState(MasterThiefState.WAITING_FOR_GROUP_ARRIVAL);
+        }
     }
-
+    
     /**
-     * Sum up the heist results, prepare a log of the heist and end the hole simulation.
-     * Stop all thieves.
+     * Assembly an assault party with thieves from the ConcentrationSite.
      */
-    private synchronized void sumUpResults()
+    private void prepareAssaultParty()
     {
         //TODO <ADD CODE HERE>
     }
     
     /**
-     * Collect canvas from thieve waiting in the collection site.
+     * Send assault party with thieves from the party created.
+     * Wakes up the first thief in the party. That thief will wake the other thieves.
      */
-    private synchronized void collectCanvas()
+    private void sendAssaultParty()
     {
         //TODO <ADD CODE HERE>
         
@@ -96,28 +114,28 @@ public class MasterThief extends Thread
     /**
      * Suspend the MasterThief activity until is awaken by another Thief.
      */
-    private synchronized void takeARest() throws InterruptedException
+    private void takeARest() throws InterruptedException
     {
-        this.wait();
+        this.collection.waitUntilThiefArrives();
     }
     
     /**
-     * Assembly an assault party with thieves from the ConcentrationSite.
+     * Collect canvas from thieve waiting in the collection site.
      */
-    private synchronized void prepareAssaultParty()
-    {
-        //TODO <ADD CODE HERE>
-    }
-    
-    /**
-     * Send assault party with thieves from the party created.
-     * Wakes up the first thief in the party. That thief will wake the other thieves.
-     */
-    private synchronized void sendAssaultParty()
+    private void collectCanvas()
     {
         //TODO <ADD CODE HERE>
         
         this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
+    }
+    
+    /**
+     * Sum up the heist results, prepare a log of the heist and end the hole simulation.
+     * Stop all thieves.
+     */
+    private void sumUpResults()
+    {
+        //TODO <ADD CODE HERE>
     }
     
     @Override

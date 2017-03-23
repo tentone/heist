@@ -4,7 +4,6 @@ import heist.Configuration;
 
 /**
  * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
- * Museum is a shared region accessed by all thieves inside the museum.
  * @author Jose Manuel
  */
 public class Museum
@@ -15,7 +14,7 @@ public class Museum
     private final int id;
     
     /**
-     * Museum constructor, initialises rooms with values from the configuration.
+     * Museum constructor, initializes rooms with values from the configuration.
      * @param configuration Simulation configuration
      */
     public Museum(Configuration configuration)
@@ -81,12 +80,12 @@ public class Museum
     }
     
     /**
-     * Try to get painting from room using the room id
+     * Check if a room still has a painting from its room id.
      * @param id Room id.
-     * @return True if was able to get painting from room.
+     * @return True if the room still has some painting inside.
      */
-    public synchronized boolean getPaiting(int id)
+    public boolean hasPainting(int id)
     {
-        return this.getRoom(id).getPaiting();
+        return this.getRoom(id).hasPainting();
     }
 }

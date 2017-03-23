@@ -2,6 +2,7 @@ package heist.museum;
 
 /**
  * Rooms contains painting that can be stolen by the Thieves attacking the museum.
+ * Room is a shared region accessed by all thieves inside the museum.
  * @author Jose Manuel
  */
 public class Room
