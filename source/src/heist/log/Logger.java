@@ -44,11 +44,11 @@ public class Logger
     {
         out.println("MstT   Thief 1      Thief 2      Thief 3      Thief 4      Thief 5      Thief 6");
         out.println("Stat  Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD");
+        out.println("####  #### #  #    #### #  #    #### #  #    #### #  #    #### #  #    #### #  #");
         
         out.println("                   Assault party 1                       Assault party 2                       Museum");
         out.println("           Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
         out.println("    RId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
-        out.println("####  #### #  #    #### #  #    #### #  #    #### #  #    #### #  #    #### #  #");
         out.println("     #    #  ##  #   #  ##  #   #  ##  #   #    #  ##  #   #  ##  #   #  ##  #   ## ##   ## ##   ## ##   ## ##   ## ##");
         
         out.println("My friends, tonight's effort produced ## priceless paintings!");

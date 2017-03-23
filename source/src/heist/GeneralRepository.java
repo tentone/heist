@@ -25,32 +25,40 @@ public class GeneralRepository
     private ConcentrationSite concentration;
     
     private Logger logger;
+    private Configuration configuration;
     
     /**
      * General repository constructor
-     * @param conf Configuration for the simulation
+     * @param configuration Configuration for the simulation
      */
-    public GeneralRepository(Configuration conf)
+    public GeneralRepository(Configuration configuration)
     {
         this.logger = new Logger(this);
+        this.configuration = configuration;
         
-        this.museum = new Museum(conf.numberRooms);
+        this.initialize();
+    }
+    
+    /**
+     * Initialise simulation elements.
+     */
+    public void initialize()
+    {
+        this.museum = new Museum(this.configuration);
         
         this.thiefs = new Queue<>();
         this.parties = new Queue<>();
         
         this.masterThief = new MasterThief(this);
-        
         this.concentration = new ConcentrationSite();
         this.collection = new CollectionSite(masterThief);
         
-        for(int i = 0; i < conf.numberThieves; i++)
+        for(int i = 0; i < this.configuration.numberThieves; i++)
         {
-            OrdinaryThief thief = new OrdinaryThief(this);
+            OrdinaryThief thief = new OrdinaryThief(this, this.configuration);
             this.thiefs.push(thief);
             this.concentration.addThief(thief);
         }
-        
     }
     
     /**

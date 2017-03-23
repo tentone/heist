@@ -2,26 +2,23 @@ package heist.museum;
 
 /**
  * Rooms contains painting that can be stolen by the Thieves attacking the museum.
- * Room is a shared region accessed by all thieves inside the museum.
  * @author Jose Manuel
  */
 public class Room
 {
-    private static int IDCounter = 0;
-    
-    private final int id;
-    private final int position;
+    private final int id, distance;
     private int paintings;
 
     /**
      * Room constructor, the room stores its own position and the amount of paintings inside of it.
-     * @param position Room position.
+     * @param id Room id.
+     * @param distance Room distance.
      * @param paintings Amount of paintings inside the room.
      */
-    public Room(int position, int paintings)
+    public Room(int id, int distance, int paintings)
     {
-        this.id = IDCounter++;
-        this.position = position;
+        this.id = id;
+        this.distance = distance;
         this.paintings = paintings;
     }
     
@@ -29,7 +26,7 @@ public class Room
      * Get room ID.
      * @return Room id.
      */
-    public synchronized int getID()
+    public int getID()
     {
         return this.id;
     }
@@ -38,9 +35,9 @@ public class Room
      * Get room position inside the museum.
      * @return Room position.
      */
-    public synchronized int getPosition()
+    public int getDistance()
     {
-        return this.position;
+        return this.distance;
     }
     
     /**

@@ -1,5 +1,6 @@
 package heist.thief;
 
+import heist.Configuration;
 import heist.GeneralRepository;
 
 /**
@@ -17,18 +18,22 @@ public class OrdinaryThief extends Thread
     private GeneralRepository repository;
     
     private final int id;
+    private final int maximumDisplacement;
     private int position;
     private boolean hasCanvas = false;
 
     /**
      * OrdinaryThief constructor.
      * @param repository General repository.
+     * @param configuration Simulation configuration.
      */
-    public OrdinaryThief(GeneralRepository repository)
+    public OrdinaryThief(GeneralRepository repository, Configuration configuration)
     {
         this.id = IDCounter++;
-        this.repository = repository;
         this.state = OrdinaryThiefState.OUTSIDE;
+        
+        this.repository = repository;
+        this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         
         this.position = -1;
         this.hasCanvas = false;

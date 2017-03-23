@@ -54,15 +54,6 @@ public class MasterThief extends Thread
     }
     
     /**
-     * Analyse the situation and take a decision.
-     * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
-     */
-    private synchronized void appraiseSit()
-    {
-        //TODO <ADD CODE HERE>
-    }
-    
-    /**
      * This is the first state change in the MasterThief life cycle it changes the MasterThief state to deciding what to do. 
      */
     private synchronized void startOperations()
@@ -70,6 +61,19 @@ public class MasterThief extends Thread
         this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
     }
     
+    /**
+     * Analyse the situation and take a decision.
+     * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
+     */
+    private synchronized void appraiseSit()
+    {
+        if(this.repository.getConcentrationSite().hasEnoughToCreateParty(id))
+        {
+            
+        }
+        //TODO <ADD CODE HERE>
+    }
+
     /**
      * Sum up the heist results, prepare a log of the heist and end the hole simulation.
      * Stop all thieves.

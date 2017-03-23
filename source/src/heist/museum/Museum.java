@@ -1,8 +1,10 @@
 package heist.museum;
 
+import heist.Configuration;
+
 /**
  * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
- * Museum is shared memory region.
+ * Museum is a shared region accessed by all thieves inside the museum.
  * @author Jose Manuel
  */
 public class Museum
@@ -13,13 +15,36 @@ public class Museum
     private final int id;
     
     /**
-     * Museum constructor
-     * @param size Number of rooms inside the museum
+     * Museum constructor, initialises rooms with values from the configuration.
+     * @param configuration Simulation configuration
      */
-    public Museum(int size)
+    public Museum(Configuration configuration)
     {
-        this.rooms = new Room[size];
         this.id = IDCount++;
+        
+        this.rooms = new Room[configuration.numberRooms];
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            boolean repeat = true;
+            int distance = configuration.roomDistance.generateInRange();
+            
+            while(repeat)
+            {
+                repeat = false;
+
+                for(int j = 0; j < i; j++)
+                {
+                    if(distance == this.rooms[j].getDistance())
+                    {
+                        distance = configuration.roomDistance.generateInRange();
+                        repeat = true;
+                        break;
+                    }
+                }
+            }
+            
+            this.rooms[i] = new Room(i, distance, configuration.numberPaintings.generateInRange());
+        }
     }
     
     /**
@@ -41,20 +66,27 @@ public class Museum
     }
     
     /**
-     * Get room from room position, returns null if there is no room at that position
-     * @param position Room position
+     * Get room from room id, returns null if there is no room for that id.
+     * @param id Room id
      * @return Room object, null if not found
      */
-    public Room getRoom(int position)
+    public Room getRoom(int id)
     {
-        for(int i = 0; i < this.rooms.length; i++)
+        if(id > 0 && id < this.rooms.length)
         {
-            if(this.rooms[i].getPosition() == position)
-            {
-                return this.rooms[i];
-            }
+            return this.rooms[id];
         }
         
         return null;
+    }
+    
+    /**
+     * Try to get painting from room using the room id
+     * @param id Room id.
+     * @return True if was able to get painting from room.
+     */
+    public synchronized boolean getPaiting(int id)
+    {
+        return this.getRoom(id).getPaiting();
     }
 }

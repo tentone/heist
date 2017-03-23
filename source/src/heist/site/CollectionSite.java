@@ -10,7 +10,7 @@ import heist.thief.OrdinaryThief;
  */
 public class CollectionSite
 {
-    private MasterThief master;
+    private final MasterThief master;
     private final Queue<OrdinaryThief> queue;
 
     /**
