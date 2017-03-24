@@ -38,7 +38,7 @@ public class Logger
     }
     
     /**
-     * Create a log entry of everything in the general repository
+     * Create a log entry of everything in the general repository and print it to the attached PrintStream.
      */
     public void log()
     {

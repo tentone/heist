@@ -1,14 +1,11 @@
 package heist;
 
 import heist.log.Logger;
-import heist.museum.Museum;
-import heist.thief.AssaultParty;
-import heist.site.CollectionSite;
-import heist.site.ConcentrationSite;
-import heist.queue.Queue;
+import heist.shared.Museum;
+import heist.shared.CollectionSite;
+import heist.shared.ConcentrationSite;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
-import java.util.Iterator;
 
 /**
  * The general repository stores all the components of the system. It is a shared memory region that is accessed by every active entity in the system.
@@ -16,10 +13,6 @@ import java.util.Iterator;
  */
 public class GeneralRepository
 {
-    private MasterThief masterThief;
-    private Queue<OrdinaryThief> thiefs;
-    private Queue<AssaultParty> parties;
-    
     private Museum museum;
     private CollectionSite collection;
     private ConcentrationSite concentration;
@@ -35,44 +28,25 @@ public class GeneralRepository
     {
         this.logger = new Logger(this);
         this.configuration = configuration;
-        
-        this.initialize();
     }
     
     /**
-     * Initialize simulation elements.
+     * Initialize simulation elements and starts the simulation, calls the start method in all thieves
      */
-    public void initialize()
+    public void start()
     {
         this.museum = new Museum(this.configuration);
-        
-        this.thiefs = new Queue<>();
-        this.parties = new Queue<>();
 
         this.concentration = new ConcentrationSite();
         this.collection = new CollectionSite();
         
-        this.masterThief = new MasterThief(this);
+        MasterThief master = new MasterThief(this);
+        master.start();
         
         for(int i = 0; i < this.configuration.numberThieves; i++)
         {
             OrdinaryThief thief = new OrdinaryThief(this, this.configuration);
-            this.thiefs.push(thief);
-            this.concentration.addThief(thief);
-        }
-    }
-    
-    /**
-     * Starts the simulation, calls the start method in all thieves
-     */
-    public void start()
-    {
-       this.masterThief.start();
-        
-        Iterator<OrdinaryThief> it = this.thiefs.iterator();
-        while(it.hasNext())
-        {
-            it.next().start();
+            thief.start();
         }
     }
     
@@ -82,24 +56,6 @@ public class GeneralRepository
     public synchronized void log()
     {
         this.logger.log();
-    }
-    
-    /**
-     * Add a new party to the party list.
-     * @param party Party to be added to the list.
-     */
-    public synchronized void addParty(AssaultParty party)
-    {
-        this.parties.push(party);
-    }
-    
-    /**
-     * Get master thief.
-     * @return MasterThief
-     */
-    public MasterThief getMasterThief()
-    {
-        return this.masterThief;
     }
     
     /**

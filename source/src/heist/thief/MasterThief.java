@@ -1,8 +1,8 @@
 package heist.thief;
 
 import heist.GeneralRepository;
-import heist.site.CollectionSite;
-import heist.site.ConcentrationSite;
+import heist.shared.CollectionSite;
+import heist.shared.ConcentrationSite;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
@@ -115,7 +115,7 @@ public class MasterThief extends Thread
      */
     private void takeARest() throws InterruptedException
     {
-        this.collection.waitUntilThiefArrives();
+        this.collection.takeARest();
     }
     
     /**

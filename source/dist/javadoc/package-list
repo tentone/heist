@@ -1,7 +1,6 @@
 heist
 heist.log
-heist.museum
-heist.site
-heist.struct
+heist.queue
+heist.shared
 heist.thief
 heist.utils

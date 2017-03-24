@@ -1,10 +1,11 @@
 package heist.thief;
 
+import heist.shared.AssaultParty;
 import heist.Configuration;
 import heist.GeneralRepository;
-import heist.museum.Museum;
-import heist.site.CollectionSite;
-import heist.site.ConcentrationSite;
+import heist.shared.Museum;
+import heist.shared.CollectionSite;
+import heist.shared.ConcentrationSite;
 
 /**
  * OrdinaryThief represents a thief active entity.
@@ -16,16 +17,16 @@ public class OrdinaryThief extends Thread
 {
     private static int IDCounter = 0;
     
-    private static final int OUTSIDE = 1000;
-    private static final int CRAWLING_INWARDS = 2000;
-    private static final int AT_A_ROOM = 3000;
-    private static final int CRAWLING_OUTWARDS = 4000;
-
-    private AssaultParty party;
+    public static final int OUTSIDE = 1000;
+    public static final int CRAWLING_INWARDS = 2000;
+    public static final int AT_A_ROOM = 3000;
+    public static final int CRAWLING_OUTWARDS = 4000;
     
     private ConcentrationSite concentration;
     private CollectionSite collection;
     private Museum museum;
+    
+    private AssaultParty party;
     
     private final int id, maximumDisplacement;
     private int state, position;
@@ -98,14 +99,6 @@ public class OrdinaryThief extends Thread
     }
     
     /**
-     * Make ordinary thief leave the party.
-     */
-    private void leaveParty()
-    {
-        this.party = null;
-    }
-    
-    /**
      * Set thief state
      * @param state
      */
@@ -132,12 +125,8 @@ public class OrdinaryThief extends Thread
      */
     private void crawlIn()
     {
-        //TODO <ADD CODE HERE>
         
-        //if(this.position == this.party.getTarget())
-        //{
-        //    this.rollACanvas();
-        //}
+        //TODO <ADD CODE HERE>
     }
     
     /**
@@ -145,16 +134,18 @@ public class OrdinaryThief extends Thread
      */
     private void rollACanvas()
     {
-        //TODO <ADD CODE HERE>
+        this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
-        this.reverseDirection();
+        this.setState(AT_A_ROOM);
     }
     
     /**
      * Change state to crawling outwards.
      */
-    private void reverseDirection()
+    private void reverseDirection() throws InterruptedException
     {
+        this.party.reverseDirection();
+        
         this.setState(CRAWLING_OUTWARDS);
     }
     
@@ -169,8 +160,9 @@ public class OrdinaryThief extends Thread
     /**
      * Hand the canvas (if there is one) to the master thief.
      */
-    private void handACanvas()
+    private void handACanvas() throws InterruptedException
     {
+        this.collection.handACanvas(this);
         //TODO <HAND THE CANVAS TO THE MASTER THIEF, ENTER THE COLLECTION SITE AND SLEEP>
     }
     

@@ -1,4 +1,4 @@
-package heist.site;
+package heist.shared;
 
 import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
@@ -10,14 +10,16 @@ import heist.thief.OrdinaryThief;
  */
 public class ConcentrationSite
 {
-    private final Queue<OrdinaryThief> queue;
+    private final Queue<OrdinaryThief> thieves;
+    private final Queue<AssaultParty> parties;
     
     /**
      * ConcentrationSite constructor.
      */
     public ConcentrationSite()
     {   
-        this.queue = new Queue<>();
+        this.thieves = new Queue<>();
+        this.parties = new Queue<>();
     }
     
     /**
@@ -26,7 +28,7 @@ public class ConcentrationSite
      */
     public synchronized void addThief(OrdinaryThief thief)
     {
-        this.queue.push(thief);
+        this.thieves.push(thief);
     }
 
     /**
@@ -36,7 +38,17 @@ public class ConcentrationSite
      */
     public synchronized boolean hasEnoughToCreateParty(int partySize)
     {
-        return this.queue.size() >= partySize;
+        return this.thieves.size() >= partySize;
+    }
+    
+    /**
+     * OrdinaryThief waits until a party is attributed to him.
+     * @return AssaultParty attributed to that ordinary thief.
+     */
+    public synchronized AssaultParty waitForPary()
+    {
+        //TODO <ADD CODE HERE>
+        return null;
     }
     
     /**
@@ -45,7 +57,7 @@ public class ConcentrationSite
      */
     public synchronized boolean hasThief()
     {
-        return !this.queue.isEmpty();
+        return !this.thieves.isEmpty();
     }
     
     /**
@@ -54,6 +66,6 @@ public class ConcentrationSite
      */
     public synchronized OrdinaryThief removeThief()
     {
-        return this.queue.pop();
+        return this.thieves.pop();
     }
 }

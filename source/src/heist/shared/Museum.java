@@ -1,5 +1,6 @@
-package heist.museum;
+package heist.shared;
 
+import heist.shared.Room;
 import heist.Configuration;
 
 /**
@@ -10,9 +11,9 @@ public class Museum
 {
     private static int IDCount = 0;
     
-    private final Room[] rooms;
     private final int id;
-    
+    private final Room[] rooms;
+
     /**
      * Museum constructor, initializes rooms with values from the configuration.
      * @param configuration Simulation configuration
@@ -59,7 +60,7 @@ public class Museum
      * Get room array
      * @return Array of Room objects
      */
-    public Room[] getRooms()
+    public synchronized Room[] getRooms()
     {
         return this.rooms;
     }
@@ -69,7 +70,7 @@ public class Museum
      * @param id Room id
      * @return Room object, null if not found
      */
-    public Room getRoom(int id)
+    public synchronized Room getRoom(int id)
     {
         if(id > 0 && id < this.rooms.length)
         {
@@ -80,11 +81,21 @@ public class Museum
     }
     
     /**
+     * Roll a canvas
+     * @param id Room id
+     * @return True if was able to get a canvas, false if the room was already empty
+     */
+    public synchronized boolean rollACanvas(int id)
+    {
+        return this.getRoom(id).getPaiting();
+    }
+    
+    /**
      * Check if a room still has a painting from its room id.
      * @param id Room id.
      * @return True if the room still has some painting inside.
      */
-    public boolean hasPainting(int id)
+    public synchronized boolean hasPainting(int id)
     {
         return this.getRoom(id).hasPainting();
     }
