@@ -5,7 +5,7 @@ import heist.museum.Museum;
 import heist.thief.AssaultParty;
 import heist.site.CollectionSite;
 import heist.site.ConcentrationSite;
-import heist.struct.Queue;
+import heist.queue.Queue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import java.util.Iterator;
@@ -40,7 +40,7 @@ public class GeneralRepository
     }
     
     /**
-     * Initialise simulation elements.
+     * Initialize simulation elements.
      */
     public void initialize()
     {
@@ -48,10 +48,11 @@ public class GeneralRepository
         
         this.thiefs = new Queue<>();
         this.parties = new Queue<>();
+
+        this.concentration = new ConcentrationSite();
+        this.collection = new CollectionSite();
         
         this.masterThief = new MasterThief(this);
-        this.concentration = new ConcentrationSite();
-        this.collection = new CollectionSite(masterThief);
         
         for(int i = 0; i < this.configuration.numberThieves; i++)
         {

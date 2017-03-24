@@ -1,4 +1,4 @@
-package heist.struct;
+package heist.queue;
 
 import java.util.Iterator;
 
@@ -61,6 +61,35 @@ public class Queue<T>
     public T peek() 
     {
         return first.e;
+    }
+    
+    /**
+     * Remove specific element from the FIFO.
+     * @param e Element to be removed from the FIFO.
+     * @return True if was able to remove the element, false otherwise.
+     */
+    public boolean remove(T e)
+    {
+        Node temp = first;
+
+        if(temp.e == e)
+        {
+            first = first.next;
+            return true;
+        }
+            
+        while(temp.next != null)
+        {
+            if(temp.next.e == e)
+            {
+                temp.next = temp.next.next;
+                return true;
+            }
+            
+            temp = temp.next;
+        }
+                
+        return false;
     }
     
     /**

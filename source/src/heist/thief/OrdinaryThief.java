@@ -2,6 +2,9 @@ package heist.thief;
 
 import heist.Configuration;
 import heist.GeneralRepository;
+import heist.museum.Museum;
+import heist.site.CollectionSite;
+import heist.site.ConcentrationSite;
 
 /**
  * OrdinaryThief represents a thief active entity.
@@ -13,13 +16,19 @@ public class OrdinaryThief extends Thread
 {
     private static int IDCounter = 0;
     
-    private OrdinaryThiefState state;
+    private static final int OUTSIDE = 1000;
+    private static final int CRAWLING_INWARDS = 2000;
+    private static final int AT_A_ROOM = 3000;
+    private static final int CRAWLING_OUTWARDS = 4000;
+
     private AssaultParty party;
-    private GeneralRepository repository;
     
-    private final int id;
-    private final int maximumDisplacement;
-    private int position;
+    private ConcentrationSite concentration;
+    private CollectionSite collection;
+    private Museum museum;
+    
+    private final int id, maximumDisplacement;
+    private int state, position;
     private boolean hasCanvas = false;
 
     /**
@@ -30,14 +39,16 @@ public class OrdinaryThief extends Thread
     public OrdinaryThief(GeneralRepository repository, Configuration configuration)
     {
         this.id = IDCounter++;
-        this.state = OrdinaryThiefState.OUTSIDE;
+        this.state = OUTSIDE;
         
-        this.repository = repository;
+        this.collection = repository.getCollectionSite();
+        this.concentration = repository.getConcentrationSite();
+        this.museum = repository.getMuseum();
+
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         
         this.position = -1;
         this.hasCanvas = false;
-        
         this.party = null;
     }
     
@@ -45,11 +56,20 @@ public class OrdinaryThief extends Thread
      * Get ordinary thief state
      * @return Thief state.
      */
-    public OrdinaryThiefState state()
+    public int state()
     {
         return this.state;
     }
 
+    /**
+     * Check if the ordinary thief has a party.
+     * @return True if ordinary thief is in a party
+     */
+    public boolean hasParty()
+    {
+        return this.party != null;
+    }
+    
     /**
      * Set assault party.
      * @param party Assault party.
@@ -78,10 +98,18 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Make ordinary thief leave the party.
+     */
+    private void leaveParty()
+    {
+        this.party = null;
+    }
+    
+    /**
      * Set thief state
      * @param state
      */
-    private void setState(OrdinaryThiefState state)
+    private void setState(int state)
     {
         this.state = state;
     }
@@ -96,7 +124,7 @@ public class OrdinaryThief extends Thread
         //TODO <GET OUT OF THE CONCENTRATION SITE>
         
         this.position = 0;
-        this.setState(OrdinaryThiefState.CRAWLING_INWARDS);
+        this.setState(CRAWLING_INWARDS);
     }
     
     /**
@@ -127,7 +155,7 @@ public class OrdinaryThief extends Thread
      */
     private void reverseDirection()
     {
-        this.setState(OrdinaryThiefState.CRAWLING_OUTWARDS);
+        this.setState(CRAWLING_OUTWARDS);
     }
     
     /**
@@ -187,12 +215,4 @@ public class OrdinaryThief extends Thread
         
         System.out.println("Thief " + this.id + " terminated");
     }
-}
-
-/**
- * Represents OrdinaryThief state.
- */
-enum OrdinaryThiefState
-{
-    OUTSIDE, CRAWLING_INWARDS, AT_A_ROOM, CRAWLING_OUTWARDS
 }

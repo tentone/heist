@@ -1,4 +1,4 @@
-package heist.struct;
+package heist.queue;
 
 import java.util.Iterator;
 

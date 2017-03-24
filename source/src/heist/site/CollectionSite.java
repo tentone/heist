@@ -1,6 +1,6 @@
 package heist.site;
 
-import heist.struct.Queue;
+import heist.queue.Queue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
@@ -10,17 +10,14 @@ import heist.thief.OrdinaryThief;
  */
 public class CollectionSite
 {
-    private final MasterThief master;
     private final Queue<OrdinaryThief> queue;
 
     /**
      * Collection site constructor
-     * @param master Master thief.
      */
-    public CollectionSite(MasterThief master)
+    public CollectionSite()
     {   
         this.queue = new Queue<>();
-        this.master = master;
     }
     
     /**

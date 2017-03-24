@@ -1,4 +1,4 @@
-package heist.struct;
+package heist.queue;
 
 /**
  * Class to represent a node

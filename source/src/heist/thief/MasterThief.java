@@ -19,8 +19,7 @@ public class MasterThief extends Thread
     public static final int WAITING_FOR_GROUP_ARRIVAL = 4000;
     public static final int PRESENTING_THE_REPORT = 5000;
             
-    private int id;
-    private MasterThiefState state;
+    private int id, state;
     
     private CollectionSite collection;
     private ConcentrationSite concentration;
@@ -34,7 +33,7 @@ public class MasterThief extends Thread
         this.id = IDCounter++;
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
-        this.state = MasterThiefState.PLANNING_THE_HEIST;
+        this.state = PLANNING_THE_HEIST;
     }
     
     /**
@@ -50,7 +49,7 @@ public class MasterThief extends Thread
      * Get Master thief state
      * @return MasterThief state
      */
-    public MasterThiefState state()
+    public int state()
     {
         return this.state;
     }
@@ -59,7 +58,7 @@ public class MasterThief extends Thread
      * Change MasterThief state
      * @param state 
      */
-    private void setState(MasterThiefState state)
+    private void setState(int state)
     {
         this.state = state;
     }
@@ -69,7 +68,7 @@ public class MasterThief extends Thread
      */
     private void startOperations()
     {
-        this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
+        this.setState(DECIDING_WHAT_TO_DO);
     }
     
     /**
@@ -80,15 +79,15 @@ public class MasterThief extends Thread
     {
         if(false) //TODO <CHECK IF ALL ROOMS HAVE BEN EMPTIED>
         {
-            this.setState(MasterThiefState.PRESENTING_THE_REPORT);
+            this.setState(PRESENTING_THE_REPORT);
         }
         else if(this.concentration.hasEnoughToCreateParty(id))
         {
-            this.setState(MasterThiefState.ASSEMBLING_A_GROUP);
+            this.setState(ASSEMBLING_A_GROUP);
         }
         else
         {
-            this.setState(MasterThiefState.WAITING_FOR_GROUP_ARRIVAL);
+            this.setState(WAITING_FOR_GROUP_ARRIVAL);
         }
     }
     
@@ -108,7 +107,7 @@ public class MasterThief extends Thread
     {
         //TODO <ADD CODE HERE>
         
-        this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
+        this.setState(DECIDING_WHAT_TO_DO);
     }
     
     /**
@@ -126,7 +125,7 @@ public class MasterThief extends Thread
     {
         //TODO <ADD CODE HERE>
         
-        this.setState(MasterThiefState.DECIDING_WHAT_TO_DO);
+        this.setState(DECIDING_WHAT_TO_DO);
     }
     
     /**
@@ -147,16 +146,16 @@ public class MasterThief extends Thread
         {
             this.startOperations();
 
-            while(this.state != MasterThiefState.PRESENTING_THE_REPORT)
+            while(this.state != PRESENTING_THE_REPORT)
             {
                 this.appraiseSit();
 
-                if(this.state == MasterThiefState.WAITING_FOR_GROUP_ARRIVAL)
+                if(this.state == WAITING_FOR_GROUP_ARRIVAL)
                 {
                     this.takeARest();
                     this.collectCanvas();
                 }
-                else if(this.state == MasterThiefState.ASSEMBLING_A_GROUP)
+                else if(this.state == ASSEMBLING_A_GROUP)
                 {
                     this.prepareAssaultParty();
                     this.sendAssaultParty();
@@ -174,12 +173,4 @@ public class MasterThief extends Thread
         
         System.out.println("MasterThief " + this.id + " terminated");
     }
-}
-
-/**
- * Represents a MasterThief state.
- */
-enum MasterThiefState
-{
-    PLANNING_THE_HEIST, DECIDING_WHAT_TO_DO, ASSEMBLING_A_GROUP, WAITING_FOR_GROUP_ARRIVAL, PRESENTING_THE_REPORT
 }

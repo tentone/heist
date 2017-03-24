@@ -1,6 +1,6 @@
 package heist.site;
 
-import heist.struct.Queue;
+import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
 
 /**

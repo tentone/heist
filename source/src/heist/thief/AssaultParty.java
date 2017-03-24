@@ -1,18 +1,18 @@
 package heist.thief;
 
-import heist.struct.Queue;
+import heist.queue.Queue;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
  * Its used as a synchronization point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
+ * Assault party is shared between thieves.
  */
 public class AssaultParty
 {
     private static int IDCounter = 0;
     
-    private final int id;
-    private final int size, target;
+    private final int id, size, target;
     private final Queue<OrdinaryThief> elements;
     
     /**
