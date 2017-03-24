@@ -123,7 +123,6 @@ public class MasterThief extends Thread
      */
     private void sendAssaultParty(AssaultParty party)
     {
-        //Wakes up the first thief of the party
         party.sendParty();
         
         this.setState(DECIDING_WHAT_TO_DO);

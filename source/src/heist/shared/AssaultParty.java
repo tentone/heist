@@ -76,7 +76,7 @@ public class AssaultParty
      */
     public synchronized void sendParty()
     {
-        
+        this.notify();
     }
     
     /**
@@ -99,7 +99,7 @@ public class AssaultParty
         this.wait();
         
         boolean reachedDestination = false;
-        
+
         //TODO <UPDATE POSITION>
         
         this.notify();
