@@ -1,6 +1,7 @@
 package heist.shared;
 
 import heist.queue.Queue;
+import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
 /**
@@ -57,16 +58,14 @@ public class CollectionSite
     /**
      * Function to allow the MasterThief to get the canvas bough by OrdnaryThieves
      * The master thief wakes up
+     * @param master MasterThief to collect the canvas and update internal RoomStatus.
      * @throws java.lang.InterruptedException Exception
-     * @return True if was able to get a canvas from a thief
      */
-    public synchronized boolean collectCanvas() throws InterruptedException
+    public synchronized void collectCanvas(MasterThief master) throws InterruptedException
     {
         OrdinaryThief thief = this.queue.pop();
-        boolean canvas = thief.handCanvas();
+        master.collectCanvasRoom(thief.getParty().getTarget(), thief.handCanvas());
         
         this.notify();
-        
-        return canvas;
     }
 }

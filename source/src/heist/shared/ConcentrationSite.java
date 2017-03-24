@@ -11,7 +11,6 @@ import heist.thief.OrdinaryThief;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
-    private final Queue<AssaultParty> parties;
     
     /**
      * ConcentrationSite constructor.
@@ -19,7 +18,6 @@ public class ConcentrationSite
     public ConcentrationSite()
     {   
         this.thieves = new Queue<>();
-        this.parties = new Queue<>();
     }
 
     /**
@@ -38,7 +36,7 @@ public class ConcentrationSite
      * @param target AssaultParty target room id.
      * @return AssaultParty created.
      */
-    public synchronized AssaultParty createNewParty(int partySize, int target)
+    public synchronized AssaultParty createNewParty(int target, int partySize)
     {
         AssaultParty party = new AssaultParty(partySize, target);
         
@@ -54,7 +52,7 @@ public class ConcentrationSite
     /**
      * OrdinaryThief enters the ConcentrationSite and waits until a AssaultParty is attributed to him and waken up.
      * @param thief OrdinaryThief to add.
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException Exception
      */
     public synchronized void enterAndWait(OrdinaryThief thief) throws InterruptedException
     {

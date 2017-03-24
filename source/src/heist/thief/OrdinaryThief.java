@@ -64,12 +64,12 @@ public class OrdinaryThief extends Thread
     }
 
     /**
-     * Check if the ordinary thief has a party.
-     * @return True if ordinary thief is in a party
+     * Get the OrdinaryThief party
+     * @return Party assigned to the OrdinaryThief.
      */
-    public boolean hasParty()
+    public AssaultParty getParty()
     {
-        return this.party != null;
+        return this.party;
     }
     
     /**

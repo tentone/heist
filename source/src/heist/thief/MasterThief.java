@@ -22,14 +22,19 @@ public class MasterThief extends Thread
     public static final int WAITING_FOR_GROUP_ARRIVAL = 4000;
     public static final int PRESENTING_THE_REPORT = 5000;
             
-    private int id, state;
-    private CollectionSite collection;
-    private ConcentrationSite concentration;
-    private Configuration configuration;
+    private final int id;
+    private int state;
     
+    private final CollectionSite collection;
+    private final ConcentrationSite concentration;
+    private final Configuration configuration;
+    
+    private RoomStatus[] rooms;
+        
     /**
      * MasterThief constructor
      * @param repository GeneralRepository
+     * @param configuration Simulation configuration
      */
     public MasterThief(GeneralRepository repository, Configuration configuration)
     {
@@ -67,6 +72,75 @@ public class MasterThief extends Thread
     }
     
     /**
+     * Checks if all rooms are clear.
+     * Uses internal RoomStatus objects inside MasterThief object.
+     * @return True if all rooms are clear.
+     */
+    private boolean allRoomsClear()
+    {
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(!this.rooms[i].clear)
+            {
+                return false;
+            }
+        }
+    
+        return true;
+    }
+    
+    /**
+     * Updated the RoomStatus after receiving a painting from that room.
+     * If an empty handed thief arrives marks the room as clean.
+     * @param id Room id.
+     * @param canvas If true a canvas was delivered.
+     */
+    public void collectCanvasRoom(int id, boolean canvas)
+    {
+        if(canvas)
+        {
+            this.rooms[id].addPainting();
+        }
+        else
+        {
+            this.rooms[id].setClear();
+        }
+    }
+    
+    /**
+     * Get next room to assign to a party.
+     * @return ID of next room to assign, -1 if all rooms have been assigned.
+     */
+    private int nextTargetRoom()
+    {
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(!this.rooms[i].assigned)
+            {
+                return this.rooms[i].id;
+            }
+        }
+        
+        return -1;
+    }
+    
+    /**
+     * Check how many paintings were stolen.
+     * @return Number of paintings.
+     */
+    private int totalPaintingsStolen()
+    {
+        int sum = 0;
+        
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            sum += this.rooms[i].paintings;
+        }
+        
+        return sum;
+    }
+    
+    /**
      * Change MasterThief state
      * @param state 
      */
@@ -93,7 +167,7 @@ public class MasterThief extends Thread
         {
             this.setState(PRESENTING_THE_REPORT);
         }
-        else if(this.concentration.hasEnoughToCreateParty(id))
+        else if(this.concentration.hasEnoughToCreateParty(this.configuration.partySize))
         {
             this.setState(ASSEMBLING_A_GROUP);
         }
@@ -109,9 +183,9 @@ public class MasterThief extends Thread
      */
     private AssaultParty prepareAssaultParty()
     {
-        int target = this.nextRoom();
-        AssaultParty party = this.concentration.createNewParty(target, configuration.partySize);
-        this.rooms[target].assign(party);
+        int target = this.nextTargetRoom();
+        AssaultParty party = this.concentration.createNewParty(target, this.configuration.partySize);
+        this.rooms[target].assignParty(party);
         
         return party;
     }
@@ -129,7 +203,8 @@ public class MasterThief extends Thread
     }
     
     /**
-     * Suspend the MasterThief activity until is awaken by another Thief.
+     * The MasterThief waits in the CollectionSite until is awaken by an incoming OrdinaryThief.
+     * @throws java.lang.InterruptedException Exception
      */
     private void takeARest() throws InterruptedException
     {
@@ -138,10 +213,12 @@ public class MasterThief extends Thread
     
     /**
      * Collect canvas from thieve waiting in the collection site.
+     * Add canvas to the correspondent RoomStatus, if empty handed mark the room as clean.
+     * @throws java.lang.InterruptedException Exception
      */
-    private void collectCanvas()
+    private void collectCanvas() throws InterruptedException
     {
-        //TODO <ADD CODE HERE>
+        this.collection.collectCanvas(this);
         
         this.setState(DECIDING_WHAT_TO_DO);
     }
@@ -205,13 +282,13 @@ public class MasterThief extends Thread
             this.distance = distance;
         }
         
-        public void assign(AssaultParty party)
+        public void assignParty(AssaultParty party)
         {
             this.party = party;
             this.assigned = true;
         }
         
-        public void markClear()
+        public void setClear()
         {
             this.clear = true;
         }
@@ -220,58 +297,5 @@ public class MasterThief extends Thread
         {
             this.paintings++;
         }
-    }
-    
-    private RoomStatus[] rooms;
-    
-    /**
-     * Checks if all rooms are clear.
-     * Uses internal RoomStatus objects inside MasterThief object.
-     * @return True if all rooms are clear.
-     */
-    private boolean allRoomsClear()
-    {
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            if(!this.rooms[i].clear)
-            {
-                return false;
-            }
-        }
-    
-        return true;
-    }
-    
-    /**
-     * Get next room to assign to a party.
-     * @return ID of next room to assign, -1 if all rooms have been assigned.
-     */
-    private int nextRoom()
-    {
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            if(!this.rooms[i].assigned)
-            {
-                return this.rooms[i].id;
-            }
-        }
-        
-        return -1;
-    }
-    
-    /**
-     * Check how many paintings were stolen.
-     * @return Number of paintings.
-     */
-    private int totalPaintingsStolen()
-    {
-        int sum = 0;
-        
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            sum += this.rooms[i].paintings;
-        }
-        
-        return sum;
     }
 }
