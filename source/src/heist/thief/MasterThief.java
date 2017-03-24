@@ -1,6 +1,8 @@
 package heist.thief;
 
+import heist.Configuration;
 import heist.GeneralRepository;
+import heist.shared.AssaultParty;
 import heist.shared.CollectionSite;
 import heist.shared.ConcentrationSite;
 import heist.shared.Room;
@@ -21,21 +23,22 @@ public class MasterThief extends Thread
     public static final int PRESENTING_THE_REPORT = 5000;
             
     private int id, state;
-    
     private CollectionSite collection;
     private ConcentrationSite concentration;
-    private RoomStatus[] rooms;
+    private Configuration configuration;
     
     /**
      * MasterThief constructor
      * @param repository GeneralRepository
      */
-    public MasterThief(GeneralRepository repository)
+    public MasterThief(GeneralRepository repository, Configuration configuration)
     {
         this.id = IDCounter++;
+        this.state = PLANNING_THE_HEIST;
+        
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
-        this.state = PLANNING_THE_HEIST;
+        this.configuration = configuration;
         
         Room[] museum = repository.getMuseum().getRooms();
         this.rooms = new RoomStatus[museum.length];
@@ -86,7 +89,7 @@ public class MasterThief extends Thread
      */
     private void appraiseSit()
     {
-        if(false) //TODO <CHECK IF ALL ROOMS HAVE BEN EMPTIED>
+        if(this.allRoomsClear())
         {
             this.setState(PRESENTING_THE_REPORT);
         }
@@ -102,19 +105,26 @@ public class MasterThief extends Thread
     
     /**
      * Assembly an assault party with thieves from the ConcentrationSite.
+     * @return AssaultParty assembled.
      */
-    private void prepareAssaultParty()
+    private AssaultParty prepareAssaultParty()
     {
-        //TODO <ADD CODE HERE>
+        int target = this.nextRoom();
+        AssaultParty party = this.concentration.createNewParty(target, configuration.partySize);
+        this.rooms[target].assign(party);
+        
+        return party;
     }
     
     /**
      * Send assault party with thieves from the party created.
      * Wakes up the first thief in the party. That thief will wake the other thieves.
+     * @param party Party to send.
      */
-    private void sendAssaultParty()
+    private void sendAssaultParty(AssaultParty party)
     {
-        //TODO <ADD CODE HERE>
+        //Wakes up the first thief of the party
+        party.sendParty();
         
         this.setState(DECIDING_WHAT_TO_DO);
     }
@@ -143,7 +153,7 @@ public class MasterThief extends Thread
      */
     private void sumUpResults()
     {
-        //TODO <ADD CODE HERE>
+        System.out.println(this.totalPaintingsStolen() + " paintings were stolen!");
     }
     
     @Override
@@ -166,8 +176,8 @@ public class MasterThief extends Thread
                 }
                 else if(this.state == ASSEMBLING_A_GROUP)
                 {
-                    this.prepareAssaultParty();
-                    this.sendAssaultParty();
+                    AssaultParty party = this.prepareAssaultParty();
+                    this.sendAssaultParty(party);
                 }
             }
             
@@ -185,14 +195,84 @@ public class MasterThief extends Thread
     
     private class RoomStatus
     {
-        final int distance, id;
-        int paintings = 0;
-        boolean clear = false;
+        public final int distance, id;
+        public int paintings = 0;
+        public boolean assigned = false, clear = false;
+        public AssaultParty party;
         
         public RoomStatus(int id, int distance)
         {
             this.id = id;
             this.distance = distance;
         }
+        
+        public void assign(AssaultParty party)
+        {
+            this.party = party;
+            this.assigned = true;
+        }
+        
+        public void markClear()
+        {
+            this.clear = true;
+        }
+        
+        public void addPainting()
+        {
+            this.paintings++;
+        }
+    }
+    
+    private RoomStatus[] rooms;
+    
+    /**
+     * Checks if all rooms are clear.
+     * Uses internal RoomStatus objects inside MasterThief object.
+     * @return True if all rooms are clear.
+     */
+    private boolean allRoomsClear()
+    {
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(!this.rooms[i].clear)
+            {
+                return false;
+            }
+        }
+    
+        return true;
+    }
+    
+    /**
+     * Get next room to assign to a party.
+     * @return ID of next room to assign, -1 if all rooms have been assigned.
+     */
+    private int nextRoom()
+    {
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(!this.rooms[i].assigned)
+            {
+                return this.rooms[i].id;
+            }
+        }
+        
+        return -1;
+    }
+    
+    /**
+     * Check how many paintings were stolen.
+     * @return Number of paintings.
+     */
+    private int totalPaintingsStolen()
+    {
+        int sum = 0;
+        
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            sum += this.rooms[i].paintings;
+        }
+        
+        return sum;
     }
 }

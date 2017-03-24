@@ -65,8 +65,18 @@ public class AssaultParty
     {
         if(!this.partyFull())
         {
+            thief.setParty(this);
             this.thieves.push(thief);
         }
+    }
+    
+    /**
+     * Called by the master thief to send the party to the museum.
+     * Wakes up the first thief that is waiting to crawlIn.
+     */
+    public synchronized void sendParty()
+    {
+        
     }
     
     /**
@@ -88,13 +98,13 @@ public class AssaultParty
     {
         this.wait();
         
-        boolean crawled = false;
+        boolean reachedDestination = false;
         
         //TODO <UPDATE POSITION>
         
         this.notify();
         
-        return crawled;
+        return reachedDestination;
     }
     
     /**

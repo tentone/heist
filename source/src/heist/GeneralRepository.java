@@ -40,7 +40,7 @@ public class GeneralRepository
         this.concentration = new ConcentrationSite();
         this.collection = new CollectionSite();
         
-        MasterThief master = new MasterThief(this);
+        MasterThief master = new MasterThief(this, this.configuration);
         master.start();
         
         for(int i = 0; i < this.configuration.numberThieves; i++)

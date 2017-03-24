@@ -24,12 +24,31 @@ public class ConcentrationSite
 
     /**
      * Check if there are enough OrdinaryThief to form a new AssaultParty.
-     * @param partySize Assault party size.
+     * @param partySize AssaultParty size.
      * @return True number of OrdinaryThief bigger or equal to SssaultParty size.
      */
     public synchronized boolean hasEnoughToCreateParty(int partySize)
     {
         return this.thieves.size() >= partySize;
+    }
+    
+    /**
+     * Cerate new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
+     * @param partySize AssaultParty size.
+     * @param target AssaultParty target room id.
+     * @return AssaultParty created.
+     */
+    public synchronized AssaultParty createNewParty(int partySize, int target)
+    {
+        AssaultParty party = new AssaultParty(partySize, target);
+        
+        for(int i = 0; i < partySize; i++)
+        {
+            party.addThief(this.thieves.pop());
+            this.notify();
+        }
+        
+        return party;
     }
     
     /**
@@ -40,7 +59,6 @@ public class ConcentrationSite
     public synchronized void enterAndWait(OrdinaryThief thief) throws InterruptedException
     {
         this.thieves.push(thief);
-        
         this.wait();
     }
     

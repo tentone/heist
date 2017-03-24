@@ -13,6 +13,7 @@ import heist.shared.ConcentrationSite;
  * Thieves attack in parties defined by the MasterThief and cannot move their comrades behind.
  * After taking a step the thief wakes up the last thief in the Party queue to make a step.
  */
+@SuppressWarnings("empty-statement")
 public class OrdinaryThief extends Thread
 {
     private static int IDCounter = 0;
@@ -22,9 +23,9 @@ public class OrdinaryThief extends Thread
     public static final int AT_A_ROOM = 3000;
     public static final int CRAWLING_OUTWARDS = 4000;
     
-    private ConcentrationSite concentration;
-    private CollectionSite collection;
-    private Museum museum;
+    private final ConcentrationSite concentration;
+    private final CollectionSite collection;
+    private final Museum museum;
     
     private AssaultParty party;
     
@@ -99,6 +100,15 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Get thief maximum displacement.
+     * @return Thief maximum displacement.
+     */
+    public int getDisplacement()
+    {
+        return this.maximumDisplacement;
+    }
+    
+    /**
      * Function called by the MasterThief to get the canvas from the OrdinaryThief directly.
      * @return True if there is a canvas to hand, false otherwise.
      */
@@ -120,13 +130,14 @@ public class OrdinaryThief extends Thread
     
     /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
+     * @throws java.lang.InterruptedException Exception     
      */
-    private void prepareExecution()
+    private void prepareExecution() throws InterruptedException
     {
-        //TODO <GET ASSAULT PARTY>
+        //Enter the concentration site and wait until a party is assigned
+        this.concentration.enterAndWait(this);
         
-        //TODO <GET OUT OF THE CONCENTRATION SITE>
-        
+        //Reset position and change state
         this.position = 0;
         this.setState(CRAWLING_INWARDS);
     }
@@ -182,7 +193,6 @@ public class OrdinaryThief extends Thread
      */
     private boolean amINeeded()
     {
-        //TODO <CHECK IF THE THIEF IS STILL NEEDED>
         return true;
     }
     
@@ -210,10 +220,9 @@ public class OrdinaryThief extends Thread
                 this.handACanvas();
             }
         }
-        catch(Exception e)
+        catch(InterruptedException e)
         {
-            System.out.println("Thief " + this.id + " error");
-            e.printStackTrace();
+            System.out.println("Thief " + this.id + " error (" + e + ")");
         }
         
         System.out.println("Thief " + this.id + " terminated");
