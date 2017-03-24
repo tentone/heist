@@ -126,6 +126,8 @@ public class OrdinaryThief extends Thread
     private void setState(int state)
     {
         this.state = state;
+        
+        System.out.println("Thief " + this.id + " change state " + this.state);
     }
     
     /**
@@ -148,6 +150,8 @@ public class OrdinaryThief extends Thread
      */
     private void crawlIn() throws InterruptedException
     {
+        System.out.println("Thief " + this.id + " crawlIn");
+        
         while(this.party.crawlIn(this));
     }
     
@@ -157,6 +161,8 @@ public class OrdinaryThief extends Thread
     private void rollACanvas()
     {
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
+        
+        System.out.println("Thief " + this.id + " rollACanvas " + this.hasCanvas);
         
         this.setState(AT_A_ROOM);
     }
@@ -193,6 +199,7 @@ public class OrdinaryThief extends Thread
      */
     private boolean amINeeded()
     {
+        System.out.println("Thief " + this.id + " amINeeded");
         return true;
     }
     

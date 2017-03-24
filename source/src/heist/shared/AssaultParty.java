@@ -98,13 +98,13 @@ public class AssaultParty
     {
         this.wait();
         
-        boolean reachedDestination = false;
+        boolean continueCrawling = true;
 
         //TODO <UPDATE POSITION>
         
         this.notify();
         
-        return reachedDestination;
+        return continueCrawling;
     }
     
     /**
@@ -149,12 +149,12 @@ public class AssaultParty
     {
         this.wait();
         
-        boolean crawled = false;
+        boolean continueCrawling = true;
         
         //TODO <UPDATE POSITION>
         
         this.notify();
         
-        return crawled;
+        return continueCrawling;
     }
 }

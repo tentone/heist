@@ -147,6 +147,8 @@ public class MasterThief extends Thread
     private void setState(int state)
     {
         this.state = state;
+
+        System.out.println("Master " + this.id + " change state " + this.state);
     }
     
     /**
@@ -175,6 +177,8 @@ public class MasterThief extends Thread
         {
             this.setState(WAITING_FOR_GROUP_ARRIVAL);
         }
+        
+        System.out.println("Master " + this.id + " appraiseSit");
     }
     
     /**
@@ -186,6 +190,8 @@ public class MasterThief extends Thread
         int target = this.nextTargetRoom();
         AssaultParty party = this.concentration.createNewParty(target, this.configuration.partySize);
         this.rooms[target].assignParty(party);
+        
+        System.out.println("Master " + this.id + " prepareAssaultParty " + party.getID());
         
         return party;
     }
@@ -200,6 +206,8 @@ public class MasterThief extends Thread
         party.sendParty();
         
         this.setState(DECIDING_WHAT_TO_DO);
+        
+        System.out.println("Master " + this.id + " sendAssaultParty " + party.getID());
     }
     
     /**
@@ -208,6 +216,8 @@ public class MasterThief extends Thread
      */
     private void takeARest() throws InterruptedException
     {
+        System.out.println("Master " + this.id + " takeARest");
+        
         this.collection.takeARest();
     }
     
@@ -235,7 +245,7 @@ public class MasterThief extends Thread
     @Override
     public void run()
     {
-        System.out.println("MasterThief " + this.id + " started");
+        System.out.println("Master " + this.id + " started");
         
         try
         {
@@ -261,12 +271,12 @@ public class MasterThief extends Thread
         }
         catch(Exception e)
         {
-            System.out.println("MasterThief " + this.id + " error");
+            System.out.println("Master " + this.id + " error");
             e.printStackTrace();
         }
 
         
-        System.out.println("MasterThief " + this.id + " terminated");
+        System.out.println("Master " + this.id + " terminated");
     }
     
     private class RoomStatus
