@@ -99,6 +99,17 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Function called by the MasterThief to get the canvas from the OrdinaryThief directly.
+     * @return True if there is a canvas to hand, false otherwise.
+     */
+    public boolean handCanvas()
+    {
+        boolean canvas = this.hasCanvas;
+        this.hasCanvas = false;
+        return canvas;
+    }
+    
+    /**
      * Set thief state
      * @param state
      */
@@ -122,11 +133,11 @@ public class OrdinaryThief extends Thread
     
     /**
      * Updates thief position inside the museum and set thief back to sleep, until another thief wakes it up.
+     * @throws java.lang.InterruptedException Exception
      */
-    private void crawlIn()
+    private void crawlIn() throws InterruptedException
     {
-        
-        //TODO <ADD CODE HERE>
+        while(this.party.crawlIn(this));
     }
     
     /**
@@ -151,10 +162,11 @@ public class OrdinaryThief extends Thread
     
     /**
      * Update position crawling out of the museum.
+     * @throws java.lang.InterruptedException Exception
      */
-    private void crawlOut()
+    private void crawlOut() throws InterruptedException
     {
-        //TODO <ADD CODE HERE>
+        while(this.party.crawlOut(this));
     }
     
     /**
@@ -163,7 +175,6 @@ public class OrdinaryThief extends Thread
     private void handACanvas() throws InterruptedException
     {
         this.collection.handACanvas(this);
-        //TODO <HAND THE CANVAS TO THE MASTER THIEF, ENTER THE COLLECTION SITE AND SLEEP>
     }
     
     /**

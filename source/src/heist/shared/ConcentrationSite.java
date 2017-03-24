@@ -21,20 +21,11 @@ public class ConcentrationSite
         this.thieves = new Queue<>();
         this.parties = new Queue<>();
     }
-    
-    /**
-     * Add thief to the concentration site.
-     * @param thief Thief to add.
-     */
-    public synchronized void addThief(OrdinaryThief thief)
-    {
-        this.thieves.push(thief);
-    }
 
     /**
-     * Check if there are enough thieves to form a new assault party.
+     * Check if there are enough OrdinaryThief to form a new AssaultParty.
      * @param partySize Assault party size.
-     * @return True number of thieves bigger or equal to assault party size.
+     * @return True number of OrdinaryThief bigger or equal to SssaultParty size.
      */
     public synchronized boolean hasEnoughToCreateParty(int partySize)
     {
@@ -42,13 +33,15 @@ public class ConcentrationSite
     }
     
     /**
-     * OrdinaryThief waits until a party is attributed to him.
-     * @return AssaultParty attributed to that ordinary thief.
+     * OrdinaryThief enters the ConcentrationSite and waits until a AssaultParty is attributed to him and waken up.
+     * @param thief OrdinaryThief to add.
+     * @throws java.lang.InterruptedException
      */
-    public synchronized AssaultParty waitForPary()
+    public synchronized void enterAndWait(OrdinaryThief thief) throws InterruptedException
     {
-        //TODO <ADD CODE HERE>
-        return null;
+        this.thieves.push(thief);
+        
+        this.wait();
     }
     
     /**

@@ -30,7 +30,7 @@ public class CollectionSite
     
     /**
      * Function used to make MasterThief wait until a OrdinaryThief arrives and wakes him up.
-     * @throws InterruptedException 
+     * @throws InterruptedException Exception
      */
     public synchronized void takeARest() throws InterruptedException
     {
@@ -44,11 +44,11 @@ public class CollectionSite
      * Add thief to the collection site and wake up the master thief.
      * The thief enters the queue wakes up the master thief and waits until is waken up.
      * @param thief Thief to be added.
+     * @throws java.lang.InterruptedException Exception
      */
     public synchronized void handACanvas(OrdinaryThief thief) throws InterruptedException
     {
         this.queue.push(thief);
-        
         this.notify();
         
         this.wait();
@@ -57,18 +57,16 @@ public class CollectionSite
     /**
      * Function to allow the MasterThief to get the canvas bough by OrdnaryThieves
      * The master thief wakes up
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException Exception
      * @return True if was able to get a canvas from a thief
      */
     public synchronized boolean collectCanvas() throws InterruptedException
     {
-        if(this.hasThief())
-        {
-            OrdinaryThief thief = this.queue.pop();
-            
-            this.notify();
-        }
+        OrdinaryThief thief = this.queue.pop();
+        boolean canvas = thief.handCanvas();
         
-        return false;
+        this.notify();
+        
+        return canvas;
     }
 }

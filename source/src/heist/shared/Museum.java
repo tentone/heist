@@ -1,6 +1,5 @@
 package heist.shared;
 
-import heist.shared.Room;
 import heist.Configuration;
 
 /**
@@ -88,15 +87,5 @@ public class Museum
     public synchronized boolean rollACanvas(int id)
     {
         return this.getRoom(id).getPaiting();
-    }
-    
-    /**
-     * Check if a room still has a painting from its room id.
-     * @param id Room id.
-     * @return True if the room still has some painting inside.
-     */
-    public synchronized boolean hasPainting(int id)
-    {
-        return this.getRoom(id).hasPainting();
     }
 }

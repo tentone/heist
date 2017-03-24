@@ -15,7 +15,7 @@ public class AssaultParty
     private static int IDCounter = 0;
     
     private final int id, size, target;
-    private final Queue<OrdinaryThief> elements;
+    private final Queue<OrdinaryThief> thieves;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
@@ -25,7 +25,7 @@ public class AssaultParty
     public AssaultParty(int size, int target)
     {
         this.id = IDCounter++;
-        this.elements = new Queue<>();
+        this.thieves = new Queue<>();
         this.target = target;
         this.size = size;
     }
@@ -65,7 +65,7 @@ public class AssaultParty
     {
         if(!this.partyFull())
         {
-            this.elements.push(thief);
+            this.thieves.push(thief);
         }
     }
     
@@ -75,13 +75,32 @@ public class AssaultParty
      */
     public synchronized boolean partyFull()
     {
-        return this.elements.size() == this.size;
+        return this.thieves.size() == this.size;
+    }
+    
+    /**
+     * Method used to update the position the thieves
+     * @param thief Thief to update position of
+     * @throws java.lang.InterruptedException Exception
+     * @return True if was able to move the thief, false if thief arrived at the room
+     */
+    public synchronized boolean crawlIn(OrdinaryThief thief) throws InterruptedException
+    {
+        this.wait();
+        
+        boolean crawled = false;
+        
+        //TODO <UPDATE POSITION>
+        
+        this.notify();
+        
+        return crawled;
     }
     
     /**
      * Reverse assault party direction. Waits for all party members to arrive at the room and pick up a canvas.
      * The thieves wait for the last one to arrive. The last thieve to arrive wakes everybody.
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException Exception
      */
     public synchronized void reverseDirection() throws InterruptedException
     {
@@ -98,7 +117,7 @@ public class AssaultParty
      */
     private synchronized boolean allThiefsAtARoom()
     {
-        Iterator<OrdinaryThief> it = elements.iterator();
+        Iterator<OrdinaryThief> it = thieves.iterator();
         while(it.hasNext())
         {
             if(it.next().state() != OrdinaryThief.AT_A_ROOM)
@@ -108,5 +127,24 @@ public class AssaultParty
         }
         
         return true;
+    }
+    
+    /**
+     * Method used to update the position the thieves
+     * @param thief Thief to update position of
+     * @throws java.lang.InterruptedException Exception
+     * @return True if was able to move the thief, false if thief arrived at the room
+     */
+    public synchronized boolean crawlOut(OrdinaryThief thief) throws InterruptedException
+    {
+        this.wait();
+        
+        boolean crawled = false;
+        
+        //TODO <UPDATE POSITION>
+        
+        this.notify();
+        
+        return crawled;
     }
 }

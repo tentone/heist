@@ -3,6 +3,7 @@ package heist.thief;
 import heist.GeneralRepository;
 import heist.shared.CollectionSite;
 import heist.shared.ConcentrationSite;
+import heist.shared.Room;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
@@ -23,6 +24,7 @@ public class MasterThief extends Thread
     
     private CollectionSite collection;
     private ConcentrationSite concentration;
+    private RoomStatus[] rooms;
     
     /**
      * MasterThief constructor
@@ -34,6 +36,13 @@ public class MasterThief extends Thread
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
         this.state = PLANNING_THE_HEIST;
+        
+        Room[] museum = repository.getMuseum().getRooms();
+        this.rooms = new RoomStatus[museum.length];
+        for(int i = 0; i < museum.length; i++)
+        {
+            this.rooms[i] = new RoomStatus(museum[i].getID(), museum[i].getDistance());
+        }
     }
     
     /**
@@ -172,5 +181,18 @@ public class MasterThief extends Thread
 
         
         System.out.println("MasterThief " + this.id + " terminated");
+    }
+    
+    private class RoomStatus
+    {
+        final int distance, id;
+        int paintings = 0;
+        boolean clear = false;
+        
+        public RoomStatus(int id, int distance)
+        {
+            this.id = id;
+            this.distance = distance;
+        }
     }
 }
