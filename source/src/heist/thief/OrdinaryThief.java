@@ -5,8 +5,8 @@ import heist.Configuration;
 import heist.Console;
 import heist.GeneralRepository;
 import heist.shared.Museum;
-import heist.shared.site.CollectionSite;
-import heist.shared.site.ConcentrationSite;
+import heist.shared.CollectionSite;
+import heist.shared.ConcentrationSite;
 
 /**
  * OrdinaryThief represents a thief active entity.

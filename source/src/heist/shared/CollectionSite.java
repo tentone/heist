@@ -1,4 +1,4 @@
-package heist.shared.site;
+package heist.shared;
 
 import heist.queue.Queue;
 import heist.thief.MasterThief;

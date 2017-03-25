@@ -2,8 +2,8 @@ package heist;
 
 import heist.log.Logger;
 import heist.shared.Museum;
-import heist.shared.site.CollectionSite;
-import heist.shared.site.ConcentrationSite;
+import heist.shared.CollectionSite;
+import heist.shared.ConcentrationSite;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
