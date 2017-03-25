@@ -3,8 +3,8 @@ package heist.thief;
 import heist.Configuration;
 import heist.GeneralRepository;
 import heist.shared.AssaultParty;
-import heist.shared.CollectionSite;
-import heist.shared.ConcentrationSite;
+import heist.shared.site.CollectionSite;
+import heist.shared.site.ConcentrationSite;
 import heist.shared.Museum;
 import heist.shared.Room;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ public class MasterThief extends Thread
     private final CollectionSite collection;
     private final ConcentrationSite concentration;
     private final Museum museum;
-    private final Configuration configuration;
+    private final Configuration config;
     
     private int state;
     private RoomStatus[] rooms;
@@ -42,7 +42,7 @@ public class MasterThief extends Thread
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
         this.museum = repository.getMuseum();
-        this.configuration = configuration;
+        this.config = configuration;
         
         Room[] museum = this.museum.getRooms();
         this.rooms = new RoomStatus[museum.length];
@@ -95,23 +95,6 @@ public class MasterThief extends Thread
         {
             this.rooms[id].setClear();
         }
-    }
-    
-    /**
-     * Check if some room has been attributed to a party but is not yet cleared out.
-     * @return True if there are thieves working.
-     */
-    private boolean thievesWorking()
-    {   
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            if(this.rooms[i].isAssignedButNotClear())
-            {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
     /**
@@ -172,20 +155,20 @@ public class MasterThief extends Thread
      */
     private void appraiseSit()
     {
+        System.out.println("Master appraiseSit");
+        
         if(this.allRoomsClear())
         {
             this.setState(PRESENTING_THE_REPORT);
         }
-        else if(this.thievesWorking())
-        {
-            this.setState(WAITING_FOR_GROUP_ARRIVAL);
-        }
-        else
+        else if(this.concentration.hasEnoughToCreateParty(this.config.partySize))
         {
             this.setState(ASSEMBLING_A_GROUP);
         }
-        
-        System.out.println("Master appraiseSit");
+        else
+        {
+            this.setState(WAITING_FOR_GROUP_ARRIVAL);
+        }
     }
     
     /**
@@ -196,9 +179,10 @@ public class MasterThief extends Thread
     private AssaultParty prepareAssaultParty() throws InterruptedException
     {
         RoomStatus target = this.nextTargetRoom();
-        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, target.id, target.distance, this.configuration.maxThiefDistance);
-        target.assignParty(party);
         
+        AssaultParty party = this.concentration.createNewParty(this.config.partySize, target.id, target.distance, this.config.maxThiefDistance);
+        target.assignParty(party);
+
         String members = "";
         Iterator<OrdinaryThief> it = party.getThieves();
         while(it.hasNext())
@@ -209,7 +193,6 @@ public class MasterThief extends Thread
                 members += ", ";
             }
         }
-        
         System.out.println("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
         
         return party;
@@ -223,10 +206,9 @@ public class MasterThief extends Thread
      */
     private void sendAssaultParty(AssaultParty party) throws InterruptedException
     {
-        party.sendParty();
-        
         System.out.println("Master sendAssaultParty " + party.getID());
         
+        party.sendParty();
         this.setState(DECIDING_WHAT_TO_DO);
     }
     
@@ -248,6 +230,8 @@ public class MasterThief extends Thread
      */
     private void collectCanvas() throws InterruptedException
     {
+        System.out.println("Master collectCanvas");
+        
         this.collection.collectCanvas(this);
         
         this.setState(DECIDING_WHAT_TO_DO);
@@ -260,6 +244,7 @@ public class MasterThief extends Thread
     private void sumUpResults()
     {
         this.concentration.allRoomsClear();
+        
         System.out.println(this.totalPaintingsStolen() + " paintings were stolen!");
     }
     
@@ -283,8 +268,7 @@ public class MasterThief extends Thread
                 }
                 else if(this.state == ASSEMBLING_A_GROUP)
                 {
-                    AssaultParty party = this.prepareAssaultParty();
-                    this.sendAssaultParty(party);
+                    this.sendAssaultParty(this.prepareAssaultParty());
                 }
             }
             
@@ -300,7 +284,7 @@ public class MasterThief extends Thread
         System.out.println("Master terminated");
     }
     
-    private class RoomStatus
+    class RoomStatus
     {
         private final int distance, id;
         private int paintings = 0;

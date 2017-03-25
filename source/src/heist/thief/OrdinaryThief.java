@@ -4,8 +4,8 @@ import heist.shared.AssaultParty;
 import heist.Configuration;
 import heist.GeneralRepository;
 import heist.shared.Museum;
-import heist.shared.CollectionSite;
-import heist.shared.ConcentrationSite;
+import heist.shared.site.CollectionSite;
+import heist.shared.site.ConcentrationSite;
 
 /**
  * OrdinaryThief represents a thief active entity.
@@ -138,8 +138,8 @@ public class OrdinaryThief extends Thread
     }
     
     /**
-     * Set thief state
-     * @param state
+     * Change OrdinaryThief state.
+     * @param state New state.
      */
     private void setState(int state)
     {
@@ -149,15 +149,28 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Check if the thief is still needed.
+     */
+    private boolean amINeeded()
+    {
+        System.out.println("Thief " + this.id + " amINeeded");
+        
+        this.position = 0;
+        this.hasCanvas = false;
+        
+        return this.concentration.amINeeded();
+    }
+    
+    /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
      * Enter the concentration site and wait until a party is assigned.
      * @throws java.lang.InterruptedException Exception     
      */
     private void prepareExecution() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " entered the ConcentrationSite");
+        System.out.println("Thief " + this.id + " entered the concentration site");
         
-        this.concentration.enterAndWait(this);
+        this.concentration.prepareExcursion(this);
         
         System.out.println("Thief " + this.id + " party assigned " + this.party.getID());
     }
@@ -182,6 +195,7 @@ public class OrdinaryThief extends Thread
      */
     private void rollACanvas()
     {
+        this.setState(OrdinaryThief.AT_A_ROOM);
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
         System.out.println("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
@@ -191,8 +205,7 @@ public class OrdinaryThief extends Thread
      * Change state to crawling outwards.
      */
     private void reverseDirection() throws InterruptedException
-    {
-        this.setState(OrdinaryThief.AT_A_ROOM);        
+    {      
         this.party.reverseDirection();
     }
     
@@ -223,20 +236,7 @@ public class OrdinaryThief extends Thread
         
         this.collection.handACanvas(this);
         
-        return true;
-    }
-    
-    /**
-     * Check if the thief is still needed (check if every room has been emptied)
-     */
-    private boolean amINeeded()
-    {
-        System.out.println("Thief " + this.id + " amINeeded");
-        
-        this.position = 0;
-        this.hasCanvas = false;
-        
-        return this.concentration.amINeeded();
+        return false;
     }
     
     /**
@@ -252,17 +252,15 @@ public class OrdinaryThief extends Thread
             while(this.amINeeded())
             {
                 this.prepareExecution();
+
+                this.crawlIn();
+
+                this.rollACanvas();
+                this.reverseDirection();
+
+                this.crawlOut();
                 
-                do
-                {
-                    this.crawlIn();
-
-                    this.rollACanvas();
-                    this.reverseDirection();
-
-                    this.crawlOut();
-                }
-                while(this.handACanvas());
+                this.handACanvas();
             }
         }
         catch(InterruptedException e)

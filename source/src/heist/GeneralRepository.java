@@ -2,8 +2,8 @@ package heist;
 
 import heist.log.Logger;
 import heist.shared.Museum;
-import heist.shared.CollectionSite;
-import heist.shared.ConcentrationSite;
+import heist.shared.site.CollectionSite;
+import heist.shared.site.ConcentrationSite;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
@@ -37,7 +37,7 @@ public class GeneralRepository
     /**
      * Initialize simulation elements and starts the simulation, calls the start method in all thieves
      */
-    public void start() throws InterruptedException
+    public void start()
     {
         this.museum = new Museum(this.configuration);
 

@@ -1,6 +1,7 @@
-package heist.shared;
+package heist.shared.site;
 
 import heist.queue.Queue;
+import heist.shared.AssaultParty;
 import heist.thief.OrdinaryThief;
 
 /**
@@ -21,7 +22,16 @@ public class ConcentrationSite
         this.thieves = new Queue<>();
         this.allRoomsClear = false;
     }
-
+    
+    /**
+     * Check if all rooms are clear to see if an OrdinaryThief can terminate.
+     * @return True if there are still rooms waiting to be cleared
+     */
+    public synchronized boolean amINeeded()
+    {
+        return !this.allRoomsClear;
+    }
+    
     /**
      * Check if there are enough OrdinaryThief to form a new AssaultParty.
      * @param partySize AssaultParty size.
@@ -37,19 +47,18 @@ public class ConcentrationSite
      * @param thief OrdinaryThief to add.
      * @throws java.lang.InterruptedException Exception
      */
-    public synchronized void enterAndWait(OrdinaryThief thief) throws InterruptedException
+    public synchronized void prepareExcursion(OrdinaryThief thief) throws InterruptedException
     {
         this.thieves.push(thief);
         
         while(!thief.hasParty())
         {
-            this.notify();
             this.wait();
         }
     }
     
     /**
-     * Cerate new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
+     * Create new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
      * @param size AssaultParty size.
      * @param target Target room id.
      * @param targetDistance Target room distance.
@@ -59,11 +68,6 @@ public class ConcentrationSite
      */
     public synchronized AssaultParty createNewParty(int size, int target, int targetDistance, int maxDistance) throws InterruptedException
     {
-        while(!this.hasEnoughToCreateParty(size))
-        {
-            this.wait();
-        }
-        
         AssaultParty party = new AssaultParty(size, target, targetDistance, maxDistance);
         
         for(int i = 0; i < size; i++)
@@ -73,15 +77,6 @@ public class ConcentrationSite
         }
         
         return party;
-    }
-    
-    /**
-     * Check if all rooms are clear to see if an OrdinaryThief can terminate.
-     * @return True if there are still rooms waiting to be cleared
-     */
-    public synchronized boolean amINeeded()
-    {
-        return !this.allRoomsClear;
     }
     
     /**
