@@ -2,6 +2,7 @@ package heist.thief;
 
 import heist.shared.AssaultParty;
 import heist.Configuration;
+import heist.Console;
 import heist.GeneralRepository;
 import heist.shared.Museum;
 import heist.shared.site.CollectionSite;
@@ -71,15 +72,6 @@ public class OrdinaryThief extends Thread
     {
         return this.party;
     }
-
-    /**
-     * Check if thief has assault party.
-     * @return True if thief has an AssaultParty.
-     */
-    public boolean hasParty()
-    {
-        return this.party != null;
-    }
     
     /**
      * Set assault party.
@@ -145,18 +137,16 @@ public class OrdinaryThief extends Thread
     {
         this.state = state;
         
-        System.out.println("Thief " + this.id + " change state " + this.state);
+        Console.log("Thief " + this.id + " change state " + this.state);
     }
     
     /**
      * Check if the thief is still needed.
+     * @throws java.lang.InterruptedException Exception   
      */
-    private boolean amINeeded()
+    private boolean amINeeded() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " amINeeded");
-        
-        this.position = 0;
-        this.hasCanvas = false;
+        Console.log("Thief " + this.id + " amINeeded");
         
         return this.concentration.amINeeded();
     }
@@ -168,11 +158,11 @@ public class OrdinaryThief extends Thread
      */
     private void prepareExecution() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " entered the concentration site");
+        Console.log("Thief " + this.id + " entered the concentration site");
         
         this.concentration.prepareExcursion(this);
         
-        System.out.println("Thief " + this.id + " party assigned " + this.party.getID());
+        Console.log("Thief " + this.id + " party assigned " + this.party.getID());
     }
     
     /**
@@ -184,10 +174,10 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_INWARDS);  
         while(this.party.crawlIn(this))
         {
-            System.out.println("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
+            Console.log("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
         }
         
-        System.out.println("Thief " + this.id + " reached room (Position:" + this.position + ")");
+        Console.log("Thief " + this.id + " reached room (Position:" + this.position + ")");
     }
     
     /**
@@ -198,7 +188,7 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.AT_A_ROOM);
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
-        System.out.println("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
+        Console.log("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
     }
     
     /**
@@ -207,6 +197,7 @@ public class OrdinaryThief extends Thread
     private void reverseDirection() throws InterruptedException
     {      
         this.party.reverseDirection();
+        Console.log("Thief " + this.id + " reverse");
     }
     
     /**
@@ -218,25 +209,22 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         while(this.party.crawlOut(this))
         {
-            System.out.println("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
+            Console.log("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
         }
         
-        System.out.println("Thief " + this.id + " reached outside (Position:" + this.position + ")");
+        Console.log("Thief " + this.id + " reached outside (Position:" + this.position + ")");
     }
     
     /**
      * Hand the canvas (if there is one) to the master thief. Waits inside handACanvas until the whole Party has returned.
-     * @return True if there are still paintings to stole in the targeted room, false otherwise.
      */
-    private boolean handACanvas() throws InterruptedException
+    private void handACanvas() throws InterruptedException
     {
         this.setState(OrdinaryThief.OUTSIDE);
         
-        System.out.println("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
+        Console.log("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
         
         this.collection.handACanvas(this);
-        
-        return false;
     }
     
     /**
@@ -245,7 +233,7 @@ public class OrdinaryThief extends Thread
     @Override
     public void run()
     {
-        System.out.println("Thief " + this.id + " started");
+        Console.log("Thief " + this.id + " started");
         
         try
         {
@@ -265,10 +253,10 @@ public class OrdinaryThief extends Thread
         }
         catch(InterruptedException e)
         {
-            System.out.println("Thief " + this.id + " error");
+            Console.log("Thief " + this.id + " error");
             e.printStackTrace();
         }
         
-        System.out.println("Thief " + this.id + " terminated");
+        Console.log("Thief " + this.id + " terminated");
     }
 }

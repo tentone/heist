@@ -31,7 +31,18 @@ public class GeneralRepository
     {
         this.logger = new Logger(this);
         this.configuration = configuration;
+        
+        this.museum = new Museum(this.configuration);
+        this.concentration = new ConcentrationSite();
+        this.collection = new CollectionSite();
+        
         this.thieves = new OrdinaryThief[configuration.numberThieves];
+        for(int i = 0; i < this.thieves.length; i++)
+        {
+            this.thieves[i] = new OrdinaryThief(this, this.configuration);
+        }
+        
+        this.master = new MasterThief(this, this.configuration);
     }
     
     /**
@@ -39,18 +50,11 @@ public class GeneralRepository
      */
     public void start()
     {
-        this.museum = new Museum(this.configuration);
-
-        this.concentration = new ConcentrationSite();
-        this.collection = new CollectionSite();
-        
         for(int i = 0; i < this.thieves.length; i++)
         {
-            this.thieves[i] = new OrdinaryThief(this, this.configuration);
             this.thieves[i].start();
         }
-        
-        this.master = new MasterThief(this, this.configuration);
+
         this.master.start();
     }
     

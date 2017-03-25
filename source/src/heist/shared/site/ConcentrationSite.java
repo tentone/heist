@@ -12,7 +12,7 @@ import heist.thief.OrdinaryThief;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
-    private boolean allRoomsClear;
+    private boolean roomsClear;
     
     /**
      * ConcentrationSite constructor.
@@ -20,16 +20,7 @@ public class ConcentrationSite
     public ConcentrationSite()
     {   
         this.thieves = new Queue<>();
-        this.allRoomsClear = false;
-    }
-    
-    /**
-     * Check if all rooms are clear to see if an OrdinaryThief can terminate.
-     * @return True if there are still rooms waiting to be cleared
-     */
-    public synchronized boolean amINeeded()
-    {
-        return !this.allRoomsClear;
+        this.roomsClear = false;
     }
     
     /**
@@ -43,6 +34,21 @@ public class ConcentrationSite
     }
     
     /**
+     * Check if the OrdinaryThief is still needed or if he can be terminated.
+     * @throws java.lang.InterruptedException Exception
+     * @return True if the OrdinaryThief is still needed
+     */
+    public synchronized boolean amINeeded() throws InterruptedException
+    {
+        if(this.roomsClear)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
      * OrdinaryThief enters the ConcentrationSite and waits until a AssaultParty is attributed to him and waken up.
      * @param thief OrdinaryThief to add.
      * @throws java.lang.InterruptedException Exception
@@ -50,11 +56,8 @@ public class ConcentrationSite
     public synchronized void prepareExcursion(OrdinaryThief thief) throws InterruptedException
     {
         this.thieves.push(thief);
-        
-        while(!thief.hasParty())
-        {
-            this.wait();
-        }
+
+        this.wait();
     }
     
     /**
@@ -80,10 +83,11 @@ public class ConcentrationSite
     }
     
     /**
-     * Called by the MasterThief to terminate the heist.
+     * Called by the MasterThief to indicate that the heist is over.
      */
-    public synchronized void allRoomsClear()
+    public synchronized void sumUpResults()
     {
-        this.allRoomsClear = true;
+        this.roomsClear = true;
+        this.notifyAll();
     }
 }

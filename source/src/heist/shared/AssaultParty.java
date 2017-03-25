@@ -16,31 +16,35 @@ public class AssaultParty
     
     private static int WAITING = 1000;
     private static int CRAWLING = 2000;
-        
-    private final int id, size;
-    private final Queue<OrdinaryThief> thieves, crawling;
-    private int state = AssaultParty.WAITING;
-    private int target, targetDistance, maxDistance;
+    
+    private final int id, partySize, maxDistance;
+    private final Queue<OrdinaryThief> thieves;
+    private final Queue<OrdinaryThief> crawling;
+    private int state;
+    
+    private int targetID, targetDistance;
     private int waitingToReverse;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
-     * @param size Assault party size.
-     * @param target Target room id.
+     * @param partySize Assault party size.
+     * @param targetID Target room id.
      * @param targetDistance Target room distance.
      * @param maxDistance Maximum distance between thieves.
      */
-    public AssaultParty(int size, int target, int targetDistance, int maxDistance)
+    public AssaultParty(int partySize, int targetID, int targetDistance, int maxDistance)
     {
         this.id = IDCounter++;
         this.thieves = new Queue<>();
         this.crawling = new Queue<>();
-        
-        this.target = target;
+
+        this.targetID = targetID;
         this.targetDistance = targetDistance;
-        this.size = size;
+        
+        this.partySize = partySize;
         this.maxDistance = maxDistance;
         
+        this.state = AssaultParty.WAITING;
         this.waitingToReverse = 0;
     }
     
@@ -59,7 +63,7 @@ public class AssaultParty
      */
     public synchronized int getTarget()
     {
-        return this.target;
+        return this.targetID;
     }
     
     /**
@@ -86,7 +90,7 @@ public class AssaultParty
      */
     public synchronized int getSize()
     {
-        return this.size;
+        return this.partySize;
     }
     
     /**
@@ -109,7 +113,7 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        this.state = CRAWLING;
+        this.state = AssaultParty.CRAWLING;
         this.notify();
     }
     
@@ -119,7 +123,7 @@ public class AssaultParty
      */
     public synchronized boolean partyFull()
     {
-        return this.thieves.size() == this.size;
+        return this.thieves.size() == this.partySize;
     }
     
     /**
@@ -137,15 +141,21 @@ public class AssaultParty
             this.wait();
         }
 
-        boolean continueCrawling = true;
         int position = thief.getPosition() + thief.getDisplacement();
         
-        //TODO <LIMIT DISTANCE BETWEEN THIEVES>    
+        //TODO <LIMIT DISTANCE BETWEEN THIEVES>
+        /*Iterator<OrdinaryThief> it = this.thieves.iterator();
+        while(it.hasNext())
+        {
+            if()
+            {
+                
+            }
+        }*/
         
         if(position > this.targetDistance)
         {
             position = this.targetDistance;
-            continueCrawling = false;
         }
         else
         {
@@ -160,7 +170,7 @@ public class AssaultParty
         this.crawling.pop();
         this.notify();
         
-        return continueCrawling;
+        return position != this.targetDistance;
     }
     
     /**
@@ -171,13 +181,20 @@ public class AssaultParty
     public synchronized void reverseDirection() throws InterruptedException
     {
         this.waitingToReverse++;
-        if(this.waitingToReverse < 3)
-        {
-            this.wait();
-        }
         
-        this.notifyAll();
-        this.waitingToReverse = 0;
+        if(this.waitingToReverse != this.partySize)
+        {
+            while(this.waitingToReverse != 0)
+            {
+                this.wait();
+            }
+        }
+        else
+        {
+            this.waitingToReverse = 0;
+            this.notifyAll();
+        }
+
     }
     
     /**
@@ -195,7 +212,6 @@ public class AssaultParty
             this.wait();
         }
         
-        boolean continueCrawling = true;
         int position = thief.getPosition() - thief.getDisplacement();
         
         //TODO <LIMIT DISTANCE BETWEEN THIEVES>
@@ -203,7 +219,6 @@ public class AssaultParty
         if(position < 0)
         {
             position = 0;
-            continueCrawling = false;
         }
         else
         {
@@ -218,11 +233,9 @@ public class AssaultParty
         this.crawling.pop();
         this.notify();
         
-        return continueCrawling;
+        return position != 0;
     }
-    
-    
-    
+
     /**
      * Check if there is some Thief is at position
      * @return True if some thief is at that position
@@ -239,5 +252,23 @@ public class AssaultParty
         }
         
         return false;
+    }
+
+    /**
+     * Check if all thieves are at a position.
+     * @return False if some thief is not at position.
+     */
+    private synchronized boolean isEverybodyAt(int position)
+    {
+        Iterator<OrdinaryThief> it = thieves.iterator();
+        while(it.hasNext())
+        {
+            if(it.next().getPosition() != position)
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

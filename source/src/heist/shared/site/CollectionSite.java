@@ -11,7 +11,7 @@ import heist.thief.OrdinaryThief;
 public class CollectionSite
 {
     private final Queue<OrdinaryThief> queue;
-    
+
     /**
      * Collection site constructor
      */
@@ -46,7 +46,6 @@ public class CollectionSite
      * The thief enters the queue wakes up the master thief and waits until is waken up.
      * @param thief Thief to be added.
      * @throws java.lang.InterruptedException Exception.
-     * @return True if there are still canvas inside the rooms to be stolen.
      */
     public synchronized void handACanvas(OrdinaryThief thief) throws InterruptedException
     {
@@ -57,16 +56,18 @@ public class CollectionSite
     }
     
     /**
-     * Function to allow the MasterThief to get the canvas bough by OrdnaryThieves
+     * Function to allow the MasterThief to get the canvas bough by OrdinaryThieves
      * The master thief wakes up
      * @param master MasterThief to collect the canvas and update internal RoomStatus.
      * @throws java.lang.InterruptedException Exception
      */
     public synchronized void collectCanvas(MasterThief master) throws InterruptedException
     {
-        OrdinaryThief thief = this.queue.pop();
-        master.collectCanvasRoom(thief.getParty().getTarget(), thief.deliverCanvas());
-        
-        this.notify();
+        while(!this.queue.isEmpty())
+        {
+            OrdinaryThief thief = this.queue.pop();
+            master.collectCanvas(thief.getParty().getTarget(), thief.deliverCanvas());
+            this.notify();
+        }
     }
 }
