@@ -206,7 +206,7 @@ public class MasterThief extends Thread
     private AssaultParty prepareAssaultParty()
     {
         RoomStatus target = this.nextTargetRoom();
-        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, target.id, target.distance);
+        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, target.id, target.distance, this.configuration.maxThiefDistance);
         target.assignParty(party);
         
         String members = "";

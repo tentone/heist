@@ -8,7 +8,7 @@ import heist.utils.Range;
  */
 public class Configuration
 {
-    public final int numberThieves, numberRooms, partySize;
+    public final int numberThieves, numberRooms, partySize, maxThiefDistance;
     public final Range thiefDisplacement, roomDistance, numberPaintings;
     
     /**
@@ -22,5 +22,6 @@ public class Configuration
         this.roomDistance = new Range(15, 30);
         this.numberPaintings = new Range(8, 16);
         this.partySize = 3;
+        this.maxThiefDistance = 3;
     }
 }

@@ -14,23 +14,31 @@ public class AssaultParty
 {
     private static int IDCounter = 0;
     
-    private final int id, size, target, targetDistance;
-    private final Queue<OrdinaryThief> thieves;
+    private final static int WAITING = 1000;
+    private final static int CRAWLING = 2000;
+    
+    private final int id, size, target, targetDistance, maxDistance;
+    private final Queue<OrdinaryThief> thieves, crawling;
+    private int state = WAITING;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
      * @param size Assault party size.
      * @param target Target room id.
      * @param targetDistance Target room distance.
+     * @param maxDistance Maximum distance between thieves.
      */
-    public AssaultParty(int size, int target, int targetDistance)
+    public AssaultParty(int size, int target, int targetDistance, int maxDistance)
     {
         this.id = IDCounter++;
         this.thieves = new Queue<>();
+        this.crawling = new Queue<>();
         
         this.target = target;
         this.targetDistance = targetDistance;
         this.size = size;
+        
+        this.maxDistance = maxDistance;
     }
     
     /**
@@ -98,6 +106,9 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
+        while(!this.allThiefsAtState(OrdinaryThief.CRAWLING_INWARDS));
+        
+        this.state = CRAWLING;
         this.notify();
     }
     
@@ -118,11 +129,29 @@ public class AssaultParty
      */
     public synchronized boolean crawlIn(OrdinaryThief thief) throws InterruptedException
     {
-        System.out.println("Thief " + thief.getID()+ " waiting to crawlIn");
-        this.wait();
+        this.crawling.push(thief);
+        
+        while(this.crawling.peek() != thief || this.state != CRAWLING)
+        {
+            this.wait();
+        }
         
         boolean continueCrawling = true;
         int position = thief.getPosition() + thief.getDisplacement();
+        
+        //TODO <CHECK THIEF DISTANCE>
+        /*Iterator<OrdinaryThief> it = this.thieves.iterator();
+        while(it.hasNext())
+        {
+            OrdinaryThief t = it.next();
+            if(t != thief)
+            {
+                if(position - t.getPosition() > this.maxDistance)
+                {
+                    position = t.getPosition() + this.maxDistance;
+                }
+            }
+        }*/
         
         if(position > this.targetDistance)
         {
@@ -139,7 +168,8 @@ public class AssaultParty
         
         thief.setPosition(position);
         
-        this.notifyAll();
+        this.crawling.pop();
+        this.notify();
         
         return continueCrawling;
     }
@@ -151,7 +181,7 @@ public class AssaultParty
      */
     public synchronized void reverseDirection() throws InterruptedException
     {
-        while(!allThiefsAtState(OrdinaryThief.AT_A_ROOM))
+        if(!this.allThiefsAtState(OrdinaryThief.AT_A_ROOM))
         {
             this.wait();
         }
@@ -160,9 +190,9 @@ public class AssaultParty
     }
     
     /**
-     * Check if every OrdinaryThief in the party has a state
-     * @param state State
-     * @return True if all thieves are at a room
+     * Check if every OrdinaryThief in the party has the same state.
+     * @param state State to be checked.
+     * @return True if all thieves have the same indicated state, false otherwise.
      */
     private synchronized boolean allThiefsAtState(int state)
     {
@@ -197,25 +227,43 @@ public class AssaultParty
     }
     
     /**
-     * Method used to update the position the thieves
-     * @param thief Thief to update position of
+     * Method used to update the position the thieves.
+     * @param thief Thief to update position of.
      * @throws java.lang.InterruptedException Exception
-     * @return True if was able to move the thief, false if thief arrived at the room
+     * @return True if was able to move the thief, false if thief arrived at the room.
      */
     public synchronized boolean crawlOut(OrdinaryThief thief) throws InterruptedException
     {
-        this.wait();
+        this.crawling.push(thief);
+        
+        while(this.crawling.peek() != thief)
+        {
+            this.wait();
+        }
         
         boolean continueCrawling = true;
+        int position = thief.getPosition() - thief.getDisplacement();
         
-        //TODO <UPDATE POSITION>
+        //TODO <DISTANCE BETWEEN THIEVES>
         
+        if(position < 0)
+        {
+            position = 0;
+            continueCrawling = false;
+        }
+        else
+        {
+            while(this.isSomebodyAt(position) && position < thief.getPosition())
+            {
+                position++;
+            }
+        }
+        
+        thief.setPosition(position);
+        
+        this.crawling.pop();
         this.notify();
         
         return continueCrawling;
-    }
-
-    private boolean allThiefsAtARoom(int AT_A_ROOM) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

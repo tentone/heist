@@ -42,19 +42,10 @@ public class Room
     }
     
     /**
-     * Check is this rooms still has paintings.
-     * @return True if there is paintings in the room.
-     */
-    public synchronized boolean hasPainting()
-    {
-        return this.paintings > 0;
-    }
-    
-    /**
      * Remove a painting from the room.
      * @return True if the painting was removed.
      */
-    public synchronized boolean getPaiting()
+    public synchronized boolean rollACanvas()
     {
         if(this.paintings > 0)
         {

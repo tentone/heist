@@ -48,9 +48,9 @@ public class ConcentrationSite
      * @param targetDistance Target room distance.
      * @return AssaultParty created.
      */
-    public synchronized AssaultParty createNewParty(int size, int target, int targetDistance)
+    public synchronized AssaultParty createNewParty(int size, int target, int targetDistance, int maxDistance)
     {
-        AssaultParty party = new AssaultParty(size, target, targetDistance);
+        AssaultParty party = new AssaultParty(size, target, targetDistance, maxDistance);
         
         for(int i = 0; i < size; i++)
         {

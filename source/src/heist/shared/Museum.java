@@ -65,27 +65,12 @@ public class Museum
     }
     
     /**
-     * Get room from room id, returns null if there is no room for that id.
-     * @param id Room id
-     * @return Room object, null if not found
-     */
-    public synchronized Room getRoom(int id)
-    {
-        if(id > 0 && id < this.rooms.length)
-        {
-            return this.rooms[id];
-        }
-        
-        return null;
-    }
-    
-    /**
      * Roll a canvas
      * @param id Room id
      * @return True if was able to get a canvas, false if the room was already empty
      */
     public synchronized boolean rollACanvas(int id)
     {
-        return this.getRoom(id).getPaiting();
+        return this.rooms[id].rollACanvas();
     }
 }

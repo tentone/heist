@@ -49,7 +49,7 @@ public class OrdinaryThief extends Thread
 
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         
-        this.position = -1;
+        this.position = 0;
         this.hasCanvas = false;
         this.party = null;
     }
@@ -141,16 +141,14 @@ public class OrdinaryThief extends Thread
     
     /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
-     * Enter the concentration site and wait until a party is assigned
-     * 
+     * Enter the concentration site and wait until a party is assigned.
      * @throws java.lang.InterruptedException Exception     
      */
     private void prepareExecution() throws InterruptedException
     {
         this.concentration.enterAndWait(this);
 
-        this.position = 0;
-        this.setState(CRAWLING_INWARDS);
+        System.out.println("Thief " + this.id + " party assigned " + this.party.getID());
     }
     
     /**
@@ -159,6 +157,7 @@ public class OrdinaryThief extends Thread
      */
     private void crawlIn() throws InterruptedException
     {
+        this.setState(CRAWLING_INWARDS);  
         while(this.party.crawlIn(this))
         {
             System.out.println("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
@@ -175,8 +174,6 @@ public class OrdinaryThief extends Thread
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
         System.out.println("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
-        
-        this.setState(AT_A_ROOM);
     }
     
     /**
@@ -184,9 +181,8 @@ public class OrdinaryThief extends Thread
      */
     private void reverseDirection() throws InterruptedException
     {
+        this.setState(AT_A_ROOM);        
         this.party.reverseDirection();
-        
-        this.setState(CRAWLING_OUTWARDS);
     }
     
     /**
@@ -195,7 +191,13 @@ public class OrdinaryThief extends Thread
      */
     private void crawlOut() throws InterruptedException
     {
-        while(this.party.crawlOut(this));
+        this.setState(CRAWLING_OUTWARDS);
+        while(this.party.crawlOut(this))
+        {
+            System.out.println("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
+        }
+        
+        System.out.println("Thief " + this.id + " reached outside (Position:" + this.position + ")");
     }
     
     /**
@@ -203,6 +205,7 @@ public class OrdinaryThief extends Thread
      */
     private void handACanvas() throws InterruptedException
     {
+        System.out.println("Thief " + this.id + " handACanvas");
         this.collection.handACanvas(this);
     }
     
