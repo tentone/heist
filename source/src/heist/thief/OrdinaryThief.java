@@ -71,6 +71,15 @@ public class OrdinaryThief extends Thread
     {
         return this.party;
     }
+
+    /**
+     * Check if thief has assault party.
+     * @return True if thief has an AssaultParty.
+     */
+    public boolean hasParty()
+    {
+        return this.party != null;
+    }
     
     /**
      * Set assault party.
@@ -146,7 +155,10 @@ public class OrdinaryThief extends Thread
      */
     private void prepareExecution() throws InterruptedException
     {
+        System.out.println("Thief " + this.id + " entered the ConcentrationSite");
+        
         this.concentration.enterAndWait(this);
+        
         System.out.println("Thief " + this.id + " party assigned " + this.party.getID());
     }
     
@@ -156,7 +168,7 @@ public class OrdinaryThief extends Thread
      */
     private void crawlIn() throws InterruptedException
     {
-        this.setState(CRAWLING_INWARDS);  
+        this.setState(OrdinaryThief.CRAWLING_INWARDS);  
         while(this.party.crawlIn(this))
         {
             System.out.println("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
@@ -180,7 +192,7 @@ public class OrdinaryThief extends Thread
      */
     private void reverseDirection() throws InterruptedException
     {
-        this.setState(AT_A_ROOM);        
+        this.setState(OrdinaryThief.AT_A_ROOM);        
         this.party.reverseDirection();
     }
     
@@ -190,7 +202,7 @@ public class OrdinaryThief extends Thread
      */
     private void crawlOut() throws InterruptedException
     {
-        this.setState(CRAWLING_OUTWARDS);
+        this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         while(this.party.crawlOut(this))
         {
             System.out.println("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
@@ -200,12 +212,18 @@ public class OrdinaryThief extends Thread
     }
     
     /**
-     * Hand the canvas (if there is one) to the master thief.
+     * Hand the canvas (if there is one) to the master thief. Waits inside handACanvas until the whole Party has returned.
+     * @return True if there are still paintings to stole in the targeted room, false otherwise.
      */
-    private void handACanvas() throws InterruptedException
+    private boolean handACanvas() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " handACanvas");
+        this.setState(OrdinaryThief.OUTSIDE);
+        
+        System.out.println("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
+        
         this.collection.handACanvas(this);
+        
+        return true;
     }
     
     /**
@@ -214,7 +232,11 @@ public class OrdinaryThief extends Thread
     private boolean amINeeded()
     {
         System.out.println("Thief " + this.id + " amINeeded");
-        return this.collection.amINeeded();
+        
+        this.position = 0;
+        this.hasCanvas = false;
+        
+        return this.concentration.amINeeded();
     }
     
     /**
@@ -230,15 +252,17 @@ public class OrdinaryThief extends Thread
             while(this.amINeeded())
             {
                 this.prepareExecution();
-
-                this.crawlIn();
-
-                this.rollACanvas();
-                this.reverseDirection();
-
-                this.crawlOut();
                 
-                this.handACanvas();
+                do
+                {
+                    this.crawlIn();
+
+                    this.rollACanvas();
+                    this.reverseDirection();
+
+                    this.crawlOut();
+                }
+                while(this.handACanvas());
             }
         }
         catch(InterruptedException e)

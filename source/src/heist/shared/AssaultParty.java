@@ -14,14 +14,9 @@ public class AssaultParty
 {
     private static int IDCounter = 0;
     
-    private final static int WAITING = 1000;
-    private final static int CRAWLING_IN = 2000;
-    private final static int CRAWLING_OUT = 3000;
-    
     private final int id, size, maxDistance;
     private final Queue<OrdinaryThief> thieves, crawling;
     private int target, targetDistance;
-    private int state;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
@@ -35,7 +30,6 @@ public class AssaultParty
         this.id = IDCounter++;
         this.thieves = new Queue<>();
         this.crawling = new Queue<>();
-        this.state = AssaultParty.WAITING;
         
         this.target = target;
         this.targetDistance = targetDistance;
@@ -109,7 +103,6 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        this.state = AssaultParty.CRAWLING_IN;
         this.notify();
     }
     
@@ -140,7 +133,8 @@ public class AssaultParty
         boolean continueCrawling = true;
         int position = thief.getPosition() + thief.getDisplacement();
         
-        Iterator<OrdinaryThief> it = this.thieves.iterator();
+        //TODO <CHECK DISTANCE>
+        /*Iterator<OrdinaryThief> it = this.thieves.iterator();
         while(it.hasNext())
         {
             OrdinaryThief t = it.next();
@@ -151,7 +145,7 @@ public class AssaultParty
                     position = t.getPosition() + this.maxDistance;
                 }
             }
-        }
+        }*/
         
         if(position > this.targetDistance)
         {
@@ -187,45 +181,6 @@ public class AssaultParty
         }
         
         this.notifyAll();
-        
-        this.state = AssaultParty.CRAWLING_OUT;
-    }
-    
-    /**
-     * Check if every OrdinaryThief in the party has the same state.
-     * @param state State to be checked.
-     * @return True if all thieves have the same indicated state, false otherwise.
-     */
-    private synchronized boolean allThiefsAtState(int state)
-    {
-        Iterator<OrdinaryThief> it = thieves.iterator();
-        while(it.hasNext())
-        {
-            if(it.next().state() != state)
-            {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-
-    /**
-     * Check if there is some Thief is at position
-     * @return True if some thief is at that position
-     */
-    private synchronized boolean isSomebodyAt(int position)
-    {
-        Iterator<OrdinaryThief> it = thieves.iterator();
-        while(it.hasNext())
-        {
-            if(it.next().getPosition() == position)
-            {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
     /**
@@ -267,5 +222,42 @@ public class AssaultParty
         this.notify();
         
         return continueCrawling;
+    }
+    
+    /**
+     * Check if every OrdinaryThief in the party has the same state.
+     * @param state State to be checked.
+     * @return True if all thieves have the same indicated state, false otherwise.
+     */
+    private synchronized boolean allThiefsAtState(int state)
+    {
+        Iterator<OrdinaryThief> it = thieves.iterator();
+        while(it.hasNext())
+        {
+            if(it.next().state() != state)
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Check if there is some Thief is at position
+     * @return True if some thief is at that position
+     */
+    private synchronized boolean isSomebodyAt(int position)
+    {
+        Iterator<OrdinaryThief> it = thieves.iterator();
+        while(it.hasNext())
+        {
+            if(it.next().getPosition() == position)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

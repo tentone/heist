@@ -11,7 +11,6 @@ import heist.thief.OrdinaryThief;
 public class CollectionSite
 {
     private final Queue<OrdinaryThief> queue;
-    private boolean allRoomsClear;
     
     /**
      * Collection site constructor
@@ -19,7 +18,6 @@ public class CollectionSite
     public CollectionSite()
     {   
         this.queue = new Queue<>();
-        this.allRoomsClear = false;
     }
     
     /**
@@ -30,24 +28,7 @@ public class CollectionSite
     {
         return !this.queue.isEmpty();
     }
-    
-    /**
-     * Check if all rooms are clear to see if an OrdinaryThief can terminate.
-     * @return True if there are still rooms waiting to be cleared
-     */
-    public synchronized boolean amINeeded()
-    {
-        return !this.allRoomsClear;
-    }
-    
-    /**
-     * Called by the MasterThief to terminate the heist.
-     */
-    public synchronized void allRoomsClear()
-    {
-        this.allRoomsClear = true;
-    }
-    
+        
     /**
      * Function used to make MasterThief wait until a OrdinaryThief arrives and wakes him up.
      * @throws InterruptedException Exception
@@ -64,7 +45,8 @@ public class CollectionSite
      * Add thief to the collection site and wake up the master thief.
      * The thief enters the queue wakes up the master thief and waits until is waken up.
      * @param thief Thief to be added.
-     * @throws java.lang.InterruptedException Exception
+     * @throws java.lang.InterruptedException Exception.
+     * @return True if there are still canvas inside the rooms to be stolen.
      */
     public synchronized void handACanvas(OrdinaryThief thief) throws InterruptedException
     {

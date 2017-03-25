@@ -11,13 +11,15 @@ import heist.thief.OrdinaryThief;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
-
+    private boolean allRoomsClear;
+    
     /**
      * ConcentrationSite constructor.
      */
     public ConcentrationSite()
     {   
         this.thieves = new Queue<>();
+        this.allRoomsClear = false;
     }
 
     /**
@@ -38,7 +40,12 @@ public class ConcentrationSite
     public synchronized void enterAndWait(OrdinaryThief thief) throws InterruptedException
     {
         this.thieves.push(thief);
-        this.wait();
+        
+        while(!thief.hasParty())
+        {
+            this.notify();
+            this.wait();
+        }
     }
     
     /**
@@ -46,10 +53,17 @@ public class ConcentrationSite
      * @param size AssaultParty size.
      * @param target Target room id.
      * @param targetDistance Target room distance.
+     * @param maxDistance Maximum distance allowed between thieves when crawling.
      * @return AssaultParty created.
+     * @throws java.lang.InterruptedException Exception
      */
-    public synchronized AssaultParty createNewParty(int size, int target, int targetDistance, int maxDistance)
+    public synchronized AssaultParty createNewParty(int size, int target, int targetDistance, int maxDistance) throws InterruptedException
     {
+        while(!this.hasEnoughToCreateParty(size))
+        {
+            this.wait();
+        }
+        
         AssaultParty party = new AssaultParty(size, target, targetDistance, maxDistance);
         
         for(int i = 0; i < size; i++)
@@ -59,5 +73,22 @@ public class ConcentrationSite
         }
         
         return party;
+    }
+    
+    /**
+     * Check if all rooms are clear to see if an OrdinaryThief can terminate.
+     * @return True if there are still rooms waiting to be cleared
+     */
+    public synchronized boolean amINeeded()
+    {
+        return !this.allRoomsClear;
+    }
+    
+    /**
+     * Called by the MasterThief to terminate the heist.
+     */
+    public synchronized void allRoomsClear()
+    {
+        this.allRoomsClear = true;
     }
 }

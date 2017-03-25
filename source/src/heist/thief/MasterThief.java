@@ -176,13 +176,13 @@ public class MasterThief extends Thread
         {
             this.setState(PRESENTING_THE_REPORT);
         }
-        else if(this.concentration.hasEnoughToCreateParty(this.configuration.partySize))
-        {
-            this.setState(ASSEMBLING_A_GROUP);
-        }
         else if(this.thievesWorking())
         {
             this.setState(WAITING_FOR_GROUP_ARRIVAL);
+        }
+        else
+        {
+            this.setState(ASSEMBLING_A_GROUP);
         }
         
         System.out.println("Master appraiseSit");
@@ -191,8 +191,9 @@ public class MasterThief extends Thread
     /**
      * Assembly an assault party with thieves from the ConcentrationSite.
      * @return AssaultParty assembled.
+     * @throws java.lang.InterruptedException Exception
      */
-    private AssaultParty prepareAssaultParty()
+    private AssaultParty prepareAssaultParty() throws InterruptedException
     {
         RoomStatus target = this.nextTargetRoom();
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, target.id, target.distance, this.configuration.maxThiefDistance);
@@ -258,7 +259,7 @@ public class MasterThief extends Thread
      */
     private void sumUpResults()
     {
-        this.collection.allRoomsClear();
+        this.concentration.allRoomsClear();
         System.out.println(this.totalPaintingsStolen() + " paintings were stolen!");
     }
     
