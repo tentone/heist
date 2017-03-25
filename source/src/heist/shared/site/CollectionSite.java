@@ -13,7 +13,7 @@ public class CollectionSite
     private final Queue<OrdinaryThief> queue;
 
     /**
-     * Collection site constructor
+     * Collection site constructor, creates a queue for OrdinaryThief.
      */
     public CollectionSite()
     {   
@@ -42,8 +42,8 @@ public class CollectionSite
     }
     
     /**
-     * Add thief to the collection site and wake up the master thief.
-     * The thief enters the queue wakes up the master thief and waits until is waken up.
+     * Add thief to the collection site and wake up the MasterThief to collect its canvas.
+     * The OrdinaryThief enters the queue wakes up the MasterThief and waits until is waken up.
      * @param thief Thief to be added.
      * @throws java.lang.InterruptedException Exception.
      */
@@ -56,8 +56,8 @@ public class CollectionSite
     }
     
     /**
-     * Function to allow the MasterThief to get the canvas bough by OrdinaryThieves
-     * The master thief wakes up
+     * Function to allow the MasterThief to get the canvas bough by OrdinaryThieves.
+     * The MasterThief wakes up the OrdinaryThieves waiting for their canvas to be collected.
      * @param master MasterThief to collect the canvas and update internal RoomStatus.
      * @throws java.lang.InterruptedException Exception
      */

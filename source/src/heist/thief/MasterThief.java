@@ -172,11 +172,10 @@ public class MasterThief extends Thread
      */
     private AssaultParty prepareAssaultParty() throws InterruptedException
     {
-        RoomStatus target = this.nextTargetRoom();
+        RoomStatus room = this.nextTargetRoom();
         
-        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, target.id, target.distance, this.configuration.thiefDistance);
-        target.assignParty(party);
-
+        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
+        
         String members = "";
         Iterator<OrdinaryThief> it = party.getThieves();
         while(it.hasNext())
@@ -276,55 +275,5 @@ public class MasterThief extends Thread
 
         
         Console.log("Master terminated");
-    }
-    
-    class RoomStatus
-    {
-        private final int distance, id;
-        private int paintings = 0;
-        private boolean assigned = false, clear = false;
-        private AssaultParty party;
-        
-        public RoomStatus(int id, int distance)
-        {
-            this.id = id;
-            this.distance = distance;
-        }
-        
-        public boolean isAssignedButNotClear()
-        {
-            return this.assigned && !this.clear;
-        }
-        
-        public boolean isClear()
-        {
-            return this.clear;
-        }
-        
-        public void assignParty(AssaultParty party)
-        {
-            this.party = party;
-            this.assigned = true;
-        }
-        
-        public void setClear()
-        {
-            this.clear = true;
-        }
-        
-        public void addPainting()
-        {
-            this.paintings++;
-        }
-        
-        public int getPaintings()
-        {
-            return this.paintings;
-        }
-
-        public AssaultParty getParty()
-        {
-            return this.party;
-        } 
     }
 }

@@ -8,9 +8,6 @@ import heist.Configuration;
  */
 public class Museum
 {
-    private static int IDCount = 0;
-    
-    private final int id;
     private final Room[] rooms;
 
     /**
@@ -19,7 +16,6 @@ public class Museum
      */
     public Museum(Configuration configuration)
     {
-        this.id = IDCount++;
         this.rooms = new Room[configuration.numberRooms];
         
         int sum = 0;
@@ -48,15 +44,6 @@ public class Museum
         }
         
         System.out.println("Museum has " + sum + " paintings!");
-    }
-    
-    /**
-     * Get museum id.
-     * @return Museum id.
-     */
-    public synchronized int getID()
-    {
-        return this.id;
     }
     
     /**

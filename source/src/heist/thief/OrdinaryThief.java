@@ -17,8 +17,6 @@ import heist.shared.site.ConcentrationSite;
 @SuppressWarnings("empty-statement")
 public class OrdinaryThief extends Thread
 {
-    private static int IDCounter = 0;
-    
     public static final int OUTSIDE = 1000;
     public static final int CRAWLING_INWARDS = 2000;
     public static final int AT_A_ROOM = 3000;
@@ -36,13 +34,14 @@ public class OrdinaryThief extends Thread
 
     /**
      * OrdinaryThief constructor.
+     * @param id Thief id.
      * @param repository General repository.
      * @param configuration Simulation configuration.
      */
-    public OrdinaryThief(GeneralRepository repository, Configuration configuration)
+    public OrdinaryThief(int id, GeneralRepository repository, Configuration configuration)
     {
-        this.id = IDCounter++;
-        this.state = OUTSIDE;
+        this.id = id;
+        this.state = OrdinaryThief.OUTSIDE;
         
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();

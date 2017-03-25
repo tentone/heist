@@ -3,6 +3,7 @@ package heist.shared.site;
 import heist.queue.Queue;
 import heist.shared.AssaultParty;
 import heist.thief.OrdinaryThief;
+import heist.thief.RoomStatus;
 
 /**
  * The concentration site is where thieves wait for the master thief to assign them a party.
@@ -12,6 +13,7 @@ import heist.thief.OrdinaryThief;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
+    private final Queue<AssaultParty> parties;
     private boolean roomsClear;
     
     /**
@@ -20,6 +22,7 @@ public class ConcentrationSite
     public ConcentrationSite()
     {   
         this.thieves = new Queue<>();
+        this.parties = new Queue<>();
         this.roomsClear = false;
     }
     
@@ -62,23 +65,23 @@ public class ConcentrationSite
     
     /**
      * Create new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
-     * @param size AssaultParty size.
-     * @param target Target room id.
-     * @param targetDistance Target room distance.
+     * @param partySize AssaultParty size.
+     * @param room Target room.
      * @param maxDistance Maximum distance allowed between thieves when crawling.
      * @return AssaultParty created.
      * @throws java.lang.InterruptedException Exception
      */
-    public synchronized AssaultParty createNewParty(int size, int target, int targetDistance, int maxDistance) throws InterruptedException
+    public synchronized AssaultParty createNewParty(int partySize, int maxDistance, RoomStatus room) throws InterruptedException
     {
-        AssaultParty party = new AssaultParty(size, target, targetDistance, maxDistance);
+        AssaultParty party = new AssaultParty(partySize, maxDistance, room);
         
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < partySize; i++)
         {
             party.addThief(this.thieves.pop());
             this.notify();
         }
         
+        this.parties.push(party);
         return party;
     }
     

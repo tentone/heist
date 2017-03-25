@@ -17,7 +17,7 @@ public class Configuration
     public Configuration()
     {
         this.numberThieves = 6;
-        this.thiefDistance = 3;
+        this.thiefDistance = 1;
         this.thiefDisplacement = new Range(2, 6);
         
         this.partySize = 3;

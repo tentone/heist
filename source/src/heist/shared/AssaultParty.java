@@ -2,6 +2,7 @@ package heist.shared;
 
 import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
+import heist.thief.RoomStatus;
 import java.util.Iterator;
 
 /**
@@ -16,33 +17,29 @@ public class AssaultParty
     
     private static int WAITING = 1000;
     private static int CRAWLING = 2000;
-    
+
     private final int id, partySize, maxDistance;
     private final Queue<OrdinaryThief> thieves;
     private final Queue<OrdinaryThief> crawling;
-    private int state;
     
-    private int targetID, targetDistance;
-    private int waitingToReverse;
+    private RoomStatus room;
+    private int state, waitingToReverse;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
      * @param partySize Assault party size.
-     * @param targetID Target room id.
-     * @param targetDistance Target room distance.
      * @param maxDistance Maximum distance between thieves.
+     * @param room Target room.
      */
-    public AssaultParty(int partySize, int targetID, int targetDistance, int maxDistance)
+    public AssaultParty(int partySize, int maxDistance, RoomStatus room)
     {
         this.id = IDCounter++;
         this.thieves = new Queue<>();
         this.crawling = new Queue<>();
-
-        this.targetID = targetID;
-        this.targetDistance = targetDistance;
         
         this.partySize = partySize;
         this.maxDistance = maxDistance;
+        this.room = room;
         
         this.state = AssaultParty.WAITING;
         this.waitingToReverse = 0;
@@ -63,7 +60,7 @@ public class AssaultParty
      */
     public synchronized int getTarget()
     {
-        return this.targetID;
+        return this.room.getID();
     }
     
     /**
@@ -81,7 +78,7 @@ public class AssaultParty
      */
     public synchronized int getTargetDistance()
     {
-        return this.targetDistance;
+        return this.room.getDistance();
     }
     
     /**
@@ -145,17 +142,31 @@ public class AssaultParty
         
         //TODO <LIMIT DISTANCE BETWEEN THIEVES>
         /*Iterator<OrdinaryThief> it = this.thieves.iterator();
+        int max = -1;
         while(it.hasNext())
         {
-            if()
+            OrdinaryThief t = it.next();
+            if(t != thief)
             {
-                
+                if(position - t.getPosition() > this.maxDistance)
+                {
+                    int temp = t.getPosition() + this.maxDistance;
+                    if(temp > max)
+                    {
+                        max = temp;
+                    }
+                }
             }
+        }
+        
+        if(max != -1)
+        {
+            position = max;
         }*/
         
-        if(position > this.targetDistance)
+        if(position > this.room.getDistance())
         {
-            position = this.targetDistance;
+            position = this.room.getDistance();
         }
         else
         {
@@ -168,9 +179,9 @@ public class AssaultParty
         thief.setPosition(position);
 
         this.crawling.pop();
-        this.notify();
+        this.notifyAll();
         
-        return position != this.targetDistance;
+        return position != this.room.getDistance();
     }
     
     /**
@@ -252,23 +263,5 @@ public class AssaultParty
         }
         
         return false;
-    }
-
-    /**
-     * Check if all thieves are at a position.
-     * @return False if some thief is not at position.
-     */
-    private synchronized boolean isEverybodyAt(int position)
-    {
-        Iterator<OrdinaryThief> it = thieves.iterator();
-        while(it.hasNext())
-        {
-            if(it.next().getPosition() != position)
-            {
-                return false;
-            }
-        }
-        
-        return true;
     }
 }

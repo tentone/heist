@@ -39,7 +39,7 @@ public class GeneralRepository
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)
         {
-            this.thieves[i] = new OrdinaryThief(this, this.configuration);
+            this.thieves[i] = new OrdinaryThief(i, this, this.configuration);
         }
         
         this.master = new MasterThief(this, this.configuration);
