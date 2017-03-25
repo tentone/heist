@@ -5,6 +5,7 @@ import heist.GeneralRepository;
 import heist.shared.AssaultParty;
 import heist.shared.CollectionSite;
 import heist.shared.ConcentrationSite;
+import heist.shared.Museum;
 import heist.shared.Room;
 import java.util.Iterator;
 
@@ -15,21 +16,18 @@ import java.util.Iterator;
  */
 public class MasterThief extends Thread
 {
-    private static int IDCounter = 0;
-    
     public static final int PLANNING_THE_HEIST = 1000;
     public static final int DECIDING_WHAT_TO_DO = 2000;
     public static final int ASSEMBLING_A_GROUP = 3000;
     public static final int WAITING_FOR_GROUP_ARRIVAL = 4000;
     public static final int PRESENTING_THE_REPORT = 5000;
-            
-    private final int id;
-    private int state;
-    
+
     private final CollectionSite collection;
     private final ConcentrationSite concentration;
+    private final Museum museum;
     private final Configuration configuration;
     
+    private int state;
     private RoomStatus[] rooms;
         
     /**
@@ -39,28 +37,19 @@ public class MasterThief extends Thread
      */
     public MasterThief(GeneralRepository repository, Configuration configuration)
     {
-        this.id = IDCounter++;
         this.state = PLANNING_THE_HEIST;
         
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
+        this.museum = repository.getMuseum();
         this.configuration = configuration;
         
-        Room[] museum = repository.getMuseum().getRooms();
+        Room[] museum = this.museum.getRooms();
         this.rooms = new RoomStatus[museum.length];
         for(int i = 0; i < museum.length; i++)
         {
             this.rooms[i] = new RoomStatus(museum[i].getID(), museum[i].getDistance());
         }
-    }
-    
-    /**
-     * Get ID
-     * @return MasterThief id 
-     */
-    public int getID()
-    {
-        return this.id;
     }
     
     /**
@@ -81,7 +70,7 @@ public class MasterThief extends Thread
     {
         for(int i = 0; i < this.rooms.length; i++)
         {
-            if(!this.rooms[i].clear)
+            if(!this.rooms[i].isClear())
             {
                 return false;
             }
@@ -116,7 +105,7 @@ public class MasterThief extends Thread
     {   
         for(int i = 0; i < this.rooms.length; i++)
         {
-            if(this.rooms[i].assignedButNotClear())
+            if(this.rooms[i].isAssignedButNotClear())
             {
                 return true;
             }
@@ -133,7 +122,7 @@ public class MasterThief extends Thread
     {
         for(int i = 0; i < this.rooms.length; i++)
         {
-            if(!this.rooms[i].assigned)
+            if(!this.rooms[i].isAssigned())
             {
                 return this.rooms[i];
             }
@@ -152,7 +141,7 @@ public class MasterThief extends Thread
         
         for(int i = 0; i < this.rooms.length; i++)
         {
-            sum += this.rooms[i].paintings;
+            sum += this.rooms[i].getPaintings();
         }
         
         return sum;
@@ -166,7 +155,7 @@ public class MasterThief extends Thread
     {
         this.state = state;
 
-        System.out.println("Master " + this.id + " change state " + this.state);
+        System.out.println("Master change state " + this.state);
     }
     
     /**
@@ -196,7 +185,7 @@ public class MasterThief extends Thread
             this.setState(WAITING_FOR_GROUP_ARRIVAL);
         }
         
-        System.out.println("Master " + this.id + " appraiseSit");
+        System.out.println("Master appraiseSit");
     }
     
     /**
@@ -220,7 +209,7 @@ public class MasterThief extends Thread
             }
         }
         
-        System.out.println("Master " + this.id + " prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
+        System.out.println("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
         
         return party;
     }
@@ -235,7 +224,7 @@ public class MasterThief extends Thread
     {
         party.sendParty();
         
-        System.out.println("Master " + this.id + " sendAssaultParty " + party.getID());
+        System.out.println("Master sendAssaultParty " + party.getID());
         
         this.setState(DECIDING_WHAT_TO_DO);
     }
@@ -246,7 +235,7 @@ public class MasterThief extends Thread
      */
     private void takeARest() throws InterruptedException
     {
-        System.out.println("Master " + this.id + " takeARest");
+        System.out.println("Master takeARest");
         
         this.collection.takeARest();
     }
@@ -269,13 +258,14 @@ public class MasterThief extends Thread
      */
     private void sumUpResults()
     {
+        this.collection.allRoomsClear();
         System.out.println(this.totalPaintingsStolen() + " paintings were stolen!");
     }
     
     @Override
     public void run()
     {
-        System.out.println("Master " + this.id + " started");
+        System.out.println("Master started");
         
         try
         {
@@ -301,20 +291,20 @@ public class MasterThief extends Thread
         }
         catch(Exception e)
         {
-            System.out.println("Master " + this.id + " error");
+            System.out.println("Master error");
             e.printStackTrace();
         }
 
         
-        System.out.println("Master " + this.id + " terminated");
+        System.out.println("Master terminated");
     }
     
     private class RoomStatus
     {
-        public final int distance, id;
-        public int paintings = 0;
-        public boolean assigned = false, clear = false;
-        public AssaultParty party;
+        private final int distance, id;
+        private int paintings = 0;
+        private boolean assigned = false, clear = false;
+        private AssaultParty party;
         
         public RoomStatus(int id, int distance)
         {
@@ -322,9 +312,19 @@ public class MasterThief extends Thread
             this.distance = distance;
         }
         
-        public boolean assignedButNotClear()
+        public boolean isAssignedButNotClear()
         {
             return this.assigned && !this.clear;
+        }
+        
+        public boolean isClear()
+        {
+            return this.clear;
+        }
+        
+        public boolean isAssigned()
+        {
+            return this.clear;
         }
         
         public void assignParty(AssaultParty party)
@@ -342,5 +342,15 @@ public class MasterThief extends Thread
         {
             this.paintings++;
         }
+        
+        public int getPaintings()
+        {
+            return this.paintings;
+        }
+
+        public AssaultParty getParty()
+        {
+            return this.party;
+        } 
     }
 }

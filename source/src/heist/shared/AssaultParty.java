@@ -15,11 +15,13 @@ public class AssaultParty
     private static int IDCounter = 0;
     
     private final static int WAITING = 1000;
-    private final static int CRAWLING = 2000;
+    private final static int CRAWLING_IN = 2000;
+    private final static int CRAWLING_OUT = 3000;
     
-    private final int id, size, target, targetDistance, maxDistance;
+    private final int id, size, maxDistance;
     private final Queue<OrdinaryThief> thieves, crawling;
-    private int state = WAITING;
+    private int target, targetDistance;
+    private int state;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
@@ -33,6 +35,7 @@ public class AssaultParty
         this.id = IDCounter++;
         this.thieves = new Queue<>();
         this.crawling = new Queue<>();
+        this.state = AssaultParty.WAITING;
         
         this.target = target;
         this.targetDistance = targetDistance;
@@ -45,7 +48,7 @@ public class AssaultParty
      * Get party id
      * @return Party ID
      */
-    public int getID()
+    public synchronized int getID()
     {
         return this.id;
     }
@@ -54,7 +57,7 @@ public class AssaultParty
      * Get assault party target room.
      * @return Target room.
      */
-    public int getTarget()
+    public synchronized int getTarget()
     {
         return this.target;
     }
@@ -63,7 +66,7 @@ public class AssaultParty
      * Get AssaultParty OrdinaryThieves iterator
      * @return Iterator.
      */
-    public Iterator<OrdinaryThief> getThieves()
+    public synchronized Iterator<OrdinaryThief> getThieves()
     {
         return this.thieves.iterator();
     }
@@ -72,7 +75,7 @@ public class AssaultParty
      * Get assault party target room distance.
      * @return Target room distance.
      */
-    public int getTargetDistance()
+    public synchronized int getTargetDistance()
     {
         return this.targetDistance;
     }
@@ -81,7 +84,7 @@ public class AssaultParty
      * Get assault party size.
      * @return Assault party size.
      */
-    public int getSize()
+    public synchronized int getSize()
     {
         return this.size;
     }
@@ -106,9 +109,7 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        while(!this.allThiefsAtState(OrdinaryThief.CRAWLING_INWARDS));
-        
-        this.state = CRAWLING;
+        this.state = AssaultParty.CRAWLING_IN;
         this.notify();
     }
     
@@ -131,7 +132,7 @@ public class AssaultParty
     {
         this.crawling.push(thief);
         
-        while(this.crawling.peek() != thief || this.state != CRAWLING)
+        while(this.crawling.peek() != thief)
         {
             this.wait();
         }
@@ -139,8 +140,7 @@ public class AssaultParty
         boolean continueCrawling = true;
         int position = thief.getPosition() + thief.getDisplacement();
         
-        //TODO <CHECK THIEF DISTANCE>
-        /*Iterator<OrdinaryThief> it = this.thieves.iterator();
+        Iterator<OrdinaryThief> it = this.thieves.iterator();
         while(it.hasNext())
         {
             OrdinaryThief t = it.next();
@@ -151,7 +151,7 @@ public class AssaultParty
                     position = t.getPosition() + this.maxDistance;
                 }
             }
-        }*/
+        }
         
         if(position > this.targetDistance)
         {
@@ -167,8 +167,8 @@ public class AssaultParty
         }
         
         thief.setPosition(position);
-        
         this.crawling.pop();
+        
         this.notify();
         
         return continueCrawling;
@@ -187,6 +187,8 @@ public class AssaultParty
         }
         
         this.notifyAll();
+        
+        this.state = AssaultParty.CRAWLING_OUT;
     }
     
     /**

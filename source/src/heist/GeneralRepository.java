@@ -17,6 +17,9 @@ public class GeneralRepository
     private CollectionSite collection;
     private ConcentrationSite concentration;
     
+    private MasterThief master;
+    private OrdinaryThief[] thieves;
+    
     private Logger logger;
     private Configuration configuration;
     
@@ -28,26 +31,27 @@ public class GeneralRepository
     {
         this.logger = new Logger(this);
         this.configuration = configuration;
+        this.thieves = new OrdinaryThief[configuration.numberThieves];
     }
     
     /**
      * Initialize simulation elements and starts the simulation, calls the start method in all thieves
      */
-    public void start()
+    public void start() throws InterruptedException
     {
         this.museum = new Museum(this.configuration);
 
         this.concentration = new ConcentrationSite();
         this.collection = new CollectionSite();
         
-        for(int i = 0; i < this.configuration.numberThieves; i++)
+        for(int i = 0; i < this.thieves.length; i++)
         {
-            OrdinaryThief thief = new OrdinaryThief(this, this.configuration);
-            thief.start();
+            this.thieves[i] = new OrdinaryThief(this, this.configuration);
+            this.thieves[i].start();
         }
         
-        MasterThief master = new MasterThief(this, this.configuration);
-        master.start();
+        this.master = new MasterThief(this, this.configuration);
+        this.master.start();
     }
     
     /**

@@ -20,8 +20,9 @@ public class Museum
     public Museum(Configuration configuration)
     {
         this.id = IDCount++;
-        
         this.rooms = new Room[configuration.numberRooms];
+        
+        int sum = 0;
         for(int i = 0; i < this.rooms.length; i++)
         {
             boolean repeat = true;
@@ -41,16 +42,19 @@ public class Museum
                     }
                 }
             }
-            
-            this.rooms[i] = new Room(i, distance, configuration.numberPaintings.generateInRange());
+            int paintings = configuration.numberPaintings.generateInRange();
+            sum += paintings;
+            this.rooms[i] = new Room(i, distance, paintings);
         }
+        
+        System.out.println("Museum has " + sum + " paintings!");
     }
     
     /**
      * Get museum id.
      * @return Museum id.
      */
-    public int getID()
+    public synchronized int getID()
     {
         return this.id;
     }

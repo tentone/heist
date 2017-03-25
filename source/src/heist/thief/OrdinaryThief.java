@@ -83,7 +83,7 @@ public class OrdinaryThief extends Thread
     
     /**
      * Get the thief position
-     * @return Thief position, -1 if outside
+     * @return Thief position
      */
     public int getPosition()
     {
@@ -121,7 +121,7 @@ public class OrdinaryThief extends Thread
      * Function called by the MasterThief to get the canvas from the OrdinaryThief directly.
      * @return True if there is a canvas to hand, false otherwise.
      */
-    public boolean handCanvas()
+    public boolean deliverCanvas()
     {
         boolean canvas = this.hasCanvas;
         this.hasCanvas = false;
@@ -147,7 +147,6 @@ public class OrdinaryThief extends Thread
     private void prepareExecution() throws InterruptedException
     {
         this.concentration.enterAndWait(this);
-
         System.out.println("Thief " + this.id + " party assigned " + this.party.getID());
     }
     
@@ -215,7 +214,7 @@ public class OrdinaryThief extends Thread
     private boolean amINeeded()
     {
         System.out.println("Thief " + this.id + " amINeeded");
-        return true;
+        return this.collection.amINeeded();
     }
     
     /**
@@ -238,13 +237,14 @@ public class OrdinaryThief extends Thread
                 this.reverseDirection();
 
                 this.crawlOut();
-
+                
                 this.handACanvas();
             }
         }
         catch(InterruptedException e)
         {
-            System.out.println("Thief " + this.id + " error (" + e + ")");
+            System.out.println("Thief " + this.id + " error");
+            e.printStackTrace();
         }
         
         System.out.println("Thief " + this.id + " terminated");

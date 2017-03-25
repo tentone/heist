@@ -11,7 +11,7 @@ import heist.thief.OrdinaryThief;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
-    
+
     /**
      * ConcentrationSite constructor.
      */

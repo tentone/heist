@@ -11,6 +11,7 @@ import heist.thief.OrdinaryThief;
 public class CollectionSite
 {
     private final Queue<OrdinaryThief> queue;
+    private boolean allRoomsClear;
     
     /**
      * Collection site constructor
@@ -18,6 +19,7 @@ public class CollectionSite
     public CollectionSite()
     {   
         this.queue = new Queue<>();
+        this.allRoomsClear = false;
     }
     
     /**
@@ -26,7 +28,24 @@ public class CollectionSite
      */
     public synchronized boolean hasThief()
     {
-        return !queue.isEmpty();
+        return !this.queue.isEmpty();
+    }
+    
+    /**
+     * Check if all rooms are clear to see if an OrdinaryThief can terminate.
+     * @return True if there are still rooms waiting to be cleared
+     */
+    public synchronized boolean amINeeded()
+    {
+        return !this.allRoomsClear;
+    }
+    
+    /**
+     * Called by the MasterThief to terminate the heist.
+     */
+    public synchronized void allRoomsClear()
+    {
+        this.allRoomsClear = true;
     }
     
     /**
@@ -64,7 +83,7 @@ public class CollectionSite
     public synchronized void collectCanvas(MasterThief master) throws InterruptedException
     {
         OrdinaryThief thief = this.queue.pop();
-        master.collectCanvasRoom(thief.getParty().getTarget(), thief.handCanvas());
+        master.collectCanvasRoom(thief.getParty().getTarget(), thief.deliverCanvas());
         
         this.notify();
     }

@@ -42,6 +42,15 @@ public class Room
     }
     
     /**
+     * Get room paintings.
+     * @return Room paintings.
+     */
+    public int getPaintings()
+    {
+        return this.paintings;
+    }
+    
+    /**
      * Remove a painting from the room.
      * @return True if the painting was removed.
      */
