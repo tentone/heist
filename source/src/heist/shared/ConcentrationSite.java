@@ -31,25 +31,6 @@ public class ConcentrationSite
     }
     
     /**
-     * Cerate new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
-     * @param partySize AssaultParty size.
-     * @param target AssaultParty target room id.
-     * @return AssaultParty created.
-     */
-    public synchronized AssaultParty createNewParty(int target, int partySize)
-    {
-        AssaultParty party = new AssaultParty(partySize, target);
-        
-        for(int i = 0; i < partySize; i++)
-        {
-            party.addThief(this.thieves.pop());
-            this.notify();
-        }
-        
-        return party;
-    }
-    
-    /**
      * OrdinaryThief enters the ConcentrationSite and waits until a AssaultParty is attributed to him and waken up.
      * @param thief OrdinaryThief to add.
      * @throws java.lang.InterruptedException Exception
@@ -61,20 +42,22 @@ public class ConcentrationSite
     }
     
     /**
-     * Check if there is some thief in the concentration site.
-     * @return True if not empty
+     * Cerate new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
+     * @param size AssaultParty size.
+     * @param target Target room id.
+     * @param targetDistance Target room distance.
+     * @return AssaultParty created.
      */
-    public synchronized boolean hasThief()
+    public synchronized AssaultParty createNewParty(int size, int target, int targetDistance)
     {
-        return !this.thieves.isEmpty();
-    }
-    
-    /**
-     * Remove thief from the concentration site.
-     * @return Removed thief.
-     */
-    public synchronized OrdinaryThief removeThief()
-    {
-        return this.thieves.pop();
+        AssaultParty party = new AssaultParty(size, target, targetDistance);
+        
+        for(int i = 0; i < size; i++)
+        {
+            party.addThief(this.thieves.pop());
+            this.notify();
+        }
+        
+        return party;
     }
 }

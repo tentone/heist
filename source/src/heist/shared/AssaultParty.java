@@ -14,19 +14,22 @@ public class AssaultParty
 {
     private static int IDCounter = 0;
     
-    private final int id, size, target;
+    private final int id, size, target, targetDistance;
     private final Queue<OrdinaryThief> thieves;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
      * @param size Assault party size.
-     * @param target Target room.
+     * @param target Target room id.
+     * @param targetDistance Target room distance.
      */
-    public AssaultParty(int size, int target)
+    public AssaultParty(int size, int target, int targetDistance)
     {
         this.id = IDCounter++;
         this.thieves = new Queue<>();
+        
         this.target = target;
+        this.targetDistance = targetDistance;
         this.size = size;
     }
     
@@ -47,7 +50,25 @@ public class AssaultParty
     {
         return this.target;
     }
-
+    
+    /**
+     * Get AssaultParty OrdinaryThieves iterator
+     * @return Iterator.
+     */
+    public Iterator<OrdinaryThief> getThieves()
+    {
+        return this.thieves.iterator();
+    }
+    
+    /**
+     * Get assault party target room distance.
+     * @return Target room distance.
+     */
+    public int getTargetDistance()
+    {
+        return this.targetDistance;
+    }
+    
     /**
      * Get assault party size.
      * @return Assault party size.
@@ -73,8 +94,9 @@ public class AssaultParty
     /**
      * Called by the master thief to send the party to the museum.
      * Wakes up the first thief that is waiting to crawlIn.
+     * @throws java.lang.InterruptedException Exception
      */
-    public synchronized void sendParty()
+    public synchronized void sendParty() throws InterruptedException
     {
         this.notify();
     }
@@ -96,13 +118,28 @@ public class AssaultParty
      */
     public synchronized boolean crawlIn(OrdinaryThief thief) throws InterruptedException
     {
+        System.out.println("Thief " + thief.getID()+ " waiting to crawlIn");
         this.wait();
         
         boolean continueCrawling = true;
-
-        //TODO <UPDATE POSITION>
+        int position = thief.getPosition() + thief.getDisplacement();
         
-        this.notify();
+        if(position > this.targetDistance)
+        {
+            position = this.targetDistance;
+            continueCrawling = false;
+        }
+        else
+        {
+            while(this.isSomebodyAt(position) && position > thief.getPosition())
+            {
+                position--;
+            }
+        }
+        
+        thief.setPosition(position);
+        
+        this.notifyAll();
         
         return continueCrawling;
     }
@@ -114,7 +151,7 @@ public class AssaultParty
      */
     public synchronized void reverseDirection() throws InterruptedException
     {
-        while(!allThiefsAtARoom())
+        while(!allThiefsAtState(OrdinaryThief.AT_A_ROOM))
         {
             this.wait();
         }
@@ -123,20 +160,40 @@ public class AssaultParty
     }
     
     /**
-     * Check if every OrdinaryThief in the party state is AT_A_ROOM
+     * Check if every OrdinaryThief in the party has a state
+     * @param state State
+     * @return True if all thieves are at a room
      */
-    private synchronized boolean allThiefsAtARoom()
+    private synchronized boolean allThiefsAtState(int state)
     {
         Iterator<OrdinaryThief> it = thieves.iterator();
         while(it.hasNext())
         {
-            if(it.next().state() != OrdinaryThief.AT_A_ROOM)
+            if(it.next().state() != state)
             {
                 return false;
             }
         }
         
         return true;
+    }
+
+    /**
+     * Check if there is some Thief is at position
+     * @return True if some thief is at that position
+     */
+    private synchronized boolean isSomebodyAt(int position)
+    {
+        Iterator<OrdinaryThief> it = thieves.iterator();
+        while(it.hasNext())
+        {
+            if(it.next().getPosition() == position)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -156,5 +213,9 @@ public class AssaultParty
         this.notify();
         
         return continueCrawling;
+    }
+
+    private boolean allThiefsAtARoom(int AT_A_ROOM) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

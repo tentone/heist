@@ -91,6 +91,15 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Set the thief position
+     * @param position New position
+     */
+    public void setPosition(int position)
+    {
+        this.position = position;
+    }
+    
+    /**
      * Get thief ID
      * @return Thief ID
      */
@@ -132,14 +141,14 @@ public class OrdinaryThief extends Thread
     
     /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
+     * Enter the concentration site and wait until a party is assigned
+     * 
      * @throws java.lang.InterruptedException Exception     
      */
     private void prepareExecution() throws InterruptedException
     {
-        //Enter the concentration site and wait until a party is assigned
         this.concentration.enterAndWait(this);
-        
-        //Reset position and change state
+
         this.position = 0;
         this.setState(CRAWLING_INWARDS);
     }
@@ -150,9 +159,12 @@ public class OrdinaryThief extends Thread
      */
     private void crawlIn() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " crawlIn");
+        while(this.party.crawlIn(this))
+        {
+            System.out.println("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
+        }
         
-        while(this.party.crawlIn(this));
+        System.out.println("Thief " + this.id + " reached room (Position:" + this.position + ")");
     }
     
     /**
@@ -162,7 +174,7 @@ public class OrdinaryThief extends Thread
     {
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
-        System.out.println("Thief " + this.id + " rollACanvas " + this.hasCanvas);
+        System.out.println("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
         
         this.setState(AT_A_ROOM);
     }

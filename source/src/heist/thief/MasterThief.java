@@ -6,6 +6,7 @@ import heist.shared.AssaultParty;
 import heist.shared.CollectionSite;
 import heist.shared.ConcentrationSite;
 import heist.shared.Room;
+import java.util.Iterator;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
@@ -108,20 +109,37 @@ public class MasterThief extends Thread
     }
     
     /**
-     * Get next room to assign to a party.
-     * @return ID of next room to assign, -1 if all rooms have been assigned.
+     * Check if some room has been attributed to a party but is not yet cleared out.
+     * @return True if there are thieves working.
      */
-    private int nextTargetRoom()
+    private boolean thievesWorking()
+    {   
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(this.rooms[i].assignedButNotClear())
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Get next room to assign to a party.
+     * @return Next room to assign, null if all rooms have already been assigned.
+     */
+    private RoomStatus nextTargetRoom()
     {
         for(int i = 0; i < this.rooms.length; i++)
         {
             if(!this.rooms[i].assigned)
             {
-                return this.rooms[i].id;
+                return this.rooms[i];
             }
         }
         
-        return -1;
+        return null;
     }
     
     /**
@@ -173,7 +191,7 @@ public class MasterThief extends Thread
         {
             this.setState(ASSEMBLING_A_GROUP);
         }
-        else
+        else if(this.thievesWorking())
         {
             this.setState(WAITING_FOR_GROUP_ARRIVAL);
         }
@@ -187,11 +205,22 @@ public class MasterThief extends Thread
      */
     private AssaultParty prepareAssaultParty()
     {
-        int target = this.nextTargetRoom();
-        AssaultParty party = this.concentration.createNewParty(target, this.configuration.partySize);
-        this.rooms[target].assignParty(party);
+        RoomStatus target = this.nextTargetRoom();
+        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, target.id, target.distance);
+        target.assignParty(party);
         
-        System.out.println("Master " + this.id + " prepareAssaultParty " + party.getID());
+        String members = "";
+        Iterator<OrdinaryThief> it = party.getThieves();
+        while(it.hasNext())
+        {
+            members += it.next().getID();
+            if(it.hasNext())
+            {
+                members += ", ";
+            }
+        }
+        
+        System.out.println("Master " + this.id + " prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
         
         return party;
     }
@@ -200,14 +229,15 @@ public class MasterThief extends Thread
      * Send assault party with thieves from the party created.
      * Wakes up the first thief in the party. That thief will wake the other thieves.
      * @param party Party to send.
+     * @throws java.lang.InterruptedException Exception
      */
-    private void sendAssaultParty(AssaultParty party)
+    private void sendAssaultParty(AssaultParty party) throws InterruptedException
     {
         party.sendParty();
         
-        this.setState(DECIDING_WHAT_TO_DO);
-        
         System.out.println("Master " + this.id + " sendAssaultParty " + party.getID());
+        
+        this.setState(DECIDING_WHAT_TO_DO);
     }
     
     /**
@@ -290,6 +320,11 @@ public class MasterThief extends Thread
         {
             this.id = id;
             this.distance = distance;
+        }
+        
+        public boolean assignedButNotClear()
+        {
+            return this.assigned && !this.clear;
         }
         
         public void assignParty(AssaultParty party)

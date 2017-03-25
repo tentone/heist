@@ -11,7 +11,7 @@ import heist.thief.OrdinaryThief;
 public class CollectionSite
 {
     private final Queue<OrdinaryThief> queue;
-
+    
     /**
      * Collection site constructor
      */
