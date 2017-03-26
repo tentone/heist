@@ -6,7 +6,6 @@ import heist.GeneralRepository;
 import heist.shared.AssaultParty;
 import heist.shared.ControlCollectionSite;
 import heist.shared.ConcentrationSite;
-import heist.Room;
 import heist.log.Logger;
 
 /**
@@ -27,7 +26,6 @@ public class MasterThief extends Thread
     private final Logger logger;
     
     private final Configuration configuration;
-    private final RoomStatus[] rooms;
     private int state;
 
     /**
@@ -42,108 +40,8 @@ public class MasterThief extends Thread
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
         this.logger = repository.getLogger();
+        
         this.configuration = configuration;
-        
-        Room[] museum = repository.getMuseum().getRooms();
-        this.rooms = new RoomStatus[museum.length];
-        for(int i = 0; i < museum.length; i++)
-        {
-            this.rooms[i] = new RoomStatus(museum[i].getID(), museum[i].getDistance());
-        }
-    }
-    
-    /**
-     * Checks if all rooms are clear.
-     * Uses internal RoomStatus objects inside MasterThief object.
-     * @return True if all rooms are clear.
-     */
-    private boolean allRoomsClear()
-    {
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            if(!this.rooms[i].isClear() || this.rooms[i].underAttack())
-            {
-                return false;
-            }
-        }
-    
-        return true;
-    }
-    
-    /**
-     * Updated the RoomStatus after receiving a painting from that room.
-     * If an empty handed thief arrives marks the room as clean.
-     * Used inside the collectionSite to transfer the canvas from the OrdinaryThief to the MasterThief.
-     * @param id Room id.
-     * @param canvas If true a canvas was delivered.
-     */
-    public void collectCanvas(int id, boolean canvas)
-    {
-        try
-        {
-            if(canvas)
-            {
-                this.rooms[id].deliverPainting();
-            }
-            else
-            {
-                this.rooms[id].setClear();
-            }            
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    /**
-     * Get next room to assign to a party.
-     * @return Next room to assign, null if all rooms have already been assigned.
-     */
-    private RoomStatus nextTargetRoom()
-    {
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            if(!this.rooms[i].isClear() && !this.rooms[i].underAttack())
-            {
-                return this.rooms[i];
-            }
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Check if there is any room under attack.
-     * @return True if there is a room under attack.
-     */
-    private boolean thievesAttackingRooms()
-    {
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            if(this.rooms[i].underAttack())
-            {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Check how many paintings were stolen.
-     * @return Number of paintings.
-     */
-    private int totalPaintingsStolen()
-    {
-        int sum = 0;
-        
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            sum += this.rooms[i].getPaintings();
-        }
-        
-        return sum;
     }
     
     /**
@@ -168,23 +66,13 @@ public class MasterThief extends Thread
     /**
      * Analyze the situation and take a decision.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
+     * @throws java.lang.InterruptedException Exception
      */
-    private void appraiseSit()
+    private void appraiseSit() throws InterruptedException
     {
         this.logger.write("Master appraiseSit");
         
-        if(this.allRoomsClear())
-        {
-            this.setState(MasterThief.PRESENTING_THE_REPORT);
-        }
-        else if(this.nextTargetRoom() != null && this.concentration.hasEnoughToCreateParty(this.configuration.partySize))
-        {
-            this.setState(MasterThief.ASSEMBLING_A_GROUP);
-        }
-        else if(this.thievesAttackingRooms())
-        {
-            this.setState(MasterThief.WAITING_FOR_GROUP_ARRIVAL);
-        }
+        this.setState(this.collection.appraiseSit());
     }
     
     /**
@@ -194,7 +82,7 @@ public class MasterThief extends Thread
      */
     private AssaultParty prepareAssaultParty() throws InterruptedException
     {
-        RoomStatus room = this.nextTargetRoom();
+        RoomStatus room = this.collection.nextTargetRoom();
         room.setThievesAttacking(this.configuration.partySize);
         
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
@@ -236,9 +124,9 @@ public class MasterThief extends Thread
      */
     private void collectCanvas() throws InterruptedException
     {
-        this.collection.collectCanvas(this);
+        this.collection.collectCanvas();
 
-        this.logger.write("Master collectCanvas (Total:" + this.totalPaintingsStolen() + ")");
+        this.logger.write("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
         
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
     }
@@ -251,7 +139,7 @@ public class MasterThief extends Thread
     {
         this.collection.sumUpResults();
         
-        this.logger.write(this.totalPaintingsStolen() + " paintings were stolen!!!");
+        this.logger.write(this.collection.totalPaintingsStolen() + " paintings were stolen!!!");
     }
     
     @Override

@@ -12,7 +12,6 @@ import heist.RoomStatus;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
-    private final AssaultParty[] parties;
     
     /**
      * ConcentrationSite constructor.
@@ -20,7 +19,7 @@ public class ConcentrationSite
     public ConcentrationSite()
     {   
         this.thieves = new Queue<>();
-        this.parties = new AssaultParty[2];
+
     }
     
     /**

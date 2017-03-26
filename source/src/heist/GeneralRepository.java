@@ -34,7 +34,7 @@ public class GeneralRepository
         
         this.museum = new Museum(this.configuration);
         this.concentration = new ConcentrationSite();
-        this.collection = new ControlCollectionSite();
+        this.collection = new ControlCollectionSite(this.configuration, this.museum);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)

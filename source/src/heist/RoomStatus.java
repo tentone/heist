@@ -59,7 +59,7 @@ public class RoomStatus extends Room
         
         if(this.thievesAttacking < 0)
         {
-            throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
+            //throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
         }
     }
     
@@ -75,7 +75,7 @@ public class RoomStatus extends Room
         
         if(this.thievesAttacking < 0)
         {
-            throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
+            //throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
         }
     }
 }

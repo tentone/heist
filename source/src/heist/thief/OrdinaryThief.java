@@ -226,14 +226,14 @@ public class OrdinaryThief extends Thread
         
         this.collection.handACanvas(this);
     }
-    
+
     /**
      * Thread run method
      */
     @Override
     public void run()
     {
-        this.logger.write("Thief " + this.id + " started");
+        this.logger.write("Thief " + this.id + " started (MD:" + this.maximumDisplacement + ")");
         
         try
         {
