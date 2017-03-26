@@ -139,63 +139,52 @@ public class AssaultParty
             this.wait();
         }
         
-        /*
-        int position = thief.getPosition() + thief.getDisplacement();
-        
-        //Avoid getting far away from other thieves
-        Iterator<OrdinaryThief> it = this.thieves.iterator();
-        int max = -1;
-        while(it.hasNext())
+        for(int delta = 0; delta < thief.getDisplacement(); delta++)
         {
-            OrdinaryThief t = it.next();
-            if(t != thief)
-            {
-                if(position - t.getPosition() > this.maxDistance)
-                {
-                    int temp = t.getPosition() + this.maxDistance;
-                    if(temp > max)
-                    {
-                        max = temp;
-                    }
-                }
-            }
-        }
-        if(max != -1)
-        {
-            position = max;
-        }
-        
-        //Avoid collision with other thieves
-        boolean occupied = true;
-        while(occupied && position > thief.getPosition())
-        {
-            occupied = false;
-            it = thieves.iterator();
+            int position = thief.getPosition() + delta;
+            boolean emptyPosition = true;
+            int distance = Integer.MAX_VALUE;
+            
+            //Check if position is valid
+            Iterator<OrdinaryThief> it = this.thieves.iterator();
             while(it.hasNext())
             {
                 OrdinaryThief t = it.next();
-                if(t != thief && t.getPosition() == position)
+                if(t != thief)
                 {
-                    occupied = true;
-                    break;
+                    //Collision
+                    if(t.getPosition() == position)
+                    {
+                        emptyPosition = false;
+                    }
+                    
+                    //Distance
+                    int temp = position - t.getPosition();
+                    if(temp < distance)
+                    {
+                        distance = temp;
+                    }
                 }
             }
-
-            if(occupied)
+            
+            //Position close enough to party members
+            if(distance <= this.maxDistance)
             {
-                position--;
+                if(position >= this.room.getDistance())
+                {
+                    thief.setPosition(this.room.getDistance());
+                }
+                else if(emptyPosition)
+                {
+                    thief.setPosition(position);
+                }
+            }
+            //Already too far away
+            else
+            {
+                break;
             }
         }
-        
-        //If passing the target distance limit
-        if(position > this.room.getDistance())
-        {
-            position = this.room.getDistance();
-        }
-        */
-        
-        //TODO <CRAWL IN MOVEMENT>
-        thief.setPosition(thief.getPosition() + 1);
         
         this.thieves.popPush();
         this.notifyAll();
@@ -252,5 +241,25 @@ public class AssaultParty
         this.notifyAll();
         
         return thief.getPosition() != 0;
+    }
+    
+    /**
+     * Generate string with AssaultParty members id.
+     * @return String with AssaultParty information.
+     */
+    @Override
+    public synchronized String toString()
+    {
+        String s = "[";
+        Iterator<OrdinaryThief> it = this.thieves.iterator();
+        while(it.hasNext())
+        {
+            s += it.next().getID();
+            if(it.hasNext())
+            {
+                s += ", ";
+            }
+        }
+        return s + "]";
     }
 }

@@ -76,7 +76,14 @@ public class ConcentrationSite
         
         for(int i = 0; i < partySize; i++)
         {
-            party.addThief(this.thieves.pop());
+            try
+            {
+                party.addThief(this.thieves.pop());
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
             this.notify();
         }
         
