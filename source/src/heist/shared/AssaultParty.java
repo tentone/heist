@@ -15,7 +15,7 @@ public class AssaultParty
 {
     private static int IDCounter = 0;
 
-    private final int id, partySize, maxDistance;
+    private final int id, partySize, thiefDistance;
     private final LinkedQueue<OrdinaryThief> thieves;
     
     private final RoomStatus room;
@@ -25,16 +25,16 @@ public class AssaultParty
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
      * @param partySize Assault party size.
-     * @param maxDistance Maximum distance between thieves.
+     * @param thiefDistance Maximum distance between thieves.
      * @param room Target room.
      */
-    public AssaultParty(int partySize, int maxDistance, RoomStatus room)
+    public AssaultParty(int partySize, int thiefDistance, RoomStatus room)
     {
         this.id = IDCounter++;
         this.thieves = new LinkedQueue<>();
         
         this.partySize = partySize;
-        this.maxDistance = maxDistance;
+        this.thiefDistance = thiefDistance;
         this.room = room;
         
         this.partyCrawling = false;
@@ -147,55 +147,66 @@ public class AssaultParty
             }
         }
         
-        for(int delta = 0; delta < thief.getDisplacement(); delta++)
+        for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
             int position = thief.getPosition() + delta;
-            boolean emptyPosition = true;
-            int distance = Integer.MAX_VALUE;
+            boolean emptyPosition = true, distanceOk = true;
             
             //Check if position is valid
-            Iterator<OrdinaryThief> it = this.thieves.iterator();
-            while(it.hasNext())
+            Iterator<OrdinaryThief> ita = this.thieves.iterator();
+            while(ita.hasNext())
             {
-                OrdinaryThief t = it.next();
-                if(t != thief)
+                OrdinaryThief ta = ita.next();
+                
+                //Collision
+                if(ta != thief)
                 {
-                    //Collision
-                    if(t.getPosition() == position)
+                    if(ta.getPosition() == position)
                     {
                         emptyPosition = false;
+                        break;
                     }
-                    
+                }
+                
+                //Check distance
+                Iterator<OrdinaryThief> itb = this.thieves.iterator();
+                int minDistanceThief = Integer.MAX_VALUE;
+                while(itb.hasNext())
+                {
+                    OrdinaryThief tb = itb.next();
+
                     //Distance
-                    int temp = position - t.getPosition();
-                    if(temp < 0)
+                    int distance = Math.abs(tb.getPosition() - ta.getPosition());
+                    if(ta == thief)
                     {
-                        temp = 0;
+                        distance = Math.abs(tb.getPosition() - position);
                     }
-                    
-                    if(temp < distance)
+
+                    if(distance < minDistanceThief)
                     {
-                        distance = temp;
+                        minDistanceThief = distance;
                     }
+                }
+
+                if(minDistanceThief > this.thiefDistance)
+                {
+                    distanceOk = false;
+                    break;
                 }
             }
             
-            //Position close enough to party members
-            if(distance <= this.maxDistance)
+            if(distanceOk)
             {
                 if(position >= this.room.getDistance())
                 {
                     thief.setPosition(this.room.getDistance());
+                    break;
                 }
                 else if(emptyPosition)
                 {
                     thief.setPosition(position);
+                    break;
                 }
-            }
-            //Already too far away
-            else
-            {
-                break;
             }
         }
         
@@ -252,54 +263,66 @@ public class AssaultParty
             }
         }
         
-        for(int delta = 0; delta < thief.getDisplacement(); delta++)
+        for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
             int position = thief.getPosition() - delta;
-            boolean emptyPosition = true;
-            int distance = Integer.MAX_VALUE;
+            boolean emptyPosition = true, distanceOk = true;
             
             //Check if position is valid
-            Iterator<OrdinaryThief> it = this.thieves.iterator();
-            while(it.hasNext())
+            Iterator<OrdinaryThief> ita = this.thieves.iterator();
+            while(ita.hasNext())
             {
-                OrdinaryThief t = it.next();
-                if(t != thief)
+                OrdinaryThief ta = ita.next();
+                
+                //Collision
+                if(ta != thief)
                 {
-                    //Collision
-                    if(t.getPosition() == position)
+                    if(ta.getPosition() == position)
                     {
                         emptyPosition = false;
+                        break;
                     }
-                    
+                }
+                
+                //Check distance between ta and all thieves
+                Iterator<OrdinaryThief> itb = this.thieves.iterator();
+                int minDistanceThief = Integer.MAX_VALUE;
+                while(itb.hasNext())
+                {
+                    OrdinaryThief tb = itb.next();
+
                     //Distance
-                    int temp = t.getPosition() - position;
-                    if(temp < 0)
+                    int distance = Math.abs(tb.getPosition() - ta.getPosition());
+                    if(ta == thief)
                     {
-                        temp = 0;
+                        distance = Math.abs(tb.getPosition() - position);
                     }
-                    if(temp < distance)
+
+                    if(distance < minDistanceThief)
                     {
-                        distance = temp;
+                        minDistanceThief = distance;
                     }
+                }
+
+                if(minDistanceThief > this.thiefDistance)
+                {
+                    distanceOk = false;
+                    break;
                 }
             }
             
-            //Position close enough to party members
-            if(distance <= this.maxDistance)
+            if(distanceOk)
             {
                 if(position <= 0)
                 {
                     thief.setPosition(0);
+                    break;
                 }
                 else if(emptyPosition)
                 {
                     thief.setPosition(position);
+                    break;
                 }
-            }
-            //Already too far away
-            else
-            {
-                break;
             }
         }
         

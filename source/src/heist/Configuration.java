@@ -10,12 +10,15 @@ public class Configuration
 {
     public final int numberThieves, numberRooms, partySize, thiefDistance;
     public final Range thiefDisplacement, roomDistance, numberPaintings;
+    public final String logFile;
     
     /**
      * Default constructor for Configuration with default values.
      */
     public Configuration()
     {
+        this.logFile = "log.txt";
+        
         this.numberThieves = 6;
         this.thiefDistance = 3;
         this.thiefDisplacement = new Range(2, 6);

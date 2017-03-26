@@ -46,7 +46,7 @@ public class GeneralRepository
     }
     
     /**
-     * Initialize simulation elements and starts the simulation, calls the start method in all thieves
+     * Initialise simulation elements and starts the simulation, calls the start method in all thieves
      */
     public void start()
     {
