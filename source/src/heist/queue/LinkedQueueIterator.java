@@ -7,7 +7,7 @@ import java.util.Iterator;
  * @author Jose Manuel
  * @param <T> 
  */
-class QueueIterator<T> implements Iterator
+class LinkedQueueIterator<T> implements Iterator
 {
     private Node<T> node;
     
@@ -15,7 +15,7 @@ class QueueIterator<T> implements Iterator
      * Constructor for the QueueIterator object.
      * @param node First node in the FIFO.
      */
-    public QueueIterator(Node<T> node)
+    public LinkedQueueIterator(Node<T> node)
     {
         this.node = node;
     }

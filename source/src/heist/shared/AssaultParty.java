@@ -1,6 +1,6 @@
 package heist.shared;
 
-import heist.queue.Queue;
+import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
 import heist.RoomStatus;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ public class AssaultParty
     private static int IDCounter = 0;
 
     private final int id, partySize, maxDistance;
-    private final Queue<OrdinaryThief> thieves;
+    private final LinkedQueue<OrdinaryThief> thieves;
     
     private final RoomStatus room;
     private int waitingToReverse;
@@ -31,7 +31,7 @@ public class AssaultParty
     public AssaultParty(int partySize, int maxDistance, RoomStatus room)
     {
         this.id = IDCounter++;
-        this.thieves = new Queue<>();
+        this.thieves = new LinkedQueue<>();
         
         this.partySize = partySize;
         this.maxDistance = maxDistance;

@@ -1,6 +1,6 @@
 package heist.shared;
 
-import heist.queue.Queue;
+import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
 import heist.RoomStatus;
 
@@ -11,16 +11,16 @@ import heist.RoomStatus;
  */
 public class ConcentrationSite
 {
-    private final Queue<OrdinaryThief> thieves;
-    private final Queue<AssaultParty> parties;
+    private final LinkedQueue<OrdinaryThief> thieves;
+    private final LinkedQueue<AssaultParty> parties;
     
     /**
      * ConcentrationSite constructor.
      */
     public ConcentrationSite()
     {   
-        this.thieves = new Queue<>();
-        this.parties = new Queue<>();
+        this.thieves = new LinkedQueue<>();
+        this.parties = new LinkedQueue<>();
     }
     
     /*

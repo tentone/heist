@@ -1,7 +1,7 @@
 package heist.log;
 
 import heist.GeneralRepository;
-import heist.queue.Queue;
+import heist.queue.LinkedQueue;
 import java.io.PrintStream;
 
 /**
@@ -11,7 +11,7 @@ import java.io.PrintStream;
 public class Logger
 {
     private static final boolean debug = true;
-    private final Queue<String> log;
+    private final LinkedQueue<String> log;
     private final GeneralRepository repository;
     private final PrintStream out;
     
@@ -22,7 +22,7 @@ public class Logger
      */
     public Logger(GeneralRepository repository, PrintStream out)
     {
-        this.log = new Queue<>();
+        this.log = new LinkedQueue<>();
         this.repository = repository;
         this.out = out;
     }
@@ -33,7 +33,7 @@ public class Logger
      */
     public Logger(GeneralRepository repository)
     {
-        this.log = new Queue<>();
+        this.log = new LinkedQueue<>();
         this.repository = repository;
         this.out = System.out;
     }

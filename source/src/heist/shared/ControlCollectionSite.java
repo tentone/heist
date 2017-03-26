@@ -3,7 +3,7 @@ package heist.shared;
 import heist.Configuration;
 import heist.Room;
 import heist.RoomStatus;
-import heist.queue.Queue;
+import heist.queue.LinkedQueue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
@@ -16,7 +16,7 @@ public class ControlCollectionSite
 {
     private final Configuration configuration;
     
-    private final Queue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
+    private final LinkedQueue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
     private final RoomStatus[] rooms;
 
     private boolean heistTerminated;
@@ -30,8 +30,8 @@ public class ControlCollectionSite
     {   
         this.configuration = configuration;
         
-        this.canvasDeliverQueue = new Queue<>();
-        this.amINeededQueue = new Queue<>();
+        this.canvasDeliverQueue = new LinkedQueue<>();
+        this.amINeededQueue = new LinkedQueue<>();
         
         this.heistTerminated = false;
         
