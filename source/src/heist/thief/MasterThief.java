@@ -52,7 +52,7 @@ public class MasterThief extends Thread
     {
         this.state = state;
 
-        this.logger.write("Master change state " + this.state);
+        this.logger.debug("Master change state " + this.state);
     }
     
     /**
@@ -70,7 +70,7 @@ public class MasterThief extends Thread
      */
     private void appraiseSit() throws InterruptedException
     {
-        this.logger.write("Master appraiseSit");
+        this.logger.debug("Master appraiseSit");
         
         this.setState(this.collection.appraiseSit());
     }
@@ -87,7 +87,7 @@ public class MasterThief extends Thread
         
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
         
-        this.logger.write("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " Members:" + party.toString() + ")");
+        this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " Members:" + party.toString() + ")");
         
         return party;
     }
@@ -100,7 +100,7 @@ public class MasterThief extends Thread
      */
     private void sendAssaultParty(AssaultParty party) throws InterruptedException
     {
-        this.logger.write("Master sendAssaultParty " + party.getID());
+        this.logger.debug("Master sendAssaultParty " + party.getID());
         
         party.sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
@@ -112,7 +112,7 @@ public class MasterThief extends Thread
      */
     private void takeARest() throws InterruptedException
     {
-        this.logger.write("Master takeARest");
+        this.logger.debug("Master takeARest");
         
         this.collection.takeARest();
     }
@@ -126,7 +126,7 @@ public class MasterThief extends Thread
     {
         this.collection.collectCanvas();
 
-        this.logger.write("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
+        this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
         
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
     }
@@ -139,7 +139,7 @@ public class MasterThief extends Thread
     {
         this.collection.sumUpResults();
         
-        this.logger.write(this.collection.totalPaintingsStolen() + " paintings were stolen!!!");
+        this.logger.debug(this.collection.totalPaintingsStolen() + " paintings were stolen!!!");
     }
     
     /**
@@ -148,7 +148,7 @@ public class MasterThief extends Thread
     @Override
     public void run()
     {
-        this.logger.write("Master started");
+        this.logger.debug("Master started");
         
         try
         {
@@ -160,27 +160,27 @@ public class MasterThief extends Thread
 
                 if(this.state == MasterThief.WAITING_FOR_GROUP_ARRIVAL)
                 {
-                    this.logger.write("Master WAITING_FOR_GROUP_ARRIVAL");
+                    this.logger.debug("Master WAITING_FOR_GROUP_ARRIVAL");
                     this.takeARest();
                     this.collectCanvas();
                 }
                 else if(this.state == MasterThief.ASSEMBLING_A_GROUP)
                 {
-                    this.logger.write("Master ASSEMBLING_A_GROUP");
+                    this.logger.debug("Master ASSEMBLING_A_GROUP");
                     this.sendAssaultParty(this.prepareAssaultParty());
                 }
             }
             
-            this.logger.write("Master PRESENTING_THE_REPORT");
+            this.logger.debug("Master PRESENTING_THE_REPORT");
             this.sumUpResults();
         }
         catch(InterruptedException e)
         {
-            this.logger.write("Master error");
+            this.logger.debug("Master error");
             e.printStackTrace();
         }
 
         
-        this.logger.write("Master terminated");
+        this.logger.debug("Master terminated");
     }
 }

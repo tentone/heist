@@ -137,7 +137,7 @@ public class OrdinaryThief extends Thread
     {
         this.state = state;
         
-        this.logger.write("Thief " + this.id + " change state " + this.state);
+        this.logger.debug("Thief " + this.id + " change state " + this.state);
     }
     
     /**
@@ -146,7 +146,7 @@ public class OrdinaryThief extends Thread
      */
     private boolean amINeeded() throws InterruptedException
     {
-        this.logger.write("Thief " + this.id + " amINeeded");
+        this.logger.debug("Thief " + this.id + " amINeeded");
         
         return this.collection.amINeeded(this);
     }
@@ -158,11 +158,11 @@ public class OrdinaryThief extends Thread
      */
     private void prepareExecution() throws Exception
     {
-        this.logger.write("Thief " + this.id + " entered the concentration site");
+        this.logger.debug("Thief " + this.id + " entered the concentration site");
         
         this.concentration.prepareExcursion(this);
         
-        this.logger.write("Thief " + this.id + " party assigned " + this.party.getID());
+        this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
     }
     
     /**
@@ -174,10 +174,10 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_INWARDS);  
         while(this.party.crawlIn(this))
         {
-            this.logger.write("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
+            this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
         }
         
-        this.logger.write("Thief " + this.id + " reached room (Position:" + this.position + ")");
+        this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
     }
     
     /**
@@ -188,7 +188,7 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.AT_A_ROOM);
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
-        this.logger.write("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
+        this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
     }
     
     /**
@@ -197,7 +197,7 @@ public class OrdinaryThief extends Thread
     private void reverseDirection() throws InterruptedException
     {      
         this.party.reverseDirection();
-        this.logger.write("Thief " + this.id + " reverse");
+        this.logger.debug("Thief " + this.id + " reverse");
     }
     
     /**
@@ -209,10 +209,10 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         while(this.party.crawlOut(this))
         {
-            this.logger.write("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
+            this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
         }
         
-        this.logger.write("Thief " + this.id + " reached outside (Position:" + this.position + ")");
+        this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
     }
     
     /**
@@ -222,7 +222,7 @@ public class OrdinaryThief extends Thread
     {
         this.setState(OrdinaryThief.OUTSIDE);
         
-        this.logger.write("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
+        this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
         
         this.collection.handACanvas(this);
     }
@@ -233,7 +233,7 @@ public class OrdinaryThief extends Thread
     @Override
     public void run()
     {
-        this.logger.write("Thief " + this.id + " started (MD:" + this.maximumDisplacement + ")");
+        this.logger.debug("Thief " + this.id + " started (MD:" + this.maximumDisplacement + ")");
         
         try
         {
@@ -253,10 +253,10 @@ public class OrdinaryThief extends Thread
         }
         catch(Exception e)
         {
-            this.logger.write("Thief " + this.id + " error");
+            this.logger.debug("Thief " + this.id + " error");
             e.printStackTrace();
         }
         
-        this.logger.write("Thief " + this.id + " terminated");
+        this.logger.debug("Thief " + this.id + " terminated");
     }
 }

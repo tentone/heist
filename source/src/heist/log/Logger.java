@@ -10,9 +10,10 @@ import java.io.PrintStream;
  */
 public class Logger
 {
-    private Queue<String> log;
-    private GeneralRepository repository;
-    private PrintStream out;
+    private static final boolean debug = true;
+    private final Queue<String> log;
+    private final GeneralRepository repository;
+    private final PrintStream out;
     
     /**
      * Constructor from repository and specific PrintStream object to be used to display log messages as they are created.
@@ -41,16 +42,19 @@ public class Logger
      * Write message directly to the PrintStream.
      * @param message Message to display.
      */
-    public void write(String message)
+    public synchronized void debug(String message)
     {
-        out.println(message);
-        out.flush();
+        if(debug)
+        {
+            out.println(message);
+            out.flush();
+        }
     }
     
     /**
      * Create a log entry of everything in the general repository
      */
-    public void log()
+    public synchronized void log()
     {
         out.println("MstT      Thief 1      Thief 2      Thief 3      Thief 4      Thief 5      Thief 6");
         out.println("Stat    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD");

@@ -168,44 +168,54 @@ public class ControlCollectionSite
     /**
      * Analyse the situation and take a decision for the MasterThief.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
+     * @return New state to be attributed tho the MasterThief.
      * @throws java.lang.InterruptedException Exception
      */
     public synchronized int appraiseSit() throws InterruptedException
     {
-        if(this.thievesAttackingRooms())
+        if(this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize)
+        {
+            for(int i = 0; i < this.configuration.partySize; i++)
+            {
+                this.amINeededQueue.pop();
+                this.notifyAll();
+            }
+
+            return MasterThief.ASSEMBLING_A_GROUP;
+        }
+        else if(this.thievesAttackingRooms())
         {
             return MasterThief.WAITING_FOR_GROUP_ARRIVAL;
         }
-        else
+        else if(this.allRoomsClear())
         {
-            if(this.allRoomsClear())
+            while(this.amINeededQueue.size() < this.configuration.numberThieves)
             {
-                while(this.amINeededQueue.size() < this.configuration.numberThieves)
-                {
-                    this.wait();
-                }
-
-                this.amINeededQueue.clear();
-                this.notifyAll();
-
-                return MasterThief.PRESENTING_THE_REPORT;
+                this.wait();
             }
-            else if(this.nextTargetRoom() != null)
-            {
-                while(this.amINeededQueue.size() < this.configuration.partySize)
-                {
-                    this.wait();
-                }
 
-                for(int i = 0; i < this.configuration.partySize; i++)
-                {
-                    this.amINeededQueue.pop();
-                    this.notify();
-                }
+            this.amINeededQueue.clear();
+            this.notifyAll();
 
-                return MasterThief.ASSEMBLING_A_GROUP;
-            }
+            return MasterThief.PRESENTING_THE_REPORT;
         }
+        
+        /*if(this.nextTargetRoom() != null)
+        {
+            while(this.amINeededQueue.size() < this.configuration.partySize)
+            {
+                this.wait();
+            }
+
+            for(int i = 0; i < this.configuration.partySize; i++)
+            {
+                this.amINeededQueue.pop();
+                this.notifyAll();
+            }
+
+            return MasterThief.ASSEMBLING_A_GROUP;
+        }*/
+        
         return MasterThief.DECIDING_WHAT_TO_DO;
     }
     
