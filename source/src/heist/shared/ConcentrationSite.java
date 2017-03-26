@@ -5,8 +5,8 @@ import heist.thief.OrdinaryThief;
 import heist.RoomStatus;
 
 /**
- * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a party.
- * Concentration site is accessed by the MasterThief to get OrdinaryThieves to create parties.
+ * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
+ * ConcentrationSite is accessed by the MasterThief to get OrdinaryThieves to create and join AssaultParties.
  * @author Jose Manuel
  */
 public class ConcentrationSite
@@ -22,16 +22,6 @@ public class ConcentrationSite
         this.thieves = new LinkedQueue<>();
         this.parties = new LinkedQueue<>();
     }
-    
-    /*
-     * Check if there are enough OrdinaryThief to form a new AssaultParty.
-     * @param partySize AssaultParty size.
-     * @return True number of OrdinaryThief bigger or equal to SssaultParty size.
-     */
-    /*private synchronized boolean hasEnoughToCreateParty(int partySize)
-    {
-        return this.thieves.size() >= partySize;
-    }*/
     
     /**
      * Create new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.

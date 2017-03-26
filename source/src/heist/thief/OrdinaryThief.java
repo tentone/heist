@@ -125,7 +125,9 @@ public class OrdinaryThief extends Thread
     public boolean deliverCanvas()
     {
         boolean canvas = this.hasCanvas;
+        
         this.hasCanvas = false;
+        
         return canvas;
     }
     
@@ -228,7 +230,7 @@ public class OrdinaryThief extends Thread
     }
 
     /**
-     * Thread run method
+     * Implements OrdinaryThief life cycle.
      */
     @Override
     public void run()

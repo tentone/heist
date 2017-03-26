@@ -17,6 +17,17 @@ public class Logger
     
     /**
      * Constructor from repository and specific PrintStream object to be used to display log messages as they are created.
+     * Legend:
+     * MstT Stat    – state of the master thief
+     * Thief # Stat - state of the ordinary thief # (# - 1 .. 6)
+     * Thief # S    – situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)
+     * Thief # MD   – maximum displacement of the ordinary thief # (# - 1 .. 6) a random number between 2 and 6
+     * Assault party # RId        – assault party # (# - 1,2) elem # (# - 1 .. 3) room identification (1 .. 5)
+     * Assault party # Elem # Id  – assault party # (# - 1,2) elem # (# - 1 .. 3) member identification (1 .. 6)
+     * Assault party # Elem # Pos – assault party # (# - 1,2) elem # (# - 1 .. 3) present position (0 .. DT RId)
+     * Assault party # Elem # Cv  – assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)
+     * Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls
+     * Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30
      * @param repository GeneralRepository to be logged.
      * @param out PrintStream to write log to.
      */
@@ -66,17 +77,5 @@ public class Logger
         out.println("     #    #  ##  #   #  ##  #   #  ##  #   #    #  ##  #   #  ##  #   #  ##  #   ## ##   ## ##   ## ##   ## ##   ## ##");
         
         out.println("My friends, tonight's effort produced ## priceless paintings!");
-        
-        /*Legend:
-        MstT Stat    – state of the master thief
-        Thief # Stat - state of the ordinary thief # (# - 1 .. 6)
-        Thief # S    – situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)
-        Thief # MD   – maximum displacement of the ordinary thief # (# - 1 .. 6) a random number between 2 and 6
-        Assault party # RId        – assault party # (# - 1,2) elem # (# - 1 .. 3) room identification (1 .. 5)
-        Assault party # Elem # Id  – assault party # (# - 1,2) elem # (# - 1 .. 3) member identification (1 .. 6)
-        Assault party # Elem # Pos – assault party # (# - 1,2) elem # (# - 1 .. 3) present position (0 .. DT RId)
-        ssault party # Elem # Cv  – assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)
-        Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls
-        Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30*/
     }
 }

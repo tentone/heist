@@ -123,6 +123,7 @@ public class ControlCollectionSite
     /**
      * Check if the OrdinaryThief is still needed or if he can be terminated.
      * The OrdinaryThief blocks until prepareAssaultParty or sumUpResults is called by the MasterThief.
+     * @param thief OrdinaryThief to check.
      * @throws java.lang.InterruptedException Exception
      * @return True if the OrdinaryThief is still needed
      */
@@ -131,6 +132,12 @@ public class ControlCollectionSite
         this.amINeededQueue.push(thief);
         this.notifyAll();
 
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            System.out.println("AIN [ID: " + this.rooms[i].getID() + " P:" + this.rooms[i].getPaintings() + " TA:" + this.rooms[i].getThievesAttacking() + "]");
+            System.out.flush();
+        }
+        
         do
         {
             this.wait();
@@ -160,6 +167,12 @@ public class ControlCollectionSite
         }
         else if(this.thievesAttackingRooms())
         {
+            for(int i = 0; i < this.rooms.length; i++)
+            {
+                System.out.println("WFGA [ID: " + this.rooms[i].getID() + " P:" + this.rooms[i].getPaintings() + " TA:" + this.rooms[i].getThievesAttacking() + "]");
+                System.out.flush();
+            }
+            
             return MasterThief.WAITING_FOR_GROUP_ARRIVAL;
         }
         else if(this.allRoomsClear())
@@ -215,7 +228,7 @@ public class ControlCollectionSite
         this.notifyAll();
         
         while(this.canvasDeliverQueue.contains(thief))
-        {
+        {    
             this.wait();
         }
     }
@@ -229,26 +242,29 @@ public class ControlCollectionSite
      */
     public synchronized void collectCanvas() throws InterruptedException
     {
-        OrdinaryThief thief = this.canvasDeliverQueue.pop();
-        
-        try
+        while(!this.canvasDeliverQueue.isEmpty())
         {
-            int targetID = thief.getParty().getTarget();
-            if(thief.deliverCanvas())
+            OrdinaryThief thief = this.canvasDeliverQueue.pop();
+
+            try
             {
-                this.rooms[targetID].deliverPainting();
+                int targetID = thief.getParty().getTarget();
+                if(thief.deliverCanvas())
+                {
+                    this.rooms[targetID].deliverPainting();
+                }
+                else
+                {
+                    this.rooms[targetID].setClear();
+                }
             }
-            else
+            catch(Exception e)
             {
-                this.rooms[targetID].setClear();
+                e.printStackTrace();
             }
+            
+            this.notifyAll();
         }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        
-        this.notifyAll();
     }
     
     /**

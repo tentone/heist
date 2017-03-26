@@ -27,9 +27,19 @@ public class RoomStatus extends Room
      * Set if there is a party assigned to this room. Indication the number of thieves attacking the room.
      * @param thievesAttacking Number of thieves attacking the room.
      */
-    public void setThievesAttacking(int thievesAttacking)
+    public void addThievesAttacking(int thievesAttacking)
     {
         this.thievesAttacking += thievesAttacking;
+    }
+    
+    /**
+     * Get how many thieves are still attacking the room.
+     * This number is decreased when returning from the room with a canvas or empty handed.
+     * @return Number of thieves attacking the room.
+     */
+    public int getThievesAttacking()
+    {
+        return this.thievesAttacking;
     }
     
     /**
@@ -56,8 +66,8 @@ public class RoomStatus extends Room
      */
     public void setClear() throws Exception
     {
-        this.clear = true;
         this.thievesAttacking--;
+        this.clear = true;
         
         if(this.thievesAttacking < 0)
         {
@@ -72,8 +82,8 @@ public class RoomStatus extends Room
      */
     public void deliverPainting() throws Exception
     {
-        this.paintings++;
         this.thievesAttacking--;
+        this.paintings++;
         
         if(this.thievesAttacking < 0)
         {
