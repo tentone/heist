@@ -61,7 +61,7 @@ public class MasterThief extends Thread
     {
         for(int i = 0; i < this.rooms.length; i++)
         {
-            if(!this.rooms[i].isClear())
+            if(!this.rooms[i].isClear() || this.rooms[i].underAttack())
             {
                 return false;
             }
@@ -79,13 +79,20 @@ public class MasterThief extends Thread
      */
     public void collectCanvas(int id, boolean canvas)
     {
-        if(canvas)
+        try
         {
-            this.rooms[id].addPainting();
+            if(canvas)
+            {
+                this.rooms[id].deliverPainting();
+            }
+            else
+            {
+                this.rooms[id].setClear();
+            }            
         }
-        else
+        catch(Exception e)
         {
-            this.rooms[id].setClear();
+            e.printStackTrace();
         }
     }
     
@@ -97,13 +104,30 @@ public class MasterThief extends Thread
     {
         for(int i = 0; i < this.rooms.length; i++)
         {
-            if(!this.rooms[i].isClear())
+            if(!this.rooms[i].isClear() && !this.rooms[i].underAttack())
             {
                 return this.rooms[i];
             }
         }
         
         return null;
+    }
+    
+    /**
+     * Check if there is any room under attack.
+     * @return True if there is a room under attack.
+     */
+    private boolean thievesAttackingRooms()
+    {
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            if(this.rooms[i].underAttack())
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -153,14 +177,11 @@ public class MasterThief extends Thread
         {
             this.setState(MasterThief.PRESENTING_THE_REPORT);
         }
-        //TODO <THERE IS A PARTY AVAILABLE>
-        //Passar a ter paties estaticas que vou enchendo usando e reutilizando em vez das parties dinamicas
-        else if(this.concentration.hasEnoughToCreateParty(this.configuration.partySize))
+        else if(this.nextTargetRoom() != null && this.concentration.hasEnoughToCreateParty(this.configuration.partySize))
         {
             this.setState(MasterThief.ASSEMBLING_A_GROUP);
         }
-        //TODO <IF THERE IS A PARTY OCCUPIED>
-        else
+        else if(this.thievesAttackingRooms())
         {
             this.setState(MasterThief.WAITING_FOR_GROUP_ARRIVAL);
         }
@@ -174,10 +195,11 @@ public class MasterThief extends Thread
     private AssaultParty prepareAssaultParty() throws InterruptedException
     {
         RoomStatus room = this.nextTargetRoom();
+        room.setThievesAttacking(this.configuration.partySize);
         
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
         
-        this.logger.write("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + party.toString() + ")");
+        this.logger.write("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " Members:" + party.toString() + ")");
         
         return party;
     }
@@ -229,7 +251,7 @@ public class MasterThief extends Thread
     {
         this.concentration.sumUpResults();
         
-        this.logger.write(this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        this.logger.write(this.totalPaintingsStolen() + " paintings were stolen!!!");
     }
     
     @Override

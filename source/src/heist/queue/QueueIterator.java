@@ -3,7 +3,7 @@ package heist.queue;
 import java.util.Iterator;
 
 /**
- * QueueIterator is used to iterate all elements inside a Queue object.
+ * QueueIterator is used to iterate all elements inside a Queue.
  * @author Jose Manuel
  * @param <T> 
  */
@@ -21,8 +21,8 @@ class QueueIterator<T> implements Iterator
     }
 
     /**
-     * Check if there is some element left to iterate.
-     * @return True if there is some element left, False otherwise.
+     * Check if there is some element left to iterate in the FIFO.
+     * @return True if there is some element left, false otherwise.
      */
     @Override
     public boolean hasNext()
@@ -31,7 +31,7 @@ class QueueIterator<T> implements Iterator
     }
 
     /**
-     * Get the next element.
+     * Get the next element in the FIFO.
      * @return Element
      */
     @Override

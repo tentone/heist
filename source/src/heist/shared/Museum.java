@@ -19,11 +19,11 @@ public class Museum
     {
         this.rooms = new Room[configuration.numberRooms];
         
-        int sum = 0;
         for(int i = 0; i < this.rooms.length; i++)
         {
             boolean repeat = true;
             int distance = configuration.roomDistance.generateInRange();
+            int paintings = configuration.numberPaintings.generateInRange();
             
             while(repeat)
             {
@@ -39,12 +39,27 @@ public class Museum
                     }
                 }
             }
-            int paintings = configuration.numberPaintings.generateInRange();
-            sum += paintings;
+            
             this.rooms[i] = new Room(i, distance, paintings);
         }
         
-        System.out.println("Museum has " + sum + " paintings!");
+        System.out.println("Museum has " + this.countPaintings() + " paintings!");
+    }
+    
+    /**
+     * Check how many paintings there are inside the museum.
+     * @return Number of paintings inside the museum.
+     */
+    private synchronized int countPaintings()
+    {
+        int sum = 0;
+        
+        for(int i = 0; i < this.rooms.length; i++)
+        {
+            sum += this.rooms[i].getPaintings();
+        }
+        
+        return sum;
     }
     
     /**

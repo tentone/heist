@@ -6,7 +6,8 @@ package heist;
  */
 public class RoomStatus extends Room
 {
-    private boolean clear, assigned;
+    private boolean clear;
+    private int thievesAttacking;
 
     /**
      * RoomStatus constructor from id and distance.
@@ -17,25 +18,25 @@ public class RoomStatus extends Room
         super(id, distance, 0);
         
         this.clear = false;
-        this.assigned = false;
+        this.thievesAttacking = 0;
     }
     
     /**
-     * Set if there is a party assigned to this room.
-     * @param assigned Assigned.
+     * Set if there is a party assigned to this room. Indication the number of thieves attacking the room.
+     * @param thievesAttacking Number of thieves attacking the room.
      */
-    public void setAssigned(boolean assigned)
+    public void setThievesAttacking(int thievesAttacking)
     {
-        this.assigned = assigned;
+        this.thievesAttacking += thievesAttacking;
     }
-
+    
     /**
-     * Check if there is a party assigned to this room.
+     * Check if there is a party attacking this room.
      * @return True if there is a party assigned to this room.
      */
-    public boolean isAssigned()
+    public boolean underAttack()
     {
-        return this.assigned;
+        return this.thievesAttacking > 0;
     }
     
     /**
@@ -49,17 +50,32 @@ public class RoomStatus extends Room
 
     /**
      * Mark the room as clear.
+     * @throws java.lang.Exception Throws exception if thievesAttacking value goes bellow zero.
      */
-    public void setClear()
+    public void setClear() throws Exception
     {
         this.clear = true;
+        this.thievesAttacking--;
+        
+        if(this.thievesAttacking < 0)
+        {
+            throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
+        }
     }
     
     /**
-     * Add painting to room.
+     * Deliver painting to this room.
+     * Adds a new painting to the room and reduces the number of thieves attacking the room value.
+     * @throws java.lang.Exception Throws exception if thievesAttacking value goes bellow zero.
      */
-    public void addPainting()
+    public void deliverPainting() throws Exception
     {
         this.paintings++;
+        this.thievesAttacking--;
+        
+        if(this.thievesAttacking < 0)
+        {
+            throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
+        }
     }
 }

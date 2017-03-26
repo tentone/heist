@@ -137,6 +137,11 @@ public class AssaultParty
         while(this.thieves.peek() != thief)
         {
             this.wait();
+            
+            while(this.thieves.peek().getPosition() == this.room.getDistance())
+            {
+                this.thieves.popPush();
+            }
         }
         
         for(int delta = 0; delta < thief.getDisplacement(); delta++)
@@ -160,6 +165,11 @@ public class AssaultParty
                     
                     //Distance
                     int temp = position - t.getPosition();
+                    if(temp < 0)
+                    {
+                        temp = 0;
+                    }
+                    
                     if(temp < distance)
                     {
                         distance = temp;
@@ -232,6 +242,11 @@ public class AssaultParty
         while(this.thieves.peek() != thief)
         {
             this.wait();
+            
+            while(this.thieves.peek().getPosition() == 0)
+            {
+                this.thieves.popPush();
+            }
         }
         
         for(int delta = 0; delta < thief.getDisplacement(); delta++)
@@ -255,6 +270,10 @@ public class AssaultParty
                     
                     //Distance
                     int temp = t.getPosition() - position;
+                    if(temp < 0)
+                    {
+                        temp = 0;
+                    }
                     if(temp < distance)
                     {
                         distance = temp;

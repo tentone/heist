@@ -12,7 +12,7 @@ import heist.RoomStatus;
 public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
-    private final Queue<AssaultParty> parties;
+    private final AssaultParty[] parties;
     private boolean roomsClear;
     
     /**
@@ -21,7 +21,7 @@ public class ConcentrationSite
     public ConcentrationSite()
     {   
         this.thieves = new Queue<>();
-        this.parties = new Queue<>();
+        this.parties = new AssaultParty[2];
         this.roomsClear = false;
     }
     
@@ -87,7 +87,6 @@ public class ConcentrationSite
             this.notify();
         }
         
-        this.parties.push(party);
         return party;
     }
     

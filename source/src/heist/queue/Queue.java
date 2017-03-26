@@ -120,13 +120,14 @@ public class Queue<T>
     
     
     /**
-     * Generate string with all Queue elements.
-     * (Element1, Element2, Element3, ...)
+     * Generate string with all elements inside the FIFO.
+     * [Element1, Element2, Element3, ...]
+     * @return String with elements inside the FIFO.
      */
     @Override
     public String toString()
     {
-        String s = "(";
+        String s = "[";
         Iterator<T> it = this.iterator();
         while(it.hasNext())
         {
@@ -136,11 +137,12 @@ public class Queue<T>
                 s += ", ";
             }
         }
-        return s + ")";
+        return s + "]";
     }
     
     /**
      * Return QueueIterator object to iterate all elements inside the FIFO.
+     * Be careful when using inside shared objects since changes to the nodes can lock the iterator. 
      * @return QueueIterator object
      */
     public Iterator<T> iterator()
