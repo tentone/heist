@@ -14,6 +14,14 @@ public class Queue<T>
     private int size = 0;
     
     /**
+     * Move first element to the end of this FIFO.
+     */
+    public void popPush()
+    {
+        this.push(this.pop());
+    }
+    
+    /**
      * Add a new element to the FIFO.
      * @param e Element
      */
@@ -108,6 +116,27 @@ public class Queue<T>
     public boolean isEmpty() 
     {
         return size() == 0;
+    }
+    
+    
+    /**
+     * Generate string with all Queue elements.
+     * (Element1, Element2, Element3, ...)
+     */
+    @Override
+    public String toString()
+    {
+        String s = "(";
+        Iterator<T> it = this.iterator();
+        while(it.hasNext())
+        {
+            s += it.next().toString();
+            if(it.hasNext())
+            {
+                s += ", ";
+            }
+        }
+        return s + ")";
     }
     
     /**

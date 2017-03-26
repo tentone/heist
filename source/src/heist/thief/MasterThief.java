@@ -1,13 +1,12 @@
 package heist.thief;
 
 import heist.Configuration;
-import heist.Console;
 import heist.GeneralRepository;
 import heist.shared.AssaultParty;
-import heist.shared.CollectionSite;
+import heist.shared.ControlCollectionSite;
 import heist.shared.ConcentrationSite;
 import heist.shared.Museum;
-import heist.shared.Room;
+import heist.Room;
 import java.util.Iterator;
 
 /**
@@ -23,15 +22,14 @@ public class MasterThief extends Thread
     public static final int WAITING_FOR_GROUP_ARRIVAL = 4000;
     public static final int PRESENTING_THE_REPORT = 5000;
 
-    private final CollectionSite collection;
+    private final ControlCollectionSite collection;
     private final ConcentrationSite concentration;
     private final Museum museum;
     
     private final Configuration configuration;
-    
+    private final RoomStatus[] rooms;
     private int state;
-    private RoomStatus[] rooms;
-        
+
     /**
      * MasterThief constructor
      * @param repository GeneralRepository
@@ -132,7 +130,7 @@ public class MasterThief extends Thread
     {
         this.state = state;
 
-        Console.log("Master change state " + this.state);
+        System.out.println("Master change state " + this.state);
     }
     
     /**
@@ -149,7 +147,7 @@ public class MasterThief extends Thread
      */
     private void appraiseSit()
     {
-        Console.log("Master appraiseSit");
+        System.out.println("Master appraiseSit");
         
         if(this.allRoomsClear())
         {
@@ -186,7 +184,7 @@ public class MasterThief extends Thread
                 members += ", ";
             }
         }
-        Console.log("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
+        System.out.println("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
         
         return party;
     }
@@ -199,7 +197,7 @@ public class MasterThief extends Thread
      */
     private void sendAssaultParty(AssaultParty party) throws InterruptedException
     {
-        Console.log("Master sendAssaultParty " + party.getID());
+        System.out.println("Master sendAssaultParty " + party.getID());
         
         party.sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
@@ -211,7 +209,7 @@ public class MasterThief extends Thread
      */
     private void takeARest() throws InterruptedException
     {
-        Console.log("Master takeARest");
+        System.out.println("Master takeARest");
         
         this.collection.takeARest();
     }
@@ -225,7 +223,7 @@ public class MasterThief extends Thread
     {
         this.collection.collectCanvas(this);
 
-        Console.log("Master collectCanvas (Total:" + this.totalPaintingsStolen() + ")");
+        System.out.println("Master collectCanvas (Total:" + this.totalPaintingsStolen() + ")");
         
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
     }
@@ -238,13 +236,13 @@ public class MasterThief extends Thread
     {
         this.concentration.sumUpResults();
         
-        Console.log(">>>>>>>>>>>>>>" + this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
     
     @Override
     public void run()
     {
-        Console.log("Master started");
+        System.out.println("Master started");
         
         try
         {
@@ -269,11 +267,11 @@ public class MasterThief extends Thread
         }
         catch(Exception e)
         {
-            Console.log("Master error");
+            System.out.println("Master error");
             e.printStackTrace();
         }
 
         
-        Console.log("Master terminated");
+        System.out.println("Master terminated");
     }
 }

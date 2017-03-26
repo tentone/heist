@@ -1,4 +1,4 @@
-package heist.shared;
+package heist;
 
 /**
  * Rooms contains painting that can be stolen by the Thieves attacking the museum.
@@ -54,7 +54,7 @@ public class Room
      * Remove a painting from the room.
      * @return True if the painting was removed.
      */
-    public synchronized boolean rollACanvas()
+    public boolean rollACanvas()
     {
         if(this.paintings > 0)
         {

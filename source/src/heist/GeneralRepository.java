@@ -2,7 +2,7 @@ package heist;
 
 import heist.log.Logger;
 import heist.shared.Museum;
-import heist.shared.CollectionSite;
+import heist.shared.ControlCollectionSite;
 import heist.shared.ConcentrationSite;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
@@ -14,7 +14,7 @@ import heist.thief.OrdinaryThief;
 public class GeneralRepository
 {
     private Museum museum;
-    private CollectionSite collection;
+    private ControlCollectionSite collection;
     private ConcentrationSite concentration;
     
     private MasterThief master;
@@ -34,7 +34,7 @@ public class GeneralRepository
         
         this.museum = new Museum(this.configuration);
         this.concentration = new ConcentrationSite();
-        this.collection = new CollectionSite();
+        this.collection = new ControlCollectionSite();
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)
@@ -79,7 +79,7 @@ public class GeneralRepository
      * Get collection site.
      * @return CollectionSite
      */
-    public CollectionSite getCollectionSite()
+    public ControlCollectionSite getCollectionSite()
     {
         return this.collection;
     }

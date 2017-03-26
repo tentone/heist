@@ -14,9 +14,6 @@ import java.util.Iterator;
 public class AssaultParty
 {
     private static int IDCounter = 0;
-    
-    private static int WAITING = 1000;
-    private static int CRAWLING = 2000;
 
     private final int id, partySize, maxDistance;
     private final Queue<OrdinaryThief> thieves;
@@ -41,7 +38,6 @@ public class AssaultParty
         this.maxDistance = maxDistance;
         this.room = room;
         
-        this.state = AssaultParty.WAITING;
         this.waitingToReverse = 0;
     }
     
@@ -110,8 +106,7 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        this.state = AssaultParty.CRAWLING;
-        this.notify();
+        this.notifyAll();
     }
     
     /**
@@ -131,17 +126,16 @@ public class AssaultParty
      */
     public synchronized boolean crawlIn(OrdinaryThief thief) throws InterruptedException
     {
-        this.crawling.push(thief);
-        
-        while(this.crawling.peek() != thief || this.state != AssaultParty.CRAWLING)
+        while(this.thieves.peek() != thief)
         {
             this.wait();
         }
-
+        
+        /*
         int position = thief.getPosition() + thief.getDisplacement();
         
-        //TODO <LIMIT DISTANCE BETWEEN THIEVES>
-        /*Iterator<OrdinaryThief> it = this.thieves.iterator();
+        //Avoid getting far away from other thieves
+        Iterator<OrdinaryThief> it = this.thieves.iterator();
         int max = -1;
         while(it.hasNext())
         {
@@ -158,30 +152,47 @@ public class AssaultParty
                 }
             }
         }
-        
         if(max != -1)
         {
             position = max;
-        }*/
-        
-        if(position > this.room.getDistance())
-        {
-            position = this.room.getDistance();
         }
-        else
+        
+        //Avoid collision with other thieves
+        boolean occupied = true;
+        while(occupied && position > thief.getPosition())
         {
-            while(this.isSomebodyAt(position) && position > thief.getPosition())
+            occupied = false;
+            it = thieves.iterator();
+            while(it.hasNext())
+            {
+                OrdinaryThief t = it.next();
+                if(t != thief && t.getPosition() == position)
+                {
+                    occupied = true;
+                    break;
+                }
+            }
+
+            if(occupied)
             {
                 position--;
             }
         }
-
-        thief.setPosition(position);
-
-        this.crawling.pop();
+        
+        //If passing the target distance limit
+        if(position > this.room.getDistance())
+        {
+            position = this.room.getDistance();
+        }
+        */
+        
+        thief.setPosition(thief.getPosition() + 1);
+        
+        this.thieves.popPush();
+        System.out.println(this.thieves);
         this.notifyAll();
         
-        return position != this.room.getDistance();
+        return thief.getPosition() != this.room.getDistance();
     }
     
     /**
@@ -216,52 +227,18 @@ public class AssaultParty
      */
     public synchronized boolean crawlOut(OrdinaryThief thief) throws InterruptedException
     {
-        this.crawling.push(thief);
-        
-        while(this.crawling.peek() != thief)
+        while(this.thieves.peek() != thief)
         {
             this.wait();
         }
         
-        int position = thief.getPosition() - thief.getDisplacement();
+        //TODO <CRAW OUT MOVEMENT>
         
-        //TODO <LIMIT DISTANCE BETWEEN THIEVES>
+        thief.setPosition(thief.getPosition() - 1);
         
-        if(position < 0)
-        {
-            position = 0;
-        }
-        else
-        {
-            while(this.isSomebodyAt(position) && position < thief.getPosition())
-            {
-                position++;
-            }
-        }
-        
-        thief.setPosition(position);
-        
-        this.crawling.pop();
+        this.thieves.popPush();
         this.notify();
         
-        return position != 0;
-    }
-
-    /**
-     * Check if there is some Thief is at position
-     * @return True if some thief is at that position
-     */
-    private synchronized boolean isSomebodyAt(int position)
-    {
-        Iterator<OrdinaryThief> it = thieves.iterator();
-        while(it.hasNext())
-        {
-            if(it.next().getPosition() == position)
-            {
-                return true;
-            }
-        }
-        
-        return false;
+        return thief.getPosition() != 0;
     }
 }

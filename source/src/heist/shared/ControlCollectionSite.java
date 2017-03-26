@@ -8,14 +8,14 @@ import heist.thief.OrdinaryThief;
  * The collection site is where the OrdinaryThiefs deliver the canvas to the MasterThief
  * @author Jose Manuel
  */
-public class CollectionSite
+public class ControlCollectionSite
 {
     private final Queue<OrdinaryThief> queue;
 
     /**
      * Collection site constructor, creates a queue for OrdinaryThief.
      */
-    public CollectionSite()
+    public ControlCollectionSite()
     {   
         this.queue = new Queue<>();
     }
