@@ -64,7 +64,7 @@ public class MasterThief extends Thread
     }
     
     /**
-     * Analyze the situation and take a decision.
+     * Analyse the situation and take a decision.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
      * @throws java.lang.InterruptedException Exception
      */
@@ -142,6 +142,9 @@ public class MasterThief extends Thread
         this.logger.write(this.collection.totalPaintingsStolen() + " paintings were stolen!!!");
     }
     
+    /**
+     * Implements MasterThief life cycle.
+     */
     @Override
     public void run()
     {
@@ -157,15 +160,18 @@ public class MasterThief extends Thread
 
                 if(this.state == MasterThief.WAITING_FOR_GROUP_ARRIVAL)
                 {
+                    this.logger.write("Master WAITING_FOR_GROUP_ARRIVAL");
                     this.takeARest();
                     this.collectCanvas();
                 }
                 else if(this.state == MasterThief.ASSEMBLING_A_GROUP)
                 {
+                    this.logger.write("Master ASSEMBLING_A_GROUP");
                     this.sendAssaultParty(this.prepareAssaultParty());
                 }
             }
             
+            this.logger.write("Master PRESENTING_THE_REPORT");
             this.sumUpResults();
         }
         catch(InterruptedException e)
@@ -176,7 +182,5 @@ public class MasterThief extends Thread
 
         
         this.logger.write("Master terminated");
-        
-        System.exit(0);
     }
 }

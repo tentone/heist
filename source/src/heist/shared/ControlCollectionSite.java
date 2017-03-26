@@ -8,7 +8,7 @@ import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
 /**
- * The Control/Collection site is where the OrdinaryThiefs deliver the canvas to the MasterThief.
+ * The ControlCollection site is where the OrdinaryThieves deliver the canvas to the MasterThief.
  * It is also responsible for decisions taken by booth the MasterThief and the OrdinaryThieves.
  * @author Jose Manuel
  */
@@ -16,10 +16,9 @@ public class ControlCollectionSite
 {
     private final Configuration configuration;
     
-    private final Queue<OrdinaryThief> canvasDeliverQueue;
+    private final Queue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
     private final RoomStatus[] rooms;
 
-    private int thievesWaiting;
     private boolean heistTerminated;
     
     /**
@@ -30,10 +29,11 @@ public class ControlCollectionSite
     public ControlCollectionSite(Configuration configuration, Museum museum)
     {   
         this.configuration = configuration;
+        
         this.canvasDeliverQueue = new Queue<>();
+        this.amINeededQueue = new Queue<>();
         
         this.heistTerminated = false;
-        this.thievesWaiting = 0;
         
         Room[] museumRooms = museum.getRooms();
         this.rooms = new RoomStatus[museumRooms.length];
@@ -152,45 +152,60 @@ public class ControlCollectionSite
      * @throws java.lang.InterruptedException Exception
      * @return True if the OrdinaryThief is still needed
      */
-    public synchronized boolean amINeeded() throws InterruptedException
+    public synchronized boolean amINeeded(OrdinaryThief thief) throws InterruptedException
     {
-        this.thievesWaiting++;
-        this.notify();
+        this.amINeededQueue.push(thief);
+        this.notifyAll();
         
-        this.wait();
-        this.thievesWaiting--;
+        while(this.amINeededQueue.contains(thief))
+        {
+            this.wait();
+        }
         
         return !this.heistTerminated;
     }
     
     /**
-     * Analyze the situation and take a decision for the MasterThief.
+     * Analyse the situation and take a decision for the MasterThief.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
      * @throws java.lang.InterruptedException Exception
      */
     public synchronized int appraiseSit() throws InterruptedException
     {
-        if(this.allRoomsClear())
-        {
-            while(this.thievesWaiting < this.configuration.numberThieves)
-            {
-                this.wait();
-            }
-            return MasterThief.PRESENTING_THE_REPORT;
-        }
-        else if(this.nextTargetRoom() != null)
-        {
-            while(this.thievesWaiting < this.configuration.partySize)
-            {
-                this.wait();
-            }
-            return MasterThief.ASSEMBLING_A_GROUP;
-        }
-        else if(this.thievesAttackingRooms())
+        if(this.thievesAttackingRooms())
         {
             return MasterThief.WAITING_FOR_GROUP_ARRIVAL;
         }
-        
+        else
+        {
+            if(this.allRoomsClear())
+            {
+                while(this.amINeededQueue.size() < this.configuration.numberThieves)
+                {
+                    this.wait();
+                }
+
+                this.amINeededQueue.clear();
+                this.notifyAll();
+
+                return MasterThief.PRESENTING_THE_REPORT;
+            }
+            else if(this.nextTargetRoom() != null)
+            {
+                while(this.amINeededQueue.size() < this.configuration.partySize)
+                {
+                    this.wait();
+                }
+
+                for(int i = 0; i < this.configuration.partySize; i++)
+                {
+                    this.amINeededQueue.pop();
+                    this.notify();
+                }
+
+                return MasterThief.ASSEMBLING_A_GROUP;
+            }
+        }
         return MasterThief.DECIDING_WHAT_TO_DO;
     }
     
@@ -215,7 +230,12 @@ public class ControlCollectionSite
     public synchronized void handACanvas(OrdinaryThief thief) throws InterruptedException
     {
         this.canvasDeliverQueue.push(thief);
-        this.notify();
+        this.notifyAll();
+        
+        while(this.canvasDeliverQueue.contains(thief))
+        {
+            this.wait();
+        }
     }
     
     /**
@@ -229,6 +249,7 @@ public class ControlCollectionSite
         {
             OrdinaryThief thief = this.canvasDeliverQueue.pop();
             this.collectCanvas(thief.getParty().getTarget(), thief.deliverCanvas());
+            this.notifyAll();
         }
     }
     
@@ -238,6 +259,6 @@ public class ControlCollectionSite
     public synchronized void sumUpResults()
     {
         this.heistTerminated = true;
-        //this.notifyAll();
+        this.notifyAll();
     }
 }

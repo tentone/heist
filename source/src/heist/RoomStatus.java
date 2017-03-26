@@ -11,7 +11,9 @@ public class RoomStatus extends Room
 
     /**
      * RoomStatus constructor from id and distance.
-     * Number of paintings starts at 0.
+     * Number of paintings always starts at 0.
+     * @param id Room id.
+     * @param distance Room distance.
      */
     public RoomStatus(int id, int distance)
     {
@@ -59,7 +61,7 @@ public class RoomStatus extends Room
         
         if(this.thievesAttacking < 0)
         {
-            //throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
+            throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
         }
     }
     
@@ -75,7 +77,7 @@ public class RoomStatus extends Room
         
         if(this.thievesAttacking < 0)
         {
-            //throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
+            throw new Exception("Delivering more canvas than the ammout of thieves that attacked!");
         }
     }
 }

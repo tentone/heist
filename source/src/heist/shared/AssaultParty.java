@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
- * Its used as a synchronization point between thieves.
+ * Its used as a synchronisation point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
@@ -20,6 +20,7 @@ public class AssaultParty
     
     private final RoomStatus room;
     private int waitingToReverse;
+    private boolean partyCrawling;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
@@ -36,6 +37,7 @@ public class AssaultParty
         this.maxDistance = maxDistance;
         this.room = room;
         
+        this.partyCrawling = false;
         this.waitingToReverse = 0;
     }
     
@@ -109,7 +111,8 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        this.notify();
+        this.partyCrawling = true;
+        this.notifyAll();
     }
     
     /**
@@ -134,7 +137,7 @@ public class AssaultParty
             this.thieves.popPush();
         }
         
-        while(this.thieves.peek() != thief)
+        while(this.thieves.peek() != thief || !this.partyCrawling)
         {
             this.wait();
             

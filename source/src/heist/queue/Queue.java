@@ -10,8 +10,15 @@ import java.util.Iterator;
 @SuppressWarnings("unchecked")
 public class Queue<T> 
 {
-    private Node<T> first = null, last = null;
-    private int size = 0;
+    private Node<T> first, last;
+    private int size;
+    
+    public Queue()
+    {
+        this.first = null;
+        this.last = null;
+        this.size = 0;
+    }
     
     /**
      * Move first element to the end of this FIFO.
@@ -27,21 +34,21 @@ public class Queue<T>
      */
     public void push(T e)
     {
-        Node<T> node = new Node<T>();
+        Node<T> node = new Node<>();
         node.e = e;
         node.next = null;
 
-        if(isEmpty())
+        if(this.isEmpty())
         {
-            first = node;
+            this.first = node;
         }
         else
         {
-            last.next = node;
+            this.last.next = node;
         }
         
-        last = node;
-        size++;
+        this.last = node;
+        this.size++;
     }
     
     /**
@@ -50,13 +57,13 @@ public class Queue<T>
      */
     public T pop() 
     {
-        T elem = first.e;
+        T elem = this.first.e;
         
-        size--;
-        first = first.next;
-        if(first == null)
+        this.size--;
+        this.first = this.first.next;
+        if(this.first == null)
         {
-            last = null;
+            this.last = null;
         }
         
         return elem;
@@ -68,7 +75,12 @@ public class Queue<T>
      */
     public T peek() 
     {
-        return first.e;
+        if(this.first == null)
+        {
+            return null;
+        }
+        
+        return this.first.e;
     }
     
     /**
@@ -78,11 +90,11 @@ public class Queue<T>
      */
     public boolean remove(T e)
     {
-        Node temp = first;
+        Node temp = this.first;
 
         if(temp.e == e)
         {
-            first = first.next;
+            this.first = this.first.next;
             return true;
         }
             
@@ -101,12 +113,22 @@ public class Queue<T>
     }
     
     /**
+     * Clear the FIFO. Remove all elements and set size to 0.
+     */
+    public void clear()
+    {
+        this.first = null;
+        this.last = null;
+        this.size = 0;
+    }
+    
+    /**
      * Check the size
      * @return Size
      */
     public int size() 
     {
-        return size;
+        return this.size;
     }
 
     /**
@@ -115,9 +137,27 @@ public class Queue<T>
      */
     public boolean isEmpty() 
     {
-        return size() == 0;
+        return this.size() == 0;
     }
-    
+
+    /**
+     * Check if a element exists inside the FIFO.
+     * Uses the == operator, the element has to be the exact same instance.
+     * @param e Element to look for.
+     * @return True if element was found inside the queue.
+     */
+    public boolean contains(T e)
+    {
+        Iterator<T> it = this.iterator();
+        while(it.hasNext())
+        {
+            if(it.next() == e)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     
     /**
      * Generate string with all elements inside the FIFO.
@@ -147,6 +187,6 @@ public class Queue<T>
      */
     public Iterator<T> iterator()
     {
-        return new QueueIterator<T>(first);
+        return new QueueIterator<>(first);
     }
 }

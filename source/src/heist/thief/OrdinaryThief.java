@@ -148,15 +148,15 @@ public class OrdinaryThief extends Thread
     {
         this.logger.write("Thief " + this.id + " amINeeded");
         
-        return this.collection.amINeeded();
+        return this.collection.amINeeded(this);
     }
     
     /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
      * Enter the concentration site and wait until a party is assigned.
-     * @throws java.lang.InterruptedException Exception     
+     * @throws java.lang.Exception Exception     
      */
-    private void prepareExecution() throws InterruptedException
+    private void prepareExecution() throws Exception
     {
         this.logger.write("Thief " + this.id + " entered the concentration site");
         
@@ -240,7 +240,7 @@ public class OrdinaryThief extends Thread
             while(this.amINeeded())
             {
                 this.prepareExecution();
-
+                
                 this.crawlIn();
 
                 this.rollACanvas();
@@ -251,7 +251,7 @@ public class OrdinaryThief extends Thread
                 this.handACanvas();
             }
         }
-        catch(InterruptedException e)
+        catch(Exception e)
         {
             this.logger.write("Thief " + this.id + " error");
             e.printStackTrace();
