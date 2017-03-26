@@ -1,40 +1,23 @@
-package heist.thief;
+package heist;
 
 /**
  * Class to represent the room as the MasterThief perceives it.
  * Stores how many paintings were retrieved from a room, if the room is cleared and if there is an AssaultParty currently attacking the room.
  */
-public class RoomStatus
+public class RoomStatus extends Room
 {
-    private final int distance, id;
-    private int paintings;
     private boolean clear, assigned;
 
+    /**
+     * RoomStatus constructor from id and distance.
+     * Number of paintings starts at 0.
+     */
     public RoomStatus(int id, int distance)
     {
-        this.id = id;
-        this.distance = distance;
-        this.paintings = 0;
+        super(id, distance, 0);
+        
         this.clear = false;
         this.assigned = false;
-    }
-
-    /**
-     * Get room distance.
-     * @return Distance.
-     */
-    public int getDistance()
-    {
-        return this.distance;
-    }
-    
-    /**
-     * Get room id.
-     * @return ID.
-     */
-    public int getID()
-    {
-        return this.id;
     }
     
     /**
@@ -71,14 +54,12 @@ public class RoomStatus
     {
         this.clear = true;
     }
-
+    
+    /**
+     * Add painting to room.
+     */
     public void addPainting()
     {
         this.paintings++;
-    }
-
-    public int getPaintings()
-    {
-        return this.paintings;
     }
 }

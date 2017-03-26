@@ -8,7 +8,7 @@ package heist;
 public class Room
 {
     private final int id, distance;
-    private int paintings;
+    protected int paintings;
 
     /**
      * Room constructor, the room stores its own position and the amount of paintings inside of it.

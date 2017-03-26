@@ -38,6 +38,16 @@ public class Logger
     }
     
     /**
+     * Write message directly to the PrintStream.
+     * @param message Message to display.
+     */
+    public void write(String message)
+    {
+        out.println(message);
+        out.flush();
+    }
+    
+    /**
      * Create a log entry of everything in the general repository
      */
     public void log()

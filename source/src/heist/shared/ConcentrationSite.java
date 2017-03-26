@@ -1,9 +1,8 @@
 package heist.shared;
 
 import heist.queue.Queue;
-import heist.shared.AssaultParty;
 import heist.thief.OrdinaryThief;
-import heist.thief.RoomStatus;
+import heist.RoomStatus;
 
 /**
  * The concentration site is where thieves wait for the master thief to assign them a party.

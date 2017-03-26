@@ -59,11 +59,12 @@ public class GeneralRepository
     }
     
     /**
-     * Generate new log entry.
+     * Return logger object.
+     * @return Logger.
      */
-    public synchronized void log()
+    public Logger getLogger()
     {
-        this.logger.log();
+        return this.logger;
     }
     
     /**

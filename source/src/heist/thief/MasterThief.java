@@ -1,12 +1,13 @@
 package heist.thief;
 
+import heist.RoomStatus;
 import heist.Configuration;
 import heist.GeneralRepository;
 import heist.shared.AssaultParty;
 import heist.shared.ControlCollectionSite;
 import heist.shared.ConcentrationSite;
-import heist.shared.Museum;
 import heist.Room;
+import heist.log.Logger;
 import java.util.Iterator;
 
 /**
@@ -24,7 +25,7 @@ public class MasterThief extends Thread
 
     private final ControlCollectionSite collection;
     private final ConcentrationSite concentration;
-    private final Museum museum;
+    private final Logger logger;
     
     private final Configuration configuration;
     private final RoomStatus[] rooms;
@@ -41,10 +42,10 @@ public class MasterThief extends Thread
         
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
-        this.museum = repository.getMuseum();
+        this.logger = repository.getLogger();
         this.configuration = configuration;
         
-        Room[] museum = this.museum.getRooms();
+        Room[] museum = repository.getMuseum().getRooms();
         this.rooms = new RoomStatus[museum.length];
         for(int i = 0; i < museum.length; i++)
         {
@@ -130,7 +131,7 @@ public class MasterThief extends Thread
     {
         this.state = state;
 
-        System.out.println("Master change state " + this.state);
+        this.logger.write("Master change state " + this.state);
     }
     
     /**
@@ -147,7 +148,7 @@ public class MasterThief extends Thread
      */
     private void appraiseSit()
     {
-        System.out.println("Master appraiseSit");
+        this.logger.write("Master appraiseSit");
         
         if(this.allRoomsClear())
         {
@@ -184,7 +185,7 @@ public class MasterThief extends Thread
                 members += ", ";
             }
         }
-        System.out.println("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
+        this.logger.write("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
         
         return party;
     }
@@ -197,7 +198,7 @@ public class MasterThief extends Thread
      */
     private void sendAssaultParty(AssaultParty party) throws InterruptedException
     {
-        System.out.println("Master sendAssaultParty " + party.getID());
+        this.logger.write("Master sendAssaultParty " + party.getID());
         
         party.sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
@@ -209,7 +210,7 @@ public class MasterThief extends Thread
      */
     private void takeARest() throws InterruptedException
     {
-        System.out.println("Master takeARest");
+        this.logger.write("Master takeARest");
         
         this.collection.takeARest();
     }
@@ -223,7 +224,7 @@ public class MasterThief extends Thread
     {
         this.collection.collectCanvas(this);
 
-        System.out.println("Master collectCanvas (Total:" + this.totalPaintingsStolen() + ")");
+        this.logger.write("Master collectCanvas (Total:" + this.totalPaintingsStolen() + ")");
         
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
     }
@@ -236,13 +237,13 @@ public class MasterThief extends Thread
     {
         this.concentration.sumUpResults();
         
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        this.logger.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
     
     @Override
     public void run()
     {
-        System.out.println("Master started");
+        this.logger.write("Master started");
         
         try
         {
@@ -267,11 +268,11 @@ public class MasterThief extends Thread
         }
         catch(Exception e)
         {
-            System.out.println("Master error");
+            this.logger.write("Master error");
             e.printStackTrace();
         }
 
         
-        System.out.println("Master terminated");
+        this.logger.write("Master terminated");
     }
 }

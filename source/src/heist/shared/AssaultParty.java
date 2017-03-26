@@ -2,7 +2,7 @@ package heist.shared;
 
 import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
-import heist.thief.RoomStatus;
+import heist.RoomStatus;
 import java.util.Iterator;
 
 /**
@@ -126,6 +126,11 @@ public class AssaultParty
      */
     public synchronized boolean crawlIn(OrdinaryThief thief) throws InterruptedException
     {
+        while(this.thieves.peek().getPosition() == this.room.getDistance())
+        {
+            this.thieves.popPush();
+        }
+        
         while(this.thieves.peek() != thief)
         {
             this.wait();
@@ -186,10 +191,10 @@ public class AssaultParty
         }
         */
         
+        //TODO <CRAWL IN MOVEMENT>
         thief.setPosition(thief.getPosition() + 1);
         
         this.thieves.popPush();
-        System.out.println(this.thieves);
         this.notifyAll();
         
         return thief.getPosition() != this.room.getDistance();
@@ -227,17 +232,21 @@ public class AssaultParty
      */
     public synchronized boolean crawlOut(OrdinaryThief thief) throws InterruptedException
     {
+        while(this.thieves.peek().getPosition() == 0)
+        {
+            this.thieves.popPush();
+        }
+        
         while(this.thieves.peek() != thief)
         {
             this.wait();
         }
         
-        //TODO <CRAW OUT MOVEMENT>
-        
+        //TODO <CRAWL OUT MOVEMENT>
         thief.setPosition(thief.getPosition() - 1);
         
         this.thieves.popPush();
-        this.notify();
+        this.notifyAll();
         
         return thief.getPosition() != 0;
     }

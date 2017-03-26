@@ -3,6 +3,7 @@ package heist.thief;
 import heist.shared.AssaultParty;
 import heist.Configuration;
 import heist.GeneralRepository;
+import heist.log.Logger;
 import heist.shared.Museum;
 import heist.shared.ControlCollectionSite;
 import heist.shared.ConcentrationSite;
@@ -23,6 +24,7 @@ public class OrdinaryThief extends Thread
     private final ConcentrationSite concentration;
     private final ControlCollectionSite collection;
     private final Museum museum;
+    private final Logger logger;
     
     private AssaultParty party;
     
@@ -44,7 +46,8 @@ public class OrdinaryThief extends Thread
         this.collection = repository.getCollectionSite();
         this.concentration = repository.getConcentrationSite();
         this.museum = repository.getMuseum();
-
+        this.logger = repository.getLogger();
+        
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         
         this.position = 0;
@@ -134,7 +137,7 @@ public class OrdinaryThief extends Thread
     {
         this.state = state;
         
-        System.out.println("Thief " + this.id + " change state " + this.state);
+        this.logger.write("Thief " + this.id + " change state " + this.state);
     }
     
     /**
@@ -143,7 +146,7 @@ public class OrdinaryThief extends Thread
      */
     private boolean amINeeded() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " amINeeded");
+        this.logger.write("Thief " + this.id + " amINeeded");
         
         return this.concentration.amINeeded();
     }
@@ -155,11 +158,11 @@ public class OrdinaryThief extends Thread
      */
     private void prepareExecution() throws InterruptedException
     {
-        System.out.println("Thief " + this.id + " entered the concentration site");
+        this.logger.write("Thief " + this.id + " entered the concentration site");
         
         this.concentration.prepareExcursion(this);
         
-        System.out.println("Thief " + this.id + " party assigned " + this.party.getID());
+        this.logger.write("Thief " + this.id + " party assigned " + this.party.getID());
     }
     
     /**
@@ -171,10 +174,10 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_INWARDS);  
         while(this.party.crawlIn(this))
         {
-            System.out.println("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
+            this.logger.write("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
         }
         
-        System.out.println("Thief " + this.id + " reached room (Position:" + this.position + ")");
+        this.logger.write("Thief " + this.id + " reached room (Position:" + this.position + ")");
     }
     
     /**
@@ -185,7 +188,7 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.AT_A_ROOM);
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
         
-        System.out.println("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
+        this.logger.write("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
     }
     
     /**
@@ -194,7 +197,7 @@ public class OrdinaryThief extends Thread
     private void reverseDirection() throws InterruptedException
     {      
         this.party.reverseDirection();
-        System.out.println("Thief " + this.id + " reverse");
+        this.logger.write("Thief " + this.id + " reverse");
     }
     
     /**
@@ -206,10 +209,10 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         while(this.party.crawlOut(this))
         {
-            System.out.println("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
+            this.logger.write("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
         }
         
-        System.out.println("Thief " + this.id + " reached outside (Position:" + this.position + ")");
+        this.logger.write("Thief " + this.id + " reached outside (Position:" + this.position + ")");
     }
     
     /**
@@ -219,7 +222,7 @@ public class OrdinaryThief extends Thread
     {
         this.setState(OrdinaryThief.OUTSIDE);
         
-        System.out.println("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
+        this.logger.write("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
         
         this.collection.handACanvas(this);
     }
@@ -230,7 +233,7 @@ public class OrdinaryThief extends Thread
     @Override
     public void run()
     {
-        System.out.println("Thief " + this.id + " started");
+        this.logger.write("Thief " + this.id + " started");
         
         try
         {
@@ -250,10 +253,10 @@ public class OrdinaryThief extends Thread
         }
         catch(InterruptedException e)
         {
-            System.out.println("Thief " + this.id + " error");
+            this.logger.write("Thief " + this.id + " error");
             e.printStackTrace();
         }
         
-        System.out.println("Thief " + this.id + " terminated");
+        this.logger.write("Thief " + this.id + " terminated");
     }
 }
