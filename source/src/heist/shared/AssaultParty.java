@@ -95,8 +95,8 @@ public class AssaultParty
     {
         if(!this.partyFull())
         {
-            thief.setParty(this);
             this.thieves.push(thief);
+            thief.setParty(this);
         }
         else
         {

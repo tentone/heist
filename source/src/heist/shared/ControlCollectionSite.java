@@ -131,12 +131,6 @@ public class ControlCollectionSite
     {
         this.amINeededQueue.push(thief);
         this.notifyAll();
-
-        for(int i = 0; i < this.rooms.length; i++)
-        {
-            System.out.println("AIN [ID: " + this.rooms[i].getID() + " P:" + this.rooms[i].getPaintings() + " TA:" + this.rooms[i].getThievesAttacking() + "]");
-            System.out.flush();
-        }
         
         do
         {
@@ -155,27 +149,7 @@ public class ControlCollectionSite
      */
     public synchronized int appraiseSit() throws InterruptedException
     {
-        if(this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize)
-        {
-            for(int i = 0; i < this.configuration.partySize; i++)
-            {
-                this.amINeededQueue.pop();
-                this.notifyAll();
-            }
-
-            return MasterThief.ASSEMBLING_A_GROUP;
-        }
-        else if(this.thievesAttackingRooms())
-        {
-            for(int i = 0; i < this.rooms.length; i++)
-            {
-                System.out.println("WFGA [ID: " + this.rooms[i].getID() + " P:" + this.rooms[i].getPaintings() + " TA:" + this.rooms[i].getThievesAttacking() + "]");
-                System.out.flush();
-            }
-            
-            return MasterThief.WAITING_FOR_GROUP_ARRIVAL;
-        }
-        else if(this.allRoomsClear())
+        if(this.allRoomsClear())
         {
             while(this.amINeededQueue.size() < this.configuration.numberThieves)
             {
@@ -185,22 +159,22 @@ public class ControlCollectionSite
 
             return MasterThief.PRESENTING_THE_REPORT;
         }
-        /*else if(this.nextTargetRoom() != null)
+        else if(this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize)
         {
-            while(this.amINeededQueue.size() < this.configuration.partySize)
-            {
-                this.wait();
-            }
-
             for(int i = 0; i < this.configuration.partySize; i++)
             {
                 this.amINeededQueue.pop();
-                this.notifyAll();
             }
-
+            this.notifyAll();
+            
             return MasterThief.ASSEMBLING_A_GROUP;
-        }*/
-        
+        }
+        else if(this.thievesAttackingRooms())
+        {
+            return MasterThief.WAITING_FOR_GROUP_ARRIVAL;
+        }
+
+        this.wait();
         return MasterThief.DECIDING_WHAT_TO_DO;
     }
     

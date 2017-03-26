@@ -84,6 +84,8 @@ public class MasterThief extends Thread
     {
         RoomStatus room = this.collection.nextTargetRoom();
         room.addThievesAttacking(this.configuration.partySize);
+
+        this.logger.debug("Master prepareAssaultParty room [ID: " + room.getID() + " P:" + room.getPaintings() + " TA:" + room.getThievesAttacking() + "]"); 
         
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
         
