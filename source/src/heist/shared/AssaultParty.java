@@ -109,7 +109,7 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        this.notifyAll();
+        this.notify();
     }
     
     /**

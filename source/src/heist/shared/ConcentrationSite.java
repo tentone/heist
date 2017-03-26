@@ -13,7 +13,6 @@ public class ConcentrationSite
 {
     private final Queue<OrdinaryThief> thieves;
     private final AssaultParty[] parties;
-    private boolean roomsClear;
     
     /**
      * ConcentrationSite constructor.
@@ -22,7 +21,6 @@ public class ConcentrationSite
     {   
         this.thieves = new Queue<>();
         this.parties = new AssaultParty[2];
-        this.roomsClear = false;
     }
     
     /**
@@ -33,21 +31,6 @@ public class ConcentrationSite
     public synchronized boolean hasEnoughToCreateParty(int partySize)
     {
         return this.thieves.size() >= partySize;
-    }
-    
-    /**
-     * Check if the OrdinaryThief is still needed or if he can be terminated.
-     * @throws java.lang.InterruptedException Exception
-     * @return True if the OrdinaryThief is still needed
-     */
-    public synchronized boolean amINeeded() throws InterruptedException
-    {
-        if(this.roomsClear)
-        {
-            return false;
-        }
-        
-        return true;
     }
     
     /**
@@ -88,14 +71,5 @@ public class ConcentrationSite
         }
         
         return party;
-    }
-    
-    /**
-     * Called by the MasterThief to indicate that the heist is over.
-     */
-    public synchronized void sumUpResults()
-    {
-        this.roomsClear = true;
-        this.notifyAll();
     }
 }

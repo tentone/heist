@@ -5,19 +5,22 @@ import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
 /**
- * The collection site is where the OrdinaryThiefs deliver the canvas to the MasterThief
+ * The Control/Collection site is where the OrdinaryThiefs deliver the canvas to the MasterThief.
+ * It is also responsible for decisions taken by booth the MasterThief and the OrdinaryThieves.
  * @author Jose Manuel
  */
 public class ControlCollectionSite
 {
     private final Queue<OrdinaryThief> queue;
-
+    private boolean roomsClear;
+    
     /**
      * Collection site constructor, creates a queue for OrdinaryThief.
      */
     public ControlCollectionSite()
     {   
         this.queue = new Queue<>();
+        this.roomsClear = false;
     }
     
     /**
@@ -28,14 +31,31 @@ public class ControlCollectionSite
     {
         return !this.queue.isEmpty();
     }
+    
+    /**
+     * Check if the OrdinaryThief is still needed or if he can be terminated.
+     * @throws java.lang.InterruptedException Exception
+     * @return True if the OrdinaryThief is still needed
+     */
+    public synchronized boolean amINeeded() throws InterruptedException
+    {
+        //this.wait();
         
+        if(this.roomsClear)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
     /**
      * Function used to make MasterThief wait until a OrdinaryThief arrives and wakes him up.
      * @throws InterruptedException Exception
      */
     public synchronized void takeARest() throws InterruptedException
     {
-        while(!this.hasThief())
+        while(this.queue.isEmpty())
         {
             this.wait();
         }
@@ -69,5 +89,14 @@ public class ControlCollectionSite
             master.collectCanvas(thief.getParty().getTarget(), thief.deliverCanvas());
             this.notify();
         }
+    }
+    
+    /**
+     * Called by the MasterThief to indicate that the heist is over.
+     */
+    public synchronized void sumUpResults()
+    {
+        this.roomsClear = true;
+        this.notifyAll();
     }
 }

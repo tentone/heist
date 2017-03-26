@@ -148,7 +148,7 @@ public class OrdinaryThief extends Thread
     {
         this.logger.write("Thief " + this.id + " amINeeded");
         
-        return this.concentration.amINeeded();
+        return this.collection.amINeeded();
     }
     
     /**

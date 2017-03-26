@@ -249,7 +249,7 @@ public class MasterThief extends Thread
      */
     private void sumUpResults()
     {
-        this.concentration.sumUpResults();
+        this.collection.sumUpResults();
         
         this.logger.write(this.totalPaintingsStolen() + " paintings were stolen!!!");
     }
@@ -288,5 +288,7 @@ public class MasterThief extends Thread
 
         
         this.logger.write("Master terminated");
+        
+        System.exit(0);
     }
 }
