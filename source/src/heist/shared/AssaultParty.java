@@ -234,8 +234,52 @@ public class AssaultParty
             this.wait();
         }
         
-        //TODO <CRAWL OUT MOVEMENT>
-        thief.setPosition(thief.getPosition() - 1);
+        for(int delta = 0; delta < thief.getDisplacement(); delta++)
+        {
+            int position = thief.getPosition() - delta;
+            boolean emptyPosition = true;
+            int distance = Integer.MAX_VALUE;
+            
+            //Check if position is valid
+            Iterator<OrdinaryThief> it = this.thieves.iterator();
+            while(it.hasNext())
+            {
+                OrdinaryThief t = it.next();
+                if(t != thief)
+                {
+                    //Collision
+                    if(t.getPosition() == position)
+                    {
+                        emptyPosition = false;
+                    }
+                    
+                    //Distance
+                    int temp = t.getPosition() - position;
+                    if(temp < distance)
+                    {
+                        distance = temp;
+                    }
+                }
+            }
+            
+            //Position close enough to party members
+            if(distance <= this.maxDistance)
+            {
+                if(position <= 0)
+                {
+                    thief.setPosition(0);
+                }
+                else if(emptyPosition)
+                {
+                    thief.setPosition(position);
+                }
+            }
+            //Already too far away
+            else
+            {
+                break;
+            }
+        }
         
         this.thieves.popPush();
         this.notifyAll();
