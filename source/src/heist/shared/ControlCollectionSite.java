@@ -130,11 +130,12 @@ public class ControlCollectionSite
     {
         this.amINeededQueue.push(thief);
         this.notifyAll();
-        
-        while(this.amINeededQueue.contains(thief))
+
+        do
         {
             this.wait();
         }
+        while(this.amINeededQueue.contains(thief));
         
         return !this.heistTerminated;
     }
@@ -167,8 +168,6 @@ public class ControlCollectionSite
             {
                 this.wait();
             }
-
-            this.amINeededQueue.clear();
             this.notifyAll();
 
             return MasterThief.PRESENTING_THE_REPORT;
@@ -259,6 +258,7 @@ public class ControlCollectionSite
     public synchronized void sumUpResults()
     {
         this.heistTerminated = true;
+        this.amINeededQueue.clear();
         this.notifyAll();
     }
 }

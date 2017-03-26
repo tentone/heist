@@ -3,6 +3,7 @@ package heist.queue;
 /**
  * Interface to represent FIFO structures.
  * @author Jose Manuel
+ * @param <T> Data type.
  */
 public interface Queue<T>
 {
