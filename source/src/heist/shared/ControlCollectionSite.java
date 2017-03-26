@@ -172,8 +172,7 @@ public class ControlCollectionSite
 
             return MasterThief.PRESENTING_THE_REPORT;
         }
-        
-        /*if(this.nextTargetRoom() != null)
+        /*else if(this.nextTargetRoom() != null)
         {
             while(this.amINeededQueue.size() < this.configuration.partySize)
             {
@@ -242,7 +241,7 @@ public class ControlCollectionSite
             else
             {
                 this.rooms[targetID].setClear();
-            }            
+            }
         }
         catch(Exception e)
         {

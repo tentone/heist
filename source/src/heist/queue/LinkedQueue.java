@@ -32,6 +32,7 @@ public class LinkedQueue<T> implements Queue<T>
      * Add a new element to the FIFO.
      * @param e Element
      */
+    @Override
     public void push(T e)
     {
         Node<T> node = new Node<>();
@@ -55,6 +56,7 @@ public class LinkedQueue<T> implements Queue<T>
      * Remove the first element from the FIFO and return it.
      * @return Element removed from the FIFO.
      */
+    @Override
     public T pop() 
     {
         T elem = this.first.e;
@@ -73,6 +75,7 @@ public class LinkedQueue<T> implements Queue<T>
      * Check the first element on the FIFO without removing it.
      * @return The first element on the FIFO.
      */
+    @Override
     public T peek() 
     {
         if(this.first == null)
@@ -88,6 +91,7 @@ public class LinkedQueue<T> implements Queue<T>
      * @param e Element to be removed from the FIFO.
      * @return True if was able to remove the element, false otherwise.
      */
+    @Override
     public boolean remove(T e)
     {
         Node temp = this.first;
@@ -95,6 +99,7 @@ public class LinkedQueue<T> implements Queue<T>
         if(temp.e == e)
         {
             this.first = this.first.next;
+            this.size--;
             return true;
         }
             
@@ -103,6 +108,7 @@ public class LinkedQueue<T> implements Queue<T>
             if(temp.next.e == e)
             {
                 temp.next = temp.next.next;
+                this.size--;
                 return true;
             }
             
@@ -115,6 +121,7 @@ public class LinkedQueue<T> implements Queue<T>
     /**
      * Clear the FIFO. Remove all elements and set size to 0.
      */
+    @Override
     public void clear()
     {
         this.first = null;
@@ -126,6 +133,7 @@ public class LinkedQueue<T> implements Queue<T>
      * Check the size
      * @return Size
      */
+    @Override
     public int size() 
     {
         return this.size;
@@ -135,6 +143,7 @@ public class LinkedQueue<T> implements Queue<T>
      * Check if the FIFO is empty.
      * @return True if the FIFO is empty.
      */
+    @Override
     public boolean isEmpty() 
     {
         return this.size() == 0;
@@ -146,6 +155,7 @@ public class LinkedQueue<T> implements Queue<T>
      * @param e Element to look for.
      * @return True if element was found inside the queue.
      */
+    @Override
     public boolean contains(T e)
     {
         Iterator<T> it = this.iterator();
