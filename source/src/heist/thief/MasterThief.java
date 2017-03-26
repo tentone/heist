@@ -8,7 +8,6 @@ import heist.shared.ControlCollectionSite;
 import heist.shared.ConcentrationSite;
 import heist.Room;
 import heist.log.Logger;
-import java.util.Iterator;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
@@ -154,10 +153,13 @@ public class MasterThief extends Thread
         {
             this.setState(MasterThief.PRESENTING_THE_REPORT);
         }
+        //TODO <THERE IS A PARTY AVAILABLE>
+        //Passar a ter paties estaticas que vou enchendo usando e reutilizando em vez das parties dinamicas
         else if(this.concentration.hasEnoughToCreateParty(this.configuration.partySize))
         {
             this.setState(MasterThief.ASSEMBLING_A_GROUP);
         }
+        //TODO <IF THERE IS A PARTY OCCUPIED>
         else
         {
             this.setState(MasterThief.WAITING_FOR_GROUP_ARRIVAL);
@@ -175,17 +177,7 @@ public class MasterThief extends Thread
         
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
         
-        String members = "";
-        Iterator<OrdinaryThief> it = party.getThieves();
-        while(it.hasNext())
-        {
-            members += it.next().getID();
-            if(it.hasNext())
-            {
-                members += ", ";
-            }
-        }
-        this.logger.write("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + members + ")");
+        this.logger.write("Master prepareAssaultParty (ID:" + party.getID() + " Distance:" + party.getTargetDistance() + " Members:" + party.toString() + ")");
         
         return party;
     }
@@ -237,7 +229,7 @@ public class MasterThief extends Thread
     {
         this.concentration.sumUpResults();
         
-        this.logger.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        this.logger.write(this.totalPaintingsStolen() + " paintings were stolen!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
     
     @Override
@@ -266,7 +258,7 @@ public class MasterThief extends Thread
             
             this.sumUpResults();
         }
-        catch(Exception e)
+        catch(InterruptedException e)
         {
             this.logger.write("Master error");
             e.printStackTrace();

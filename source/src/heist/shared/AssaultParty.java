@@ -17,10 +17,9 @@ public class AssaultParty
 
     private final int id, partySize, maxDistance;
     private final Queue<OrdinaryThief> thieves;
-    private final Queue<OrdinaryThief> crawling;
     
-    private RoomStatus room;
-    private int state, waitingToReverse;
+    private final RoomStatus room;
+    private int waitingToReverse;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
@@ -32,7 +31,6 @@ public class AssaultParty
     {
         this.id = IDCounter++;
         this.thieves = new Queue<>();
-        this.crawling = new Queue<>();
         
         this.partySize = partySize;
         this.maxDistance = maxDistance;
@@ -89,13 +87,18 @@ public class AssaultParty
     /**
      * Add thief to party if the party is full the thief is not added.
      * @param thief Thief to be added to the party.
+     * @throws java.lang.Exception Throws exception if party is already full.
      */
-    public synchronized void addThief(OrdinaryThief thief)
+    public synchronized void addThief(OrdinaryThief thief) throws Exception
     {
         if(!this.partyFull())
         {
             thief.setParty(this);
             this.thieves.push(thief);
+        }
+        else
+        {
+            throw new Exception("Party is full");
         }
     }
     
