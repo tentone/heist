@@ -71,32 +71,6 @@ public class ControlCollectionSite
     }
     
     /**
-     * Updated the RoomStatus after receiving a painting from that room.
-     * If an empty handed thief arrives marks the room as clean.
-     * Used inside the collectionSite to transfer the canvas from the OrdinaryThief to the MasterThief.
-     * @param id Room id.
-     * @param canvas If true a canvas was delivered.
-     */
-    public synchronized void collectCanvas(int id, boolean canvas)
-    {
-        try
-        {
-            if(canvas)
-            {
-                this.rooms[id].deliverPainting();
-            }
-            else
-            {
-                this.rooms[id].setClear();
-            }            
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    /**
      * Get next room to assign to a party.
      * @return Next room to assign, null if all rooms have already been assigned.
      */
@@ -251,16 +225,32 @@ public class ControlCollectionSite
     /**
      * Function to allow the MasterThief to get the canvas bough by OrdinaryThieves.
      * The MasterThief wakes up the OrdinaryThieves waiting for their canvas to be collected.
+     * Updates the RoomStatus after receiving a painting from that room.
+     * If an empty handed thief arrives marks the room as clean.
      * @throws java.lang.InterruptedException Exception
      */
     public synchronized void collectCanvas() throws InterruptedException
     {
-        while(!this.canvasDeliverQueue.isEmpty())
+        OrdinaryThief thief = this.canvasDeliverQueue.pop();
+        
+        try
         {
-            OrdinaryThief thief = this.canvasDeliverQueue.pop();
-            this.collectCanvas(thief.getParty().getTarget(), thief.deliverCanvas());
-            this.notifyAll();
+            int targetID = thief.getParty().getTarget();
+            if(thief.deliverCanvas())
+            {
+                this.rooms[targetID].deliverPainting();
+            }
+            else
+            {
+                this.rooms[targetID].setClear();
+            }            
         }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        this.notifyAll();
     }
     
     /**
