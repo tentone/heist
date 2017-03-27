@@ -3,13 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/thief/MasterThief.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/GeneralRepository.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/shared/ControlCollectionSite.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/shared/ConcentrationSite.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/RoomStatus.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/thief/OrdinaryThief.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/queue/Queue.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/thief/MasterThief.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/shared/ControlCollectionSite.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/log/Logger.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/Heist.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/GeneralRepository.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/thief/OrdinaryThief.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/Configuration.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/shared/AssaultParty.java</file>
         </group>
     </open-files>
 </project-private>

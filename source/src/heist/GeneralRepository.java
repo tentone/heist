@@ -25,11 +25,10 @@ public class GeneralRepository
     
     /**
      * General repository constructor
-     * @param configuration Configuration for the simulation
      */
-    public GeneralRepository(Configuration configuration)
+    public GeneralRepository()
     {
-        this.configuration = configuration;
+        this.configuration = new Configuration();
         this.logger = new Logger(this, configuration, "log.txt");
         
         this.museum = new Museum(this.configuration);

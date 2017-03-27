@@ -4,7 +4,6 @@ import heist.Configuration;
 import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
 import heist.RoomStatus;
-import heist.queue.Iterator;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
@@ -14,8 +13,10 @@ import heist.queue.Iterator;
 public class ConcentrationSite
 {
     private final LinkedQueue<OrdinaryThief> waitingThieves;
-    private final LinkedQueue<AssaultParty> waitingParties, parties;
-    private final int patiesToStore;
+    private final LinkedQueue<AssaultParty> waitingParties;
+    
+    private final AssaultParty[] parties;
+    private int partiesPointer;
     
     /**
      * ConcentrationSite constructor.
@@ -24,17 +25,19 @@ public class ConcentrationSite
     {   
         this.waitingThieves = new LinkedQueue<>();
         this.waitingParties = new LinkedQueue<>();
-        this.parties = new LinkedQueue<>();
-        this.patiesToStore = configuration.numberThieves / configuration.partySize;
+
+        this.parties = new AssaultParty[configuration.numberThieves / configuration.partySize];
+        this.partiesPointer = 0;
     }
     
     /**
      * Get parties queue, contains the last parties created during this simulation.
-     * @return Parties created during the simulation
+     * These parties are used for logging.
+     * @return Parties created during the simulation.
      */
-    public synchronized Iterator<AssaultParty> getParties()
+    public synchronized AssaultParty[] getParties()
     {
-        return this.parties.iterator();
+        return this.parties;
     }
     
     /**
@@ -51,13 +54,13 @@ public class ConcentrationSite
     {
         AssaultParty party = new AssaultParty(partySize, maxDistance, room);
 
-        this.waitingParties.push(party);
-        this.parties.push(party);
-        if(this.parties.size() > this.patiesToStore)
+        this.parties[this.partiesPointer++] = party;
+        if(this.partiesPointer >= this.parties.length)
         {
-            this.parties.pop();
+            this.partiesPointer = 0;
         }
         
+        this.waitingParties.push(party);
         this.notifyAll();
 
         while(!party.partyFull())

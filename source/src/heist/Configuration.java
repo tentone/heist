@@ -10,7 +10,8 @@ public class Configuration
 {
     public final int numberThieves, numberRooms, partySize, thiefDistance;
     public final Range thiefDisplacement, roomDistance, numberPaintings;
-
+    public final boolean debug, log, log_header;
+    
     /**
      * Default constructor for Configuration with default values.
      */
@@ -25,6 +26,9 @@ public class Configuration
         this.numberRooms = 5;
         this.roomDistance = new Range(15, 30);
         this.numberPaintings = new Range(8, 16);
-
+        
+        this.debug = false;
+        this.log = true;
+        this.log_header = true;
     }
 }
