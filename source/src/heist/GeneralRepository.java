@@ -30,7 +30,7 @@ public class GeneralRepository
     public GeneralRepository(Configuration configuration)
     {
         this.configuration = configuration;
-        this.logger = new Logger(this, configuration);
+        this.logger = new Logger(this, configuration, "log.txt");
         
         this.museum = new Museum(this.configuration);
         this.concentration = new ConcentrationSite(this.configuration);

@@ -29,7 +29,7 @@ import java.io.PrintStream;
  */
 public class Logger
 {
-    private final static boolean DEBUG = false, LOG = false, PRINT_HEADER = false;
+    private final static boolean DEBUG = false, LOG = true, PRINT_HEADER = true;
     private final GeneralRepository repository;
     private final Configuration configuration;
     private PrintStream out;
@@ -74,7 +74,6 @@ public class Logger
         if(Logger.DEBUG)
         {
             out.println(message);
-            out.flush();
         }
     }
     
@@ -91,7 +90,7 @@ public class Logger
 
             if(Logger.PRINT_HEADER)
             {
-                out.print("MstT      ");
+                out.print("\nMstT      ");
                 for(int i = 0; i < thieves.length; i++)
                 {
                     out.print("Thief " + i + "      ");
