@@ -97,6 +97,18 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Leave party is called after handing the canvas to the MasterThief.
+     */
+    public void leaveParty()
+    {
+        if(this.party != null)
+        {
+            this.party.removeThief(this);
+            this.party = null;
+        }
+    }
+    
+    /**
      * Get the thief position
      * @return Thief position
      */
@@ -187,9 +199,9 @@ public class OrdinaryThief extends Thread
         this.logger.debug("Thief " + this.id + " entered the concentration site");
         
         this.concentration.prepareExcursion(this);
-        this.logger.log();
         
         this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
+        this.logger.log();
     }
     
     /**
@@ -198,7 +210,9 @@ public class OrdinaryThief extends Thread
      */
     private void crawlIn() throws InterruptedException
     {
-        this.setState(OrdinaryThief.CRAWLING_INWARDS);  
+        this.setState(OrdinaryThief.CRAWLING_INWARDS);
+        this.logger.log();
+        
         while(this.party.crawlIn(this))
         {
             this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
@@ -206,6 +220,7 @@ public class OrdinaryThief extends Thread
         }
         
         this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
+        this.logger.log();
     }
     
     /**
@@ -238,6 +253,8 @@ public class OrdinaryThief extends Thread
     private void crawlOut() throws InterruptedException
     {
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
+        this.logger.log();
+        
         while(this.party.crawlOut(this))
         {
             this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
@@ -245,6 +262,7 @@ public class OrdinaryThief extends Thread
         }
         
         this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
+        this.logger.log();
     }
     
     /**
@@ -258,7 +276,8 @@ public class OrdinaryThief extends Thread
         this.logger.log();
         
         this.collection.handACanvas(this);
-    
+        this.leaveParty();
+        
         this.logger.log();
     }
 

@@ -118,6 +118,21 @@ public class AssaultParty
     }
     
     /**
+     * Remove thief from party.
+     * After all thieves are removed from the party the party is dismissed
+     * @param thief Thief to be removed from party.
+     */
+    public synchronized void removeThief(OrdinaryThief thief)
+    {
+        this.thieves.remove(thief);
+        
+        if(thieves.size() == 0)
+        {
+            this.state = AssaultParty.DISMISSED;
+        }
+    }
+    
+    /**
      * Called by the master thief to send the party to the museum.
      * Wakes up the first thief that is waiting to crawlIn.
      * @throws java.lang.InterruptedException Exception

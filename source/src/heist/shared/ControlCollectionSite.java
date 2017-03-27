@@ -17,8 +17,7 @@ public class ControlCollectionSite
     private final Configuration configuration;
     
     private final RoomStatus[] rooms;
-    private final LinkedQueue<OrdinaryThief> parties;
-    
+ 
     private final LinkedQueue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
     private boolean heistTerminated;
     
@@ -30,8 +29,7 @@ public class ControlCollectionSite
     public ControlCollectionSite(Configuration configuration, Museum museum)
     {   
         this.configuration = configuration;
-        
-        this.parties = new LinkedQueue<>();
+
         
         Room[] museumRooms = museum.getRooms();
         this.rooms = new RoomStatus[museumRooms.length];
@@ -124,6 +122,15 @@ public class ControlCollectionSite
     }
     
     /**
+     * Check if there is conditions to create a new party.
+     * @return True if there is conditions to create a new party.
+     */
+    public synchronized boolean canCreateParty()
+    {
+        return this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize;
+    }
+    
+    /**
      * Check if the OrdinaryThief is still needed or if he can be terminated.
      * The OrdinaryThief blocks until prepareAssaultParty or sumUpResults is called by the MasterThief.
      * @param thief OrdinaryThief to check.
@@ -162,7 +169,7 @@ public class ControlCollectionSite
 
             return MasterThief.PRESENTING_THE_REPORT;
         }
-        else if(this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize)
+        else if(this.canCreateParty())
         {
             for(int i = 0; i < this.configuration.partySize; i++)
             {
@@ -179,6 +186,20 @@ public class ControlCollectionSite
 
         this.wait();
         return MasterThief.DECIDING_WHAT_TO_DO;
+    }
+    
+    /**
+     * MasterThief gets a room for the OrdinaryThieves to attack.
+     * The room is marked undeAttack by a partySize number of thieves.
+     * @param partySize Party size.
+     * @return Returns RoomStatus that describes the room to be attacked.
+     */
+    public synchronized RoomStatus getRoomToAttack(int partySize)
+    {
+        RoomStatus room = this.nextTargetRoom();
+        room.addThievesAttacking(partySize);
+        
+        return room;
     }
     
     /**
@@ -219,13 +240,15 @@ public class ControlCollectionSite
      */
     public synchronized void collectCanvas() throws InterruptedException
     {
-        while(!this.canvasDeliverQueue.isEmpty())
+        if(!this.canvasDeliverQueue.isEmpty())
         {
             OrdinaryThief thief = this.canvasDeliverQueue.pop();
-
+            AssaultParty party = thief.getParty();
+            
             try
             {
-                int targetID = thief.getParty().getTarget();
+                int targetID = party.getTarget();
+                
                 if(thief.deliverCanvas())
                 {
                     this.rooms[targetID].deliverPainting();

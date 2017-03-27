@@ -103,6 +103,17 @@ public class LinkedQueue<T> implements Queue<T>
             
         while(temp.next != null)
         {
+            if(temp.next == this.last)
+            {
+                if(this.last.e == e)
+                {
+                    this.last = temp;
+                    this.last.next = null;
+                    this.size--;
+                    return true;
+                }
+            }
+            
             if(temp.next.e == e)
             {
                 temp.next = temp.next.next;
@@ -112,7 +123,7 @@ public class LinkedQueue<T> implements Queue<T>
             
             temp = temp.next;
         }
-                
+        
         return false;
     }
     

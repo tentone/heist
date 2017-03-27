@@ -29,7 +29,7 @@ import java.io.PrintStream;
  */
 public class Logger
 {
-    private final static boolean DEBUG = false;
+    private final static boolean DEBUG = false, LOG = false, PRINT_HEADER = false;
     private final GeneralRepository repository;
     private final Configuration configuration;
     private PrintStream out;
@@ -84,68 +84,78 @@ public class Logger
      */
     public synchronized void log()
     {
-        MasterThief master = this.repository.getMasterThief();
-        OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
+        if(Logger.LOG)
+        {
+            MasterThief master = this.repository.getMasterThief();
+            OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
 
-        out.print("MstT      ");
-        for(int i = 0; i < thieves.length; i++)
-        {
-            out.print("Thief " + i + "      ");
-        }
-        
-        out.print("\nStat     ");
-        for(int i = 0; i < thieves.length; i++)
-        {
-            out.print("Stat S MD    ");
-        }
-
-        out.print("\n" + master.state() + "     ");//
-        for(int i = 0; i < thieves.length; i++)
-        {
-            out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
-        }
-        out.print("\n");
-        out.print("\n               Assault party 1                       Assault party 2                       Museum");
-        out.print("\n       Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
-        out.print("\nRId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
-        out.print("\n");
-        
-        Iterator<AssaultParty> itp = this.repository.getConcentrationSite().getParties();
-        for(int i = 0; i < 2; i++)
-        {
-            AssaultParty party = itp.next();
-            if(party == null)
+            if(Logger.PRINT_HEADER)
             {
-                out.print("-    -  -  -    -  -  -    -  -  -     ");
-            }
-            else
-            {
-                out.printf("%2d    ", party.getTarget());
-                
-                Iterator<OrdinaryThief> itt = party.getThieves();
-                for(int j = 0; j < 3; j++)
+                out.print("MstT      ");
+                for(int i = 0; i < thieves.length; i++)
                 {
-                    OrdinaryThief thief = itt.next();
-                    if(thief == null)
+                    out.print("Thief " + i + "      ");
+                }
+
+                out.print("\nStat     ");
+                for(int i = 0; i < thieves.length; i++)
+                {
+                    out.print("Stat S MD    ");
+                }
+            }
+
+            out.print("\n" + master.state() + "     ");//
+            for(int i = 0; i < thieves.length; i++)
+            {
+                out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
+            }
+
+            out.print("\n");
+
+            if(Logger.PRINT_HEADER)
+            {
+                out.print("\n               Assault party 1                       Assault party 2                       Museum");
+                out.print("\n       Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
+                out.print("\nRId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
+                out.print("\n");
+            }
+
+            Iterator<AssaultParty> itp = this.repository.getConcentrationSite().getParties();
+            for(int i = 0; i < 2; i++)
+            {
+                AssaultParty party = itp.next();
+                if(party == null)
+                {
+                    out.print("-    -  -  -    -  -  -    -  -  -     ");
+                }
+                else
+                {
+                    out.printf("%2d    ", party.getTarget());
+
+                    Iterator<OrdinaryThief> itt = party.getThieves();
+                    for(int j = 0; j < 3; j++)
                     {
-                        out.print(" -  -  -   ");
-                    }
-                    else
-                    {
-                        out.printf(" %d  %2d  %d   ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                        OrdinaryThief thief = itt.next();
+                        if(thief == null)
+                        {
+                            out.print(" -  -  -   ");
+                        }
+                        else
+                        {
+                            out.printf(" %d %2d  %d   ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                        }
                     }
                 }
             }
+
+            Room[] rooms = this.repository.getMuseum().getRooms();
+            for(int i = 0; i < rooms.length; i++)
+            {
+                out.printf("%2d %2d   ", rooms[i].getPaintings(), rooms[i].getDistance());
+            }
+
+            out.flush();
         }
-        
-        Room[] rooms = this.repository.getMuseum().getRooms();
-        for(int i = 0; i < rooms.length; i++)
-        {
-            out.printf("%2d %2d   ", rooms[i].getPaintings(), rooms[i].getDistance());
-        }
-        
-        out.print("\n");
-        out.flush();
     }
     
     /**
@@ -154,6 +164,5 @@ public class Logger
     public synchronized void end()
     {
         out.println("\nMy friends, tonight's effort produced " + this.repository.getCollectionSite().totalPaintingsStolen() + " priceless paintings!");
-        out.close();
     }
 }
