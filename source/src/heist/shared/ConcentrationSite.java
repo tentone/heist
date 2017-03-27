@@ -1,8 +1,10 @@
 package heist.shared;
 
+import heist.Configuration;
 import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
 import heist.RoomStatus;
+import heist.queue.Iterator;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
@@ -11,16 +13,28 @@ import heist.RoomStatus;
  */
 public class ConcentrationSite
 {
-    private final LinkedQueue<OrdinaryThief> thieves;
-    private final LinkedQueue<AssaultParty> parties;
+    private final LinkedQueue<OrdinaryThief> waitingThieves;
+    private final LinkedQueue<AssaultParty> waitingParties, parties;
+    private final int patiesToStore;
     
     /**
      * ConcentrationSite constructor.
      */
-    public ConcentrationSite()
+    public ConcentrationSite(Configuration configuration)
     {   
-        this.thieves = new LinkedQueue<>();
+        this.waitingThieves = new LinkedQueue<>();
+        this.waitingParties = new LinkedQueue<>();
         this.parties = new LinkedQueue<>();
+        this.patiesToStore = configuration.numberThieves / configuration.partySize;
+    }
+    
+    /**
+     * Get parties queue, contains the last parties created during this simulation.
+     * @return Parties created during the simulation
+     */
+    public synchronized Iterator<AssaultParty> getParties()
+    {
+        return this.parties.iterator();
     }
     
     /**
@@ -37,7 +51,13 @@ public class ConcentrationSite
     {
         AssaultParty party = new AssaultParty(partySize, maxDistance, room);
 
+        this.waitingParties.push(party);
         this.parties.push(party);
+        if(this.parties.size() > this.patiesToStore)
+        {
+            this.parties.pop();
+        }
+        
         this.notifyAll();
 
         while(!party.partyFull())
@@ -45,7 +65,7 @@ public class ConcentrationSite
             this.wait();
         }
 
-        this.parties.pop();
+        this.waitingParties.pop();
 
         return party;
     }
@@ -58,19 +78,19 @@ public class ConcentrationSite
      */
     public synchronized void prepareExcursion(OrdinaryThief thief) throws InterruptedException, Exception
     {
-        this.thieves.push(thief);
-        
+        this.waitingThieves.push(thief);
+
         AssaultParty party = null;
         while(party == null)
         {
-            party = this.parties.peek();
+            party = this.waitingParties.peek();
             if(party == null)
             {
                 this.wait();
             }
         }
         
-        this.thieves.pop();
+        this.waitingThieves.pop();
         party.addThief(thief);
         
         if(party.partyFull())

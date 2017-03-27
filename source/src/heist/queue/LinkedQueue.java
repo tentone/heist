@@ -1,7 +1,5 @@
 package heist.queue;
 
-import java.util.Iterator;
-
 /**
  * Generic node based FIFO structure.
  * @author Jose Manuel

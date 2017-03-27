@@ -56,11 +56,22 @@ public class MasterThief extends Thread
     }
     
     /**
+     * Get MasterThief state
+     * @return Thief state.
+     */
+    public int state()
+    {
+        return this.state;
+    }
+    
+    /**
      * This is the first state change in the MasterThief life cycle it changes the MasterThief state to deciding what to do. 
      */
     private void startOperations()
     {
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
+        
+        this.logger.log();
     }
     
     /**
@@ -70,9 +81,10 @@ public class MasterThief extends Thread
      */
     private void appraiseSit() throws InterruptedException
     {
-        this.logger.debug("Master appraiseSit");
-        
         this.setState(this.collection.appraiseSit());
+        
+        this.logger.debug("Master appraiseSit");
+        this.logger.log();
     }
     
     /**
@@ -85,11 +97,10 @@ public class MasterThief extends Thread
         RoomStatus room = this.collection.nextTargetRoom();
         room.addThievesAttacking(this.configuration.partySize);
 
-        this.logger.debug("Master prepareAssaultParty room [ID: " + room.getID() + " P:" + room.getPaintings() + " TA:" + room.getThievesAttacking() + "]"); 
-        
         AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
         
-        this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " Members:" + party.toString() + ")");
+        this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
+        this.logger.log();
         
         return party;
     }
@@ -102,9 +113,11 @@ public class MasterThief extends Thread
      */
     private void sendAssaultParty(AssaultParty party) throws InterruptedException
     {
-        this.logger.debug("Master sendAssaultParty " + party.getID());
-        
         party.sendParty();
+
+        this.logger.debug("Master sendAssaultParty " + party.getID());
+        this.logger.log();
+        
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
     }
     
@@ -117,6 +130,8 @@ public class MasterThief extends Thread
         this.logger.debug("Master takeARest");
         
         this.collection.takeARest();
+        
+        this.logger.log();
     }
     
     /**
@@ -127,10 +142,11 @@ public class MasterThief extends Thread
     private void collectCanvas() throws InterruptedException
     {
         this.collection.collectCanvas();
-
-        this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
-        
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
+        
+        this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
+        this.logger.log();
+        
     }
     
     /**
@@ -141,7 +157,9 @@ public class MasterThief extends Thread
     {
         this.collection.sumUpResults();
         
-        this.logger.debug(this.collection.totalPaintingsStolen() + " paintings were stolen!!!");
+        this.logger.debug(this.collection.totalPaintingsStolen() + " paintings were stolen!");
+        this.logger.log();
+        this.logger.end();
     }
     
     /**

@@ -1,13 +1,20 @@
 package heist.log;
 
+import heist.Configuration;
 import heist.GeneralRepository;
-import heist.queue.LinkedQueue;
+import heist.Room;
+import heist.queue.Iterator;
+import heist.shared.AssaultParty;
+import heist.thief.MasterThief;
+import heist.thief.OrdinaryThief;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
 /**
  * Logger object is used to create a detailed log of everything inside a GeneralRepository.
+ * The logger is called by every active entity (MasterThief and OrdinaryThieves) after every change.
+ * 
  * MstT Stat    – state of the master thief
  * Thief # Stat - state of the ordinary thief # (# - 1 .. 6)
  * Thief # S    – situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)
@@ -22,9 +29,9 @@ import java.io.PrintStream;
  */
 public class Logger
 {
-    private static final boolean debug = true;
-    private final LinkedQueue<String> log;
+    private final static boolean DEBUG = false;
     private final GeneralRepository repository;
+    private final Configuration configuration;
     private PrintStream out;
     
     /**
@@ -32,10 +39,10 @@ public class Logger
      * @param repository GeneralRepository to be logged.
      * @param file File name for log.
      */
-    public Logger(GeneralRepository repository, String file)
+    public Logger(GeneralRepository repository, Configuration configuration, String file)
     {
-        this.log = new LinkedQueue<>();
         this.repository = repository;
+        this.configuration = configuration;
         this.out = System.out;
         
         try
@@ -50,20 +57,21 @@ public class Logger
      * Constructor from general repository object that uses System.out as PrintStream to display log messages.
      * @param repository GeneralRepository to be logged.
      */
-    public Logger(GeneralRepository repository)
+    public Logger(GeneralRepository repository, Configuration configuration)
     {
-        this.log = new LinkedQueue<>();
         this.repository = repository;
+        this.configuration = configuration;
         this.out = System.out;
     }
 
     /**
      * Write message directly to the PrintStream.
+     * Flushes the PrintStream after every message.
      * @param message Message to display.
      */
     public synchronized void debug(String message)
     {
-        if(debug)
+        if(Logger.DEBUG)
         {
             out.println(message);
             out.flush();
@@ -71,19 +79,81 @@ public class Logger
     }
     
     /**
-     * Create a log entry of everything in the general repository
+     * Create a log entry of everything in the general repository.
+     * Flushes after log has been written.
      */
     public synchronized void log()
     {
-        out.println("MstT      Thief 1      Thief 2      Thief 3      Thief 4      Thief 5      Thief 6");
-        out.println("Stat    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD");
-        out.println("####    #### #  #    #### #  #    #### #  #    #### #  #    #### #  #    #### #  #");
+        MasterThief master = this.repository.getMasterThief();
+        OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
+
+        out.print("MstT      ");
+        for(int i = 0; i < thieves.length; i++)
+        {
+            out.print("Thief " + i + "      ");
+        }
         
-        out.println("                   Assault party 1                       Assault party 2                       Museum");
-        out.println("           Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
-        out.println("    RId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
-        out.println("     #    #  ##  #   #  ##  #   #  ##  #   #    #  ##  #   #  ##  #   #  ##  #   ## ##   ## ##   ## ##   ## ##   ## ##");
+        out.print("\nStat     ");
+        for(int i = 0; i < thieves.length; i++)
+        {
+            out.print("Stat S MD    ");
+        }
+
+        out.print("\n" + master.state() + "     ");//
+        for(int i = 0; i < thieves.length; i++)
+        {
+            out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
+        }
+        out.print("\n");
+        out.print("\n               Assault party 1                       Assault party 2                       Museum");
+        out.print("\n       Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
+        out.print("\nRId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
+        out.print("\n");
         
-        out.println("My friends, tonight's effort produced ## priceless paintings!");
+        Iterator<AssaultParty> itp = this.repository.getConcentrationSite().getParties();
+        for(int i = 0; i < 2; i++)
+        {
+            AssaultParty party = itp.next();
+            if(party == null)
+            {
+                out.print("-    -  -  -    -  -  -    -  -  -     ");
+            }
+            else
+            {
+                out.printf("%2d    ", party.getTarget());
+                
+                Iterator<OrdinaryThief> itt = party.getThieves();
+                for(int j = 0; j < 3; j++)
+                {
+                    OrdinaryThief thief = itt.next();
+                    if(thief == null)
+                    {
+                        out.print(" -  -  -   ");
+                    }
+                    else
+                    {
+                        out.printf(" %d  %2d  %d   ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                    }
+                }
+            }
+        }
+        
+        Room[] rooms = this.repository.getMuseum().getRooms();
+        for(int i = 0; i < rooms.length; i++)
+        {
+            out.printf("%2d %2d   ", rooms[i].getPaintings(), rooms[i].getDistance());
+        }
+        
+        out.print("\n");
+        out.flush();
+    }
+    
+    /**
+     * End the log and close the internal PrintStream.
+     */
+    public synchronized void end()
+    {
+        out.println("\nMy friends, tonight's effort produced " + this.repository.getCollectionSite().totalPaintingsStolen() + " priceless paintings!");
+        out.close();
     }
 }

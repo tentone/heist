@@ -3,7 +3,7 @@ package heist.shared;
 import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
 import heist.RoomStatus;
-import java.util.Iterator;
+import heist.queue.Iterator;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
@@ -13,14 +13,18 @@ import java.util.Iterator;
  */
 public class AssaultParty
 {
+    public static final int WAITING = 1000;
+    public static final int CRAWLING = 2000;
+    public static final int DISMISSED = 3000;
+    
     private static int IDCounter = 0;
-
+    
     private final int id, partySize, thiefDistance;
     private final LinkedQueue<OrdinaryThief> thieves;
     
     private final RoomStatus room;
     private int waitingToReverse;
-    private boolean partyCrawling;
+    private int state;
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
@@ -37,7 +41,7 @@ public class AssaultParty
         this.thiefDistance = thiefDistance;
         this.room = room;
         
-        this.partyCrawling = false;
+        this.state = AssaultParty.WAITING;
         this.waitingToReverse = 0;
     }
     
@@ -48,6 +52,15 @@ public class AssaultParty
     public synchronized int getID()
     {
         return this.id;
+    }
+    
+    /**
+     * Get party state.
+     * @return Party state.
+     */
+    public synchronized int state()
+    {
+        return this.state;
     }
     
     /**
@@ -111,7 +124,7 @@ public class AssaultParty
      */
     public synchronized void sendParty() throws InterruptedException
     {
-        this.partyCrawling = true;
+        this.state = AssaultParty.CRAWLING;
         this.notifyAll();
     }
     
@@ -137,7 +150,7 @@ public class AssaultParty
             this.thieves.popPush();
         }
         
-        while(this.thieves.peek() != thief || !this.partyCrawling)
+        while(this.thieves.peek() != thief || this.state != AssaultParty.CRAWLING)
         {
             this.wait();
             

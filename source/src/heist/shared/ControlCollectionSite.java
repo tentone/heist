@@ -16,9 +16,10 @@ public class ControlCollectionSite
 {
     private final Configuration configuration;
     
-    private final LinkedQueue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
     private final RoomStatus[] rooms;
-
+    private final LinkedQueue<OrdinaryThief> parties;
+    
+    private final LinkedQueue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
     private boolean heistTerminated;
     
     /**
@@ -30,10 +31,7 @@ public class ControlCollectionSite
     {   
         this.configuration = configuration;
         
-        this.canvasDeliverQueue = new LinkedQueue<>();
-        this.amINeededQueue = new LinkedQueue<>();
-        
-        this.heistTerminated = false;
+        this.parties = new LinkedQueue<>();
         
         Room[] museumRooms = museum.getRooms();
         this.rooms = new RoomStatus[museumRooms.length];
@@ -41,6 +39,11 @@ public class ControlCollectionSite
         {
             this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
         }
+        
+        this.canvasDeliverQueue = new LinkedQueue<>();
+        this.amINeededQueue = new LinkedQueue<>();
+        
+        this.heistTerminated = false;
     }
     
     /**

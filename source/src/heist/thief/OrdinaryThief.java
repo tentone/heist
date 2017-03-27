@@ -65,6 +65,20 @@ public class OrdinaryThief extends Thread
     }
 
     /**
+     * Check if OrdinaryThief has a party.
+     * @return Returns a P if has party or a W otherwise.
+     */
+    public char hasParty()
+    {
+        if(this.party == null)
+        {
+            return 'W';
+        }
+        
+        return 'P';
+    }
+    
+    /**
      * Get the OrdinaryThief party
      * @return Party assigned to the OrdinaryThief.
      */
@@ -108,6 +122,15 @@ public class OrdinaryThief extends Thread
     {
         return this.id;
     }
+
+    /**
+     * Check if thieve has a canvas.
+     * @return Return 1 if thief has a canvas 0 otherwise.
+     */
+    public int hasCanvas()
+    {
+        return this.hasCanvas ? 1 : 0;
+    }
     
     /**
      * Get thief maximum displacement.
@@ -149,6 +172,7 @@ public class OrdinaryThief extends Thread
     private boolean amINeeded() throws InterruptedException
     {
         this.logger.debug("Thief " + this.id + " amINeeded");
+        this.logger.log();
         
         return this.collection.amINeeded(this);
     }
@@ -163,6 +187,7 @@ public class OrdinaryThief extends Thread
         this.logger.debug("Thief " + this.id + " entered the concentration site");
         
         this.concentration.prepareExcursion(this);
+        this.logger.log();
         
         this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
     }
@@ -177,6 +202,7 @@ public class OrdinaryThief extends Thread
         while(this.party.crawlIn(this))
         {
             this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
+            this.logger.log();
         }
         
         this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
@@ -189,8 +215,9 @@ public class OrdinaryThief extends Thread
     {
         this.setState(OrdinaryThief.AT_A_ROOM);
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
-        
+
         this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
+        this.logger.log();
     }
     
     /**
@@ -199,7 +226,9 @@ public class OrdinaryThief extends Thread
     private void reverseDirection() throws InterruptedException
     {      
         this.party.reverseDirection();
+        
         this.logger.debug("Thief " + this.id + " reverse");
+        this.logger.log();
     }
     
     /**
@@ -212,6 +241,7 @@ public class OrdinaryThief extends Thread
         while(this.party.crawlOut(this))
         {
             this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
+            this.logger.log();
         }
         
         this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
@@ -225,8 +255,11 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.OUTSIDE);
         
         this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
+        this.logger.log();
         
         this.collection.handACanvas(this);
+    
+        this.logger.log();
     }
 
     /**

@@ -13,15 +13,15 @@ import heist.thief.OrdinaryThief;
  */
 public class GeneralRepository
 {
-    private Museum museum;
-    private ControlCollectionSite collection;
-    private ConcentrationSite concentration;
+    private final Museum museum;
+    private final ControlCollectionSite collection;
+    private final ConcentrationSite concentration;
     
-    private MasterThief master;
-    private OrdinaryThief[] thieves;
+    private final MasterThief master;
+    private final OrdinaryThief[] thieves;
     
-    private Logger logger;
-    private Configuration configuration;
+    private final Logger logger;
+    private final Configuration configuration;
     
     /**
      * General repository constructor
@@ -29,11 +29,11 @@ public class GeneralRepository
      */
     public GeneralRepository(Configuration configuration)
     {
-        this.logger = new Logger(this);
         this.configuration = configuration;
+        this.logger = new Logger(this, configuration);
         
         this.museum = new Museum(this.configuration);
-        this.concentration = new ConcentrationSite();
+        this.concentration = new ConcentrationSite(this.configuration);
         this.collection = new ControlCollectionSite(this.configuration, this.museum);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
@@ -43,6 +43,8 @@ public class GeneralRepository
         }
         
         this.master = new MasterThief(this, this.configuration);
+        
+        this.logger.log();
     }
     
     /**
@@ -78,7 +80,7 @@ public class GeneralRepository
     
     /**
      * Get collection site.
-     * @return CollectionSite
+     * @return CollectionSite.
      */
     public ControlCollectionSite getCollectionSite()
     {
@@ -87,10 +89,28 @@ public class GeneralRepository
     
     /**
      * Get concentration site.
-     * @return ConcentrationSite
+     * @return ConcentrationSite.
      */
     public ConcentrationSite getConcentrationSite()
     {
         return this.concentration;
+    }
+    
+    /**
+     * Get Master Thief.
+     * @return MasterThief.
+     */
+    public MasterThief getMasterThief()
+    {
+        return this.master;
+    }
+    
+    /**
+     * Get Ordinary Thieves.
+     * @return OrdinaryThief array.
+     */
+    public OrdinaryThief[] getOrdinaryThieves()
+    {
+        return this.thieves;
     }
 }

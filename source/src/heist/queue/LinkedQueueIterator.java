@@ -1,7 +1,5 @@
 package heist.queue;
 
-import java.util.Iterator;
-
 /**
  * QueueIterator is used to iterate all elements inside a Queue.
  * @author Jose Manuel
@@ -27,18 +25,24 @@ class LinkedQueueIterator<T> implements Iterator
     @Override
     public boolean hasNext()
     {
-        return node != null;
+        return this.node != null;
     }
 
     /**
      * Get the next element in the FIFO.
+     * Returns null if there is no element available.
      * @return Element
      */
     @Override
     public T next()
     {
-       T value = node.e;
-       node = node.next;
-       return value; 
+        if(this.hasNext())
+        {
+            T value = this.node.e;
+            this.node = this.node.next;
+            return value;
+        }
+        
+        return null;
     }
 }
