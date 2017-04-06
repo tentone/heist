@@ -7,10 +7,14 @@ package heist.queue;
  */
 class LinkedQueueIterator<T> implements Iterator
 {
+    /**
+     * Current node being iterated.
+     */
     private Node<T> node;
     
     /**
      * Constructor for the QueueIterator object.
+     * LinkedQueue should pass the first node in the FIFO.
      * @param node First node in the FIFO.
      */
     public LinkedQueueIterator(Node<T> node)

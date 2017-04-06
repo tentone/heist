@@ -25,11 +25,12 @@ public class GeneralRepository
     
     /**
      * General repository constructor
+     * @param configuration Configuration to be used to create elements in this repository.
      */
-    public GeneralRepository()
+    public GeneralRepository(Configuration configuration)
     {
-        this.configuration = new Configuration();
-        this.logger = new Logger(this, configuration, "log.txt");
+        this.configuration = configuration;
+        this.logger = new Logger(this, configuration);
         
         this.museum = new Museum(this.configuration);
         this.concentration = new ConcentrationSite(this.configuration);
@@ -47,7 +48,7 @@ public class GeneralRepository
     }
     
     /**
-     * Initialise simulation elements and starts the simulation, calls the start method in all thieves
+     * Initializes simulation elements and starts the simulation, calls the start method in all thieves
      */
     public void start()
     {

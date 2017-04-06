@@ -12,14 +12,25 @@ import heist.RoomStatus;
  */
 public class ConcentrationSite
 {
+    /**
+     * List of thieves waiting to enter a team.
+     */
     private final LinkedQueue<OrdinaryThief> waitingThieves;
+    
+    /**
+     * List of parties waiting to be filled with thieves.
+     */
     private final LinkedQueue<AssaultParty> waitingParties;
     
+    /**
+     * Array with the last created assault parties
+     */
     private final AssaultParty[] parties;
     private int partiesPointer;
     
     /**
      * ConcentrationSite constructor.
+     * @param configuration Configuration to be used.
      */
     public ConcentrationSite(Configuration configuration)
     {   

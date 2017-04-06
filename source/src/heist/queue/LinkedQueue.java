@@ -8,24 +8,26 @@ package heist.queue;
 @SuppressWarnings("unchecked")
 public class LinkedQueue<T> implements Queue<T>
 {
+    /**
+     * First and last node of the FIFO.
+     */
     private Node<T> first, last;
+    
+    /**
+     * Current size of the FIFO.
+     */
     private int size;
     
+    /**
+     * LinkedQueue constructor, initializes first and last nodes and sets the size.
+     */
     public LinkedQueue()
     {
         this.first = null;
         this.last = null;
         this.size = 0;
     }
-    
-    /**
-     * Move first element to the end of this FIFO.
-     */
-    public void popPush()
-    {
-        this.push(this.pop());
-    }
-    
+        
     /**
      * Add a new element to the FIFO.
      * @param e Element
@@ -146,16 +148,6 @@ public class LinkedQueue<T> implements Queue<T>
     public int size() 
     {
         return this.size;
-    }
-
-    /**
-     * Check if the FIFO is empty.
-     * @return True if the FIFO is empty.
-     */
-    @Override
-    public boolean isEmpty() 
-    {
-        return this.size() == 0;
     }
 
     /**

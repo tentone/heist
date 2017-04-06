@@ -7,7 +7,7 @@ import heist.queue.Iterator;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
- * Its used as a synchronisation point between thieves.
+ * Its used as a synchronization point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */

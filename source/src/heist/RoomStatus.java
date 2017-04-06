@@ -6,7 +6,15 @@ package heist;
  */
 public class RoomStatus extends Room
 {
+    /**
+     * Flag to mark if the room has been cleared out.
+     */
     private boolean clear;
+    
+    /**
+     * Stores the number of thieves currently attacking (or on their way to attack) the room.
+     * Its incremented with a thief enters a party that targets this room, and is decreased when the thieve returns from the room.
+     */
     private int thievesAttacking;
 
     /**

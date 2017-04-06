@@ -44,15 +44,26 @@ public interface Queue<T>
     public int size();
     
     /**
-     * Check if the FIFO is empty.
-     * @return True if the FIFO is empty.
-     */
-    public boolean isEmpty();
-    
-    /**
      * Check if the FIFO contains an element.
      * @param e Element to search for.
      * @return True if the FIFO contains the element.
      */
     public boolean contains(T e);
+    
+    /**
+     * Check if the FIFO is empty.
+     * @return True if the FIFO is empty.
+     */
+    public default boolean isEmpty() 
+    {
+        return this.size() == 0;
+    }
+    
+    /**
+     * Move first element to the end of this FIFO.
+     */
+    public default void popPush()
+    {
+        this.push(this.pop());
+    }
 }

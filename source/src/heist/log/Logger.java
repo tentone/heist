@@ -27,33 +27,25 @@ import java.io.PrintStream;
  * @author Jose Manuel
  */
 public class Logger
-{ 
-    private final GeneralRepository repository;
-    private final Configuration configuration;
-    private PrintStream out;
-    
+{
     /**
-     * Constructor from repository and specific PrintStream object to be used to display log messages as they are created.
-     * @param repository GeneralRepository to be logged.
-     * @param configuration Configuration.
-     * @param file File name for log.
+     * Repository to be logged.
      */
-    public Logger(GeneralRepository repository, Configuration configuration, String file)
-    {
-        this.repository = repository;
-        this.configuration = configuration;
-        this.out = System.out;
-        
-        try
-        {
-            PrintStream pw = new PrintStream(new File(file));
-            this.out = pw;
-        }
-        catch(FileNotFoundException e){}
-    }
+    private final GeneralRepository repository;
     
     /**
-     * Constructor from general repository object that uses System.out as PrintStream to display log messages.
+     * Configuration object.
+     */
+    private final Configuration configuration;
+    
+    /**
+     * PrintStream used to write the log.
+     */
+    private PrintStream out;
+
+    /**
+     * Logger constructor from GeneralRepository and Configuration file.
+     * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
      * @param repository GeneralRepository to be logged.
      * @param configuration Configuration
      */
@@ -62,6 +54,16 @@ public class Logger
         this.repository = repository;
         this.configuration = configuration;
         this.out = System.out;
+        
+        if(this.configuration.logToFile)
+        {
+            try
+            {
+                PrintStream pw = new PrintStream(new File(this.configuration.logFile));
+                this.out = pw;
+            }
+            catch(FileNotFoundException e){}
+        }
     }
 
     /**
@@ -90,7 +92,7 @@ public class Logger
                 MasterThief master = this.repository.getMasterThief();
                 OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
 
-                if(this.configuration.log_header)
+                if(this.configuration.logHeader)
                 {
                     out.print("\n\n\nMstT      ");
                     for(int i = 0; i < thieves.length; i++)
@@ -116,7 +118,7 @@ public class Logger
 
                 AssaultParty[] parties = this.repository.getConcentrationSite().getParties();
 
-                if(this.configuration.log_header)
+                if(this.configuration.logHeader)
                 {
                     out.print("\n               Assault party " + (parties[0] != null ? parties[0].getID() : 'X') + "                       Assault party " + (parties[1] != null ? parties[1].getID() : 'X') + "                       Museum");
                     out.print("\n       Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");

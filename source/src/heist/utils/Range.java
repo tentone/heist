@@ -8,7 +8,16 @@ import java.util.Random;
 public class Range
 {
     private static Random random = new Random();
-    public int min, max;
+    
+    /**
+     * Min value in range.
+     */
+    public int min;
+    
+    /**
+     * Max value in range.
+     */
+    public int max;
     
     /**
      * Range constructor from min and max values.

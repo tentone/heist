@@ -7,7 +7,20 @@ package heist;
  */
 public class Room
 {
-    private final int id, distance;
+    /**
+     * Room identification.
+     */
+    private final int id;
+    
+    /**
+     * Room distance inside the museum.
+     */
+    private final int distance;
+    
+    /**
+     * Number of paintings currently inside the room.
+     * This value is decreased every time a thief takes a painting from the room.
+     */
     protected int paintings;
 
     /**
