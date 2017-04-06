@@ -1,6 +1,6 @@
 package heist.shared;
 
-import heist.Room;
+import heist.room.Room;
 import heist.Configuration;
 
 /**

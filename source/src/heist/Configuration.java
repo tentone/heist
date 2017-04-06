@@ -8,14 +8,69 @@ import heist.utils.Range;
  * This configuration can be distributed to all elements in a distributed implementation.
  */
 public class Configuration
-{
-    public final int numberThieves, numberRooms, partySize, thiefDistance;
-    public final Range thiefDisplacement, roomDistance, numberPaintings;
+{   
+    /**
+     * Number of thieves to be created for this simulation.
+     */
+    public final int numberThieves;
     
+    /**
+     * Number of rooms inside the museum.
+     * Number of rooms has to be less or equal to the possible values for room distance.
+     */
+    public final int numberRooms;
+    
+    /**
+     * Party size.
+     */
+    public final int partySize;
+    
+    /**
+     * Max distance between crawling thieves.
+     * Distance is only verified for the party.
+     */
+    public final int thiefDistance;
+            
+    /**
+     * Range of possible thief displacements.
+     * Displacement defines how far the thief can move in one step.
+     */
+    public final Range thiefDisplacement;
+    
+    /**
+     * Range of room distances inside the museum.
+     */
+    public final Range roomDistance;
+    
+    /**
+     * Range of number painting inside each room.
+     */
+    public final Range numberPaintings;
+    
+    /**
+     * Flag to enable debug messages.
+     */
     public final boolean debug;
     
+    /**
+     * File path to log write log file.
+     */
     public final String logFile;
-    public final boolean logToFile, log, logHeader;
+    
+    /**
+     * Flag to set if log is written to a file.
+     */
+    public final boolean logToFile;
+    
+    /**
+     * Print log messages as specified in the document.
+     */
+    public final boolean  log;
+    
+    /**
+     * If true the log header is printed every time.
+    */
+    public final boolean logHeader;
     
     /**
      * Default constructor for Configuration with default values.
@@ -34,7 +89,7 @@ public class Configuration
         
         this.logFile = "log.txt";
         this.logToFile = false;
-        this.debug = true;
+        this.debug = false;
         this.log = true;
         this.logHeader = true;
     }

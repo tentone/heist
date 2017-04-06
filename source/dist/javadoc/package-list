@@ -1,6 +1,7 @@
 heist
 heist.log
 heist.queue
+heist.room
 heist.shared
 heist.thief
 heist.utils

@@ -1,6 +1,6 @@
 package heist.thief;
 
-import heist.RoomStatus;
+import heist.room.RoomStatus;
 import heist.Configuration;
 import heist.GeneralRepository;
 import heist.shared.AssaultParty;

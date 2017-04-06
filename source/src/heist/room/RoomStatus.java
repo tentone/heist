@@ -1,4 +1,4 @@
-package heist;
+package heist.room;
 
 /**
  * Class to represent the room as the MasterThief perceives it.

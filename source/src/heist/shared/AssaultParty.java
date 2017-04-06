@@ -2,7 +2,7 @@ package heist.shared;
 
 import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
-import heist.RoomStatus;
+import heist.room.RoomStatus;
 import heist.queue.Iterator;
 
 /**

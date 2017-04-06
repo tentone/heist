@@ -3,7 +3,7 @@ package heist.shared;
 import heist.Configuration;
 import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
-import heist.RoomStatus;
+import heist.room.RoomStatus;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.

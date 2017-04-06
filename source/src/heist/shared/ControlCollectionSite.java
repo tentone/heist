@@ -1,8 +1,8 @@
 package heist.shared;
 
 import heist.Configuration;
-import heist.Room;
-import heist.RoomStatus;
+import heist.room.Room;
+import heist.room.RoomStatus;
 import heist.queue.LinkedQueue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
