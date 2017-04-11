@@ -38,8 +38,8 @@ public class ArrayQueue<T> implements Queue<T>
         this.maxSize = maxSize;
         this.size = 0;
         
-        this.first = -1;
-        this.last = -1;
+        this.first = 0;
+        this.last = 0;
         
         this.array = (T[]) new Object[this.maxSize];
     }
@@ -47,21 +47,41 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public void push(T e)
     {
-        //TODO <ADD CODE HERE>
+        if(this.size == 0)
+        {
+            this.first = 0;
+            this.last = 0;
+            this.array[this.first] = e;
+        }
+        else
+        {
+            this.last++;
+            this.array[this.last] = e;
+        }
+        this.size++;
     }
 
     @Override
     public T pop()
     {
-        //TODO <ADD CODE HERE>
-        return null;
+        T e = this.array[0];
+        
+        for(int i = 0; i < last; i++)
+        {
+            this.array[i] = this.array[i + 1];
+        }
+        
+        this.array[this.last] = null;
+        this.last--;
+        this.size--;
+        
+        return e;
     }
 
     @Override
     public T peek()
     {
-        //TODO <ADD CODE HERE>
-        return null;
+        return this.array[this.first];
     }
 
     @Override
@@ -74,7 +94,14 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public void clear()
     {
-        //TODO <ADD CODE HERE>
+        for(int i = 0; i < this.array.length; i++)
+        {
+            this.array[i] = null;
+        }
+        
+        this.last = 0;
+        this.first = 0;
+        this.size = 0;
     }
 
     @Override
@@ -86,7 +113,14 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public boolean contains(T e)
     {
-        //TODO <ADD CODE HERE>
+        for(int i = 0; i < this.array.length; i++)
+        {
+            if(this.array[i] == e)
+            {
+                return true;
+            }
+        }
+        
         return false;
     }
 }
