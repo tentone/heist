@@ -51,6 +51,12 @@ public interface Queue<T>
     public boolean contains(T e);
     
     /**
+     * Get a Iterator object to iterate all elements inside the FIFO.
+     * @return Iterator object.
+     */
+    public Iterator<T> iterator();
+    
+    /**
      * Check if the FIFO is empty.
      * @return True if the FIFO is empty.
      */

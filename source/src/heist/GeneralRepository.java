@@ -14,14 +14,39 @@ import heist.thief.OrdinaryThief;
  */
 public class GeneralRepository
 {
+    /**
+     * Museum to be assaulted by AssaultParties.
+     */
     private final Museum museum;
+    
+    /**
+     * The control and collection site.
+     */
     private final ControlCollectionSite collection;
+    
+    /**
+     * Concentration site where the OrdinaryThieves wait to be assigned to an AssaultParty.
+     */
     private final ConcentrationSite concentration;
     
+    /**
+     * MasterThieve that controls and assigns OrdinaryThieves to AssaultParties.
+     */
     private final MasterThief master;
+    
+    /**
+     * OrdinaryThieves array
+     */
     private final OrdinaryThief[] thieves;
     
+    /**
+     * Logger object used to log the state of this GeneralRepository
+     */
     private final Logger logger;
+    
+    /**
+     * Configuration used for the simulation.
+     */
     private final Configuration configuration;
     
     /**

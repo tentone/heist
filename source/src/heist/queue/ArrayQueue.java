@@ -38,8 +38,8 @@ public class ArrayQueue<T> implements Queue<T>
         this.maxSize = maxSize;
         this.size = 0;
         
-        this.first = 0;
-        this.last = 0;
+        this.first = -1;
+        this.last = -1;
         
         this.array = (T[]) new Object[this.maxSize];
     }
@@ -49,15 +49,11 @@ public class ArrayQueue<T> implements Queue<T>
     {
         if(this.size == 0)
         {
-            this.first = 0;
-            this.last = 0;
-            this.array[this.first] = e;
+            this.first++;
         }
-        else
-        {
-            this.last++;
-            this.array[this.last] = e;
-        }
+        
+        this.last++;
+        this.array[this.last] = e;
         this.size++;
     }
 
@@ -66,7 +62,7 @@ public class ArrayQueue<T> implements Queue<T>
     {
         T e = this.array[0];
         
-        for(int i = 0; i < last; i++)
+        for(int i = 0; i < this.last; i++)
         {
             this.array[i] = this.array[i + 1];
         }
@@ -87,7 +83,21 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public boolean remove(T e)
     {
-        //TODO <ADD CODE HERE>
+        for(int i = 0; i <= this.last; i++)
+        {
+            if(this.array[i] == e)
+            {
+                int j;
+                for(j = i; j < this.last; j++)
+                {
+                    this.array[j] = this.array[j + 1];
+                }
+                this.array[j] = null;
+                this.last--;
+                
+                break;
+            }
+        }
         return false;
     }
 
@@ -99,8 +109,8 @@ public class ArrayQueue<T> implements Queue<T>
             this.array[i] = null;
         }
         
-        this.last = 0;
-        this.first = 0;
+        this.last = -1;
+        this.first = -1;
         this.size = 0;
     }
 
@@ -122,5 +132,34 @@ public class ArrayQueue<T> implements Queue<T>
         }
         
         return false;
+    }
+    
+    @Override
+    public ArrayQueueIterator<T> iterator()
+    {
+        return new ArrayQueueIterator<T>(this.array, this.size);
+    }
+    
+    /**
+     * Generate string with all elements inside the FIFO.
+     * [Element1, Element2, Element3, ...]
+     * @return String with elements inside the FIFO.
+     */
+    @Override
+    public String toString()
+    {
+        String s = "[";
+        
+        for(int i = 0; i <= this.last; i++)
+        {
+            s += this.array[i].toString();
+            
+            if(i + 1 <= this.last)
+            {
+                s += ", ";
+            }
+        }
+        
+        return s + "]";
     }
 }

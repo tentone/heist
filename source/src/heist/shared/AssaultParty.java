@@ -1,9 +1,10 @@
 package heist.shared;
 
-import heist.queue.LinkedQueue;
 import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 import heist.queue.Iterator;
+import heist.queue.LinkedQueue;
+import heist.queue.Queue;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
@@ -54,7 +55,7 @@ public class AssaultParty
     /**
      * OrdinaryThieves in the party.
      */
-    private final LinkedQueue<OrdinaryThief> thieves;
+    private final Queue<OrdinaryThief> thieves;
     
     /**
      * Targeted room.
