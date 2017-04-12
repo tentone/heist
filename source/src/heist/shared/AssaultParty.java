@@ -13,17 +13,62 @@ import heist.queue.Iterator;
  */
 public class AssaultParty
 {
+    /**
+     * Waiting state.
+     * When the party is in this state the OrdinaryThieves are joining or waiting for the MasterThieve to send them.
+     */
     public static final int WAITING = 1000;
+    
+    /**
+     * Crawling state.
+     * When the party is in this state the OrdinaryThieves are crawling, or inside the room.
+     */
     public static final int CRAWLING = 2000;
+    
+    /**
+     * Dismissed state.
+     * The party is set to this state after the last OrdinaryThieve delivers the canvas (or notifies the MasterThieve that he arrived empty handed).
+     */
     public static final int DISMISSED = 3000;
     
+    /**
+     * AssaultParty id counter.
+     */
     private static int IDCounter = 0;
     
-    private final int id, partySize, thiefDistance;
+    /**
+     * AssaultParty unique identifier.
+     */
+    private final int id;
+    
+    /**
+     * Party size.
+     */
+    private final int partySize;
+            
+    /**
+     * Maximum distance between crawling OrdinaryThieves.
+     */
+    private final int thiefDistance;
+    
+    /**
+     * OrdinaryThieves in the party.
+     */
     private final LinkedQueue<OrdinaryThief> thieves;
     
+    /**
+     * Targeted room.
+     */
     private final RoomStatus room;
+    
+    /**
+     * Number of OrdinaryThieves waiting to reverse direction.
+     */
     private int waitingToReverse;
+    
+    /**
+     * Party state.
+     */
     private int state;
     
     /**

@@ -3,7 +3,7 @@ package heist;
 /**
  * Concurrent version of the Heist.
  * Runs locally on a single computer.
- * @author Tentone
+ * @author Jose Manuel
  */
 public class HeistConcurrent
 {

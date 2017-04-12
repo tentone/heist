@@ -9,10 +9,13 @@ import heist.Configuration;
  */
 public class Museum
 {
+    /**
+     * Rooms inside the museum.
+     */
     private final Room[] rooms;
 
     /**
-     * Museum constructor, initialises rooms with values from the configuration.
+     * Museum constructor, initializes rooms with values from the configuration.
      * @param configuration Simulation configuration
      */
     public Museum(Configuration configuration)

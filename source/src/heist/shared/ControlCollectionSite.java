@@ -14,11 +14,31 @@ import heist.thief.OrdinaryThief;
  */
 public class ControlCollectionSite
 {
+    /**
+     * Configuration used by this ControlCollectionSite.
+     */
     private final Configuration configuration;
     
+    /**
+     * RoomStatus array, used to store information about who are assaulting rooms, how many paintings where stolen from each room and if the room is empty.
+     */
     private final RoomStatus[] rooms;
- 
-    private final LinkedQueue<OrdinaryThief> canvasDeliverQueue, amINeededQueue;
+
+    /**
+     * Queue for OrdinaryThieves waiting to deliver a canvas.
+     */
+    private final LinkedQueue<OrdinaryThief> canvasDeliverQueue;
+    
+    /**
+     * Queue for OrdinaryThieves waiting to check if they are still needed.
+     * OrdinaryThieves are needed until the Museum is completely empty.
+     */
+    private final LinkedQueue<OrdinaryThief> amINeededQueue;
+    
+    /**
+     * Flag to indicate if the heist has been terminated.
+     * True when the MasterThieve decides that the Museum is clear.
+     */
     private boolean heistTerminated;
     
     /**

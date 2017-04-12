@@ -10,6 +10,7 @@ import heist.thief.OrdinaryThief;
 /**
  * The general repository stores all the components of the system. It is a shared memory region that is accessed by every active entity in the system.
  * It is also responsible for starting and killing all running instances.
+ * @author Jose Manuel
  */
 public class GeneralRepository
 {

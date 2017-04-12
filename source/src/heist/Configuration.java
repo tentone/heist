@@ -6,6 +6,7 @@ import heist.utils.Range;
  * This class is used to store the simulation configuration.
  * Can be used to store and prepare tests for different configurations.
  * This configuration can be distributed to all elements in a distributed implementation.
+ * @author Jose Manuel
  */
 public class Configuration
 {   
