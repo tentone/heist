@@ -1,5 +1,7 @@
 package heist.queue;
 
+import heist.queue.iterator.Iterator;
+
 /**
  * Interface to represent FIFO structures.
  * @author Jose Manuel

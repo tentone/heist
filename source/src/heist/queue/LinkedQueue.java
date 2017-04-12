@@ -1,5 +1,8 @@
 package heist.queue;
 
+import heist.queue.iterator.Iterator;
+import heist.queue.iterator.LinkedQueueIterator;
+
 /**
  * Generic node based FIFO structure.
  * @author Jose Manuel
@@ -169,6 +172,16 @@ public class LinkedQueue<T> implements Queue<T>
         }
         return false;
     }
+
+    /**
+     * Return QueueIterator object to iterate all elements inside the FIFO.
+     * Be careful when using inside shared objects since changes to the nodes can lock the iterator. 
+     * @return QueueIterator object
+     */
+    public Iterator<T> iterator()
+    {
+        return new LinkedQueueIterator<>(first);
+    }
     
     /**
      * Generate string with all elements inside the FIFO.
@@ -189,15 +202,5 @@ public class LinkedQueue<T> implements Queue<T>
             }
         }
         return s + "]";
-    }
-    
-    /**
-     * Return QueueIterator object to iterate all elements inside the FIFO.
-     * Be careful when using inside shared objects since changes to the nodes can lock the iterator. 
-     * @return QueueIterator object
-     */
-    public Iterator<T> iterator()
-    {
-        return new LinkedQueueIterator<>(first);
     }
 }

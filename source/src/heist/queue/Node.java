@@ -10,10 +10,10 @@ public class Node<T>
     /**
      * Element stored in the node.
      */
-    T e;
+    public T e;
     
     /**
      * Pointer to next node.
      */
-    Node<T> next;
+    public Node<T> next;
 }

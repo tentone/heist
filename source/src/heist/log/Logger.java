@@ -3,7 +3,7 @@ package heist.log;
 import heist.Configuration;
 import heist.GeneralRepository;
 import heist.room.Room;
-import heist.queue.Iterator;
+import heist.queue.iterator.Iterator;
 import heist.shared.AssaultParty;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;

@@ -4,6 +4,7 @@ import heist.Configuration;
 import heist.room.Room;
 import heist.room.RoomStatus;
 import heist.queue.LinkedQueue;
+import heist.queue.Queue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
@@ -27,13 +28,13 @@ public class ControlCollectionSite
     /**
      * Queue for OrdinaryThieves waiting to deliver a canvas.
      */
-    private final LinkedQueue<OrdinaryThief> canvasDeliverQueue;
+    private final Queue<OrdinaryThief> canvasDeliverQueue;
     
     /**
      * Queue for OrdinaryThieves waiting to check if they are still needed.
      * OrdinaryThieves are needed until the Museum is completely empty.
      */
-    private final LinkedQueue<OrdinaryThief> amINeededQueue;
+    private final Queue<OrdinaryThief> amINeededQueue;
     
     /**
      * Flag to indicate if the heist has been terminated.

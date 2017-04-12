@@ -2,6 +2,7 @@ package heist.shared;
 
 import heist.Configuration;
 import heist.queue.LinkedQueue;
+import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 
@@ -15,12 +16,12 @@ public class ConcentrationSite
     /**
      * List of thieves waiting to enter a team.
      */
-    private final LinkedQueue<OrdinaryThief> waitingThieves;
+    private final Queue<OrdinaryThief> waitingThieves;
     
     /**
      * List of parties waiting to be filled with thieves.
      */
-    private final LinkedQueue<AssaultParty> waitingParties;
+    private final Queue<AssaultParty> waitingParties;
     
     /**
      * Array with the last created assault parties

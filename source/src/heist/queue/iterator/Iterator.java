@@ -1,4 +1,4 @@
-package heist.queue;
+package heist.queue.iterator;
 
 /**
  * Iterator interface describes an object that can be iterated.

@@ -1,10 +1,14 @@
-package heist.queue;
+package heist.test;
+
+import heist.queue.ArrayQueue;
+import heist.queue.Queue;
+import heist.queue.iterator.Iterator;
 
 public class TestQueue
 {
     public static void main(String[] args)
     {
-        ArrayQueue<Integer> queue = new ArrayQueue<>(10);
+        Queue<Integer> queue = new ArrayQueue<>(10);
         
         queue.push(1);
         queue.push(2);

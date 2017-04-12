@@ -1,25 +1,39 @@
-package heist.queue;
+package heist.queue.iterator;
 
 /**
  * QueueIterator is used to iterate all elements inside a Queue.
  * @author Jose Manuel
  * @param <T> 
  */
-class LinkedQueueIterator<T> implements Iterator
+public class ArrayQueueIterator<T> implements Iterator
 {
     /**
-     * Current node being iterated.
+     * Array of element to iterate.
      */
-    private Node<T> node;
+    private T[] array;
+    
+    
+    /**
+     * How many elements to iterate in the array.
+     */
+    private int size;
+    
+    /**
+     * Current element index.
+     */
+    private int index;
     
     /**
      * Constructor for the QueueIterator object.
-     * LinkedQueue should pass the first node in the FIFO.
-     * @param node First node in the FIFO.
+     * ArrayQueue should pass the the elements array and the current queue size.
+     * @param array Elements array.
+     * @param size FIFO size.
      */
-    public LinkedQueueIterator(Node<T> node)
+    public ArrayQueueIterator(T[] array, int size)
     {
-        this.node = node;
+        this.array = array;
+        this.size = size;
+        this.index = 0;
     }
 
     /**
@@ -29,7 +43,7 @@ class LinkedQueueIterator<T> implements Iterator
     @Override
     public boolean hasNext()
     {
-        return this.node != null;
+        return this.index < this.size;
     }
 
     /**
@@ -42,8 +56,8 @@ class LinkedQueueIterator<T> implements Iterator
     {
         if(this.hasNext())
         {
-            T value = this.node.e;
-            this.node = this.node.next;
+            T value = this.array[this.index];
+            this.index++;
             return value;
         }
         

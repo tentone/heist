@@ -1,10 +1,13 @@
 package heist.queue;
 
+import heist.queue.iterator.ArrayQueueIterator;
+
 /**
  * Generic array based FIFO structure.
  * @author Jose Manuel
  * @param <T> Type of FIFO elements.
  */
+@SuppressWarnings("unchecked")
 public class ArrayQueue<T> implements Queue<T>
 {
     /**
@@ -17,7 +20,6 @@ public class ArrayQueue<T> implements Queue<T>
      * Current size of the queue.
      */
     private int size;
-    
     
     /**
      * Fist and last queue elements pointer. 
