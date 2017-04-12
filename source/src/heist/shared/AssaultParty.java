@@ -1,5 +1,6 @@
 package heist.shared;
 
+import heist.queue.ArrayQueue;
 import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
@@ -81,7 +82,7 @@ public class AssaultParty
     public AssaultParty(int partySize, int thiefDistance, RoomStatus room)
     {
         this.id = IDCounter++;
-        this.thieves = new LinkedQueue<>();
+        this.thieves = new ArrayQueue<>(partySize);//new LinkedQueue<>();
         
         this.partySize = partySize;
         this.thiefDistance = thiefDistance;

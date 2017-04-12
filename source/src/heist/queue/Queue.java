@@ -10,32 +10,33 @@ import heist.queue.iterator.Iterator;
 public interface Queue<T>
 {
     /**
-     * Add elements to the FIFO.
-     * @param e Element to Add.
+     * Add a new element to the FIFO.
+     * @param e Element to be added.
      */
     public void push(T e);
     
     /**
-     * Remove element from the FIFO.
-     * @return Element removed.
+     * Remove the first element from the FIFO and returns it.
+     * @return Element removed from the FIFO.
      */
     public T pop();
     
     /**
-     * See first element of the FIFO.
-     * @return First element.
+     * Get the first element on the FIFO without removing it.
+     * @return The first element on the FIFO.
      */
     public T peek();
     
     /**
-     * Remove an element from the FIFO.
-     * @param e Element to Remove.
-     * @return True if element was removed.
+     * Removes a specific element from the FIFO.
+     * @param e Element to be removed from the FIFO.
+     * @return True if was able to remove the element, false otherwise.
      */
     public boolean remove(T e);
     
     /**
      * Clear the FIFO.
+     * Removes all elements and set size to 0.
      */
     public void clear();
     
@@ -47,6 +48,7 @@ public interface Queue<T>
     
     /**
      * Check if the FIFO contains an element.
+     * Uses the == operator, the element has to be the exact same instance.
      * @param e Element to search for.
      * @return True if the FIFO contains the element.
      */

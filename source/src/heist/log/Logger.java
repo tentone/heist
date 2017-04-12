@@ -120,7 +120,7 @@ public class Logger
 
                 if(this.configuration.logHeader)
                 {
-                    out.print("\n               Assault party " + (parties[0] != null ? parties[0].getID() : 'X') + "                       Assault party " + (parties[1] != null ? parties[1].getID() : 'X') + "                       Museum");
+                    out.print("\n               Assault party " + (parties[0] != null ? parties[0].getID() : "-") + "                       Assault party " + (parties[1] != null ? parties[1].getID() : "-") + "                       Museum");
                     out.print("\n       Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
                     out.print("\nRId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
                     out.print("\n");

@@ -1,5 +1,8 @@
 package heist;
 
+import heist.Configuration;
+import heist.GeneralRepository;
+
 /**
  * Concurrent version of the Heist.
  * Runs locally on a single computer.

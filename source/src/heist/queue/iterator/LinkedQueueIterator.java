@@ -5,7 +5,7 @@ import heist.queue.Node;
 /**
  * QueueIterator is used to iterate all elements inside a Queue.
  * @author Jose Manuel
- * @param <T> 
+ * @param <T> Data type.
  */
 public class LinkedQueueIterator<T> implements Iterator
 {

@@ -3,7 +3,7 @@ package heist.queue.iterator;
 /**
  * QueueIterator is used to iterate all elements inside a Queue.
  * @author Jose Manuel
- * @param <T> 
+ * @param <T> Data type.
  */
 public class ArrayQueueIterator<T> implements Iterator
 {

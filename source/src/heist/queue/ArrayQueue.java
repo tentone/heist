@@ -24,7 +24,7 @@ public class ArrayQueue<T> implements Queue<T>
     /**
      * Fist and last queue elements pointer. 
      */
-    private int first, last;
+    private int last;
     
     /**
      * Array with data stored in the queue.
@@ -39,8 +39,6 @@ public class ArrayQueue<T> implements Queue<T>
     {
         this.maxSize = maxSize;
         this.size = 0;
-        
-        this.first = -1;
         this.last = -1;
         
         this.array = (T[]) new Object[this.maxSize];
@@ -49,9 +47,10 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public void push(T e)
     {
-        if(this.size == 0)
+        if(this.size == this.maxSize)
         {
-            this.first++;
+            System.err.println("Queue is already full");
+            System.exit(0);
         }
         
         this.last++;
@@ -78,8 +77,8 @@ public class ArrayQueue<T> implements Queue<T>
 
     @Override
     public T peek()
-    {
-        return this.array[this.first];
+    {        
+        return this.array[0];
     }
 
     @Override
@@ -89,15 +88,16 @@ public class ArrayQueue<T> implements Queue<T>
         {
             if(this.array[i] == e)
             {
-                int j;
-                for(j = i; j < this.last; j++)
+                for(int j = i; j < this.last; j++)
                 {
                     this.array[j] = this.array[j + 1];
                 }
-                this.array[j] = null;
-                this.last--;
                 
-                break;
+                this.array[this.last] = null;
+                this.last--;
+                this.size--;
+                
+                return true;
             }
         }
         return false;
@@ -112,7 +112,6 @@ public class ArrayQueue<T> implements Queue<T>
         }
         
         this.last = -1;
-        this.first = -1;
         this.size = 0;
     }
 
@@ -139,7 +138,7 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public ArrayQueueIterator<T> iterator()
     {
-        return new ArrayQueueIterator<T>(this.array, this.size);
+        return new ArrayQueueIterator<>(this.array, this.size);
     }
     
     /**
@@ -162,6 +161,6 @@ public class ArrayQueue<T> implements Queue<T>
             }
         }
         
-        return s + "]";
+        return s + "] Size:" + this.size;
     }
 }

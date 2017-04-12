@@ -1,6 +1,7 @@
 package heist.shared;
 
 import heist.Configuration;
+import heist.queue.ArrayQueue;
 import heist.queue.LinkedQueue;
 import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
@@ -35,7 +36,7 @@ public class ConcentrationSite
      */
     public ConcentrationSite(Configuration configuration)
     {   
-        this.waitingThieves = new LinkedQueue<>();
+        this.waitingThieves = new ArrayQueue<>(configuration.numberThieves);
         this.waitingParties = new LinkedQueue<>();
 
         this.parties = new AssaultParty[configuration.numberThieves / configuration.partySize];

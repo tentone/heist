@@ -1,9 +1,9 @@
 package heist.shared;
 
 import heist.Configuration;
+import heist.queue.ArrayQueue;
 import heist.room.Room;
 import heist.room.RoomStatus;
-import heist.queue.LinkedQueue;
 import heist.queue.Queue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
@@ -59,8 +59,8 @@ public class ControlCollectionSite
             this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
         }
         
-        this.canvasDeliverQueue = new LinkedQueue<>();
-        this.amINeededQueue = new LinkedQueue<>();
+        this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
+        this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
         
         this.heistTerminated = false;
     }

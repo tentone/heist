@@ -30,11 +30,7 @@ public class LinkedQueue<T> implements Queue<T>
         this.last = null;
         this.size = 0;
     }
-        
-    /**
-     * Add a new element to the FIFO.
-     * @param e Element
-     */
+    
     @Override
     public void push(T e)
     {
@@ -55,10 +51,6 @@ public class LinkedQueue<T> implements Queue<T>
         this.size++;
     }
     
-    /**
-     * Remove the first element from the FIFO and return it.
-     * @return Element removed from the FIFO.
-     */
     @Override
     public T pop() 
     {
@@ -74,10 +66,6 @@ public class LinkedQueue<T> implements Queue<T>
         return elem;
     }
 
-    /**
-     * Check the first element on the FIFO without removing it.
-     * @return The first element on the FIFO.
-     */
     @Override
     public T peek() 
     {
@@ -89,11 +77,6 @@ public class LinkedQueue<T> implements Queue<T>
         return this.first.e;
     }
     
-    /**
-     * Remove specific element from the FIFO.
-     * @param e Element to be removed from the FIFO.
-     * @return True if was able to remove the element, false otherwise.
-     */
     @Override
     public boolean remove(T e)
     {
@@ -132,9 +115,6 @@ public class LinkedQueue<T> implements Queue<T>
         return false;
     }
     
-    /**
-     * Clear the FIFO. Remove all elements and set size to 0.
-     */
     @Override
     public void clear()
     {
@@ -143,22 +123,12 @@ public class LinkedQueue<T> implements Queue<T>
         this.size = 0;
     }
     
-    /**
-     * Check the size
-     * @return Size
-     */
     @Override
     public int size() 
     {
         return this.size;
     }
 
-    /**
-     * Check if a element exists inside the FIFO.
-     * Uses the == operator, the element has to be the exact same instance.
-     * @param e Element to look for.
-     * @return True if element was found inside the queue.
-     */
     @Override
     public boolean contains(T e)
     {
@@ -173,11 +143,7 @@ public class LinkedQueue<T> implements Queue<T>
         return false;
     }
 
-    /**
-     * Return QueueIterator object to iterate all elements inside the FIFO.
-     * Be careful when using inside shared objects since changes to the nodes can lock the iterator. 
-     * @return QueueIterator object
-     */
+    @Override
     public Iterator<T> iterator()
     {
         return new LinkedQueueIterator<>(first);
