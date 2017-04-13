@@ -149,6 +149,21 @@ public class LinkedQueue<T> implements Queue<T>
         return new LinkedQueueIterator<>(first);
     }
     
+    @Override
+    public T[] toArray()
+    {
+        T[] array = (T[]) new Object[this.size()];
+        int i = 0;
+        
+        Iterator<T> it = this.iterator();
+        while(it.hasNext())
+        {
+            array[i++] = it.next();
+        }
+        
+        return array;
+    }
+    
     /**
      * Generate string with all elements inside the FIFO.
      * [Element1, Element2, Element3, ...]

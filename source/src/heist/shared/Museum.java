@@ -53,7 +53,7 @@ public class Museum
      * Check how many paintings there are inside the museum.
      * @return Number of paintings inside the museum.
      */
-    private synchronized int countPaintings()
+    private int countPaintings()
     {
         int sum = 0;
         
@@ -69,7 +69,7 @@ public class Museum
      * Get room array
      * @return Array of Room objects
      */
-    public synchronized Room[] getRooms()
+    public Room[] getRooms()
     {
         return this.rooms;
     }
@@ -79,7 +79,7 @@ public class Museum
      * @param id Room id
      * @return True if was able to get a canvas, false if the room was already empty
      */
-    public synchronized boolean rollACanvas(int id)
+    public boolean rollACanvas(int id)
     {
         return this.rooms[id].rollACanvas();
     }

@@ -74,19 +74,6 @@ public class GeneralRepository
     }
     
     /**
-     * Initializes simulation elements and starts the simulation, calls the start method in all thieves
-     */
-    public void start()
-    {
-        for(int i = 0; i < this.thieves.length; i++)
-        {
-            this.thieves[i].start();
-        }
-
-        this.master.start();
-    }
-    
-    /**
      * Return logger object.
      * @return Logger.
      */

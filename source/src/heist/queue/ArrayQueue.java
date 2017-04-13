@@ -134,21 +134,11 @@ public class ArrayQueue<T> implements Queue<T>
     {
         return new ArrayQueueIterator<>(this.array, this.size);
     }
-    
-    /**
-     * Get queue elements as an array.
-     * @return Array with elements inside this queue.
-     */
+
+    @Override
     public T[] toArray()
     {
-        T[] array = (T[]) new Object[this.size];
-        
-        for(int i = 0; i < array.length; i++)
-        {
-            array[i] = this.array[i];
-        }
-        
-        return array;
+        return this.array;
     }
             
     /**

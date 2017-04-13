@@ -1,7 +1,6 @@
 package heist;
 
-import heist.Configuration;
-import heist.GeneralRepository;
+import heist.thief.OrdinaryThief;
 
 /**
  * Concurrent version of the Heist.
@@ -12,9 +11,14 @@ public class HeistConcurrent
 {
     public static void main(String[] args) throws InterruptedException
     {
-        Configuration configuration = new Configuration();
+        GeneralRepository repository = new GeneralRepository(new Configuration());
         
-        GeneralRepository repository = new GeneralRepository(configuration);
-        repository.start();
-    } 
+        OrdinaryThief[] thieves = repository.getOrdinaryThieves();
+        for(int i = 0; i < thieves.length; i++)
+        {
+            thieves[i].start();
+        }
+
+        repository.getMasterThief().start();
+    }
 }
