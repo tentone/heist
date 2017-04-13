@@ -15,17 +15,58 @@ import heist.log.Logger;
  */
 public class MasterThief extends Thread
 {
+    /**
+     * Planning the heist state.
+     * When the Master thief is in this state we is waiting for the OrdinaryThieves to be ready to start working.
+     */
     public static final int PLANNING_THE_HEIST = 1000;
+    
+    /**
+     * Deciding what to do state.
+     * In this state the MasterThief is deciding what is his next state based on how many thieves are available to create parties, how many rooms have been targeted and how many rooms still have paintings in them.
+     */
     public static final int DECIDING_WHAT_TO_DO = 2000;
+    
+    /**
+     * Assembling a party state.
+     */
     public static final int ASSEMBLING_A_GROUP = 3000;
+    
+    /**
+     * Waiting for group arrival state.
+     * In this state the MasterThief waits for the OrdinaryThieves attacking the museum.
+     */
     public static final int WAITING_FOR_GROUP_ARRIVAL = 4000;
+    
+    /**
+     * Presenting report state.
+     * In this state the MasterThief signals everybody that the heist is over.
+     */
     public static final int PRESENTING_THE_REPORT = 5000;
 
+    /**
+     * Control and Collection Site
+     */
     private final ControlCollectionSite collection;
+   
+    /**
+     * Concentration Site
+     */
     private final ConcentrationSite concentration;
+    
+    /**
+     * Logger
+     */
     private final Logger logger;
     
+    /**
+     * Simulation configuration.
+     */
     private final Configuration configuration;
+    
+    /**
+     * Thief state.
+     */
     private int state;
 
     /**

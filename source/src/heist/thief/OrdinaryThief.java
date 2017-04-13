@@ -16,21 +16,78 @@ import heist.shared.ConcentrationSite;
  */
 public class OrdinaryThief extends Thread
 {
+    /**
+     * Outside state
+     * When the thief is outside it is waiting for instructions provided by the master thief
+     * It can join an AssaultParty and start crawling inside the museum or terminate
+     */
     public static final int OUTSIDE = 1000;
+    
+    /**
+     * Crawling inwards state
+     */
     public static final int CRAWLING_INWARDS = 2000;
+    
+    /**
+     * At a room state
+     */
     public static final int AT_A_ROOM = 3000;
+    
+    /**
+     * Crawling outwards
+     */
     public static final int CRAWLING_OUTWARDS = 4000;
     
+    /**
+     * Concentration site
+     */
     private final ConcentrationSite concentration;
+    
+    /**
+     * Collection site
+     */
     private final ControlCollectionSite collection;
+    
+    /**
+     * Museum
+     */
     private final Museum museum;
+    
+    /**
+     * Logger
+     */
     private final Logger logger;
     
+    /**
+     * Current AssaultParty attributed to this thief.
+     * Null if the thief is not in an AssaultParty.
+     */
     private AssaultParty party;
     
-    private final int id, maximumDisplacement;
-    private int state, position;
-    private boolean hasCanvas = false;
+    /**
+     * Thief unique id.
+     */
+    private final int id;
+    
+    /**
+     * How far can the thief move in one step.
+     */
+    private final int maximumDisplacement;
+    
+    /**
+     * Thief state.
+     */
+    private int state;
+    
+    /**
+     * Thief crawling position.
+     */
+    private int position;
+    
+    /**
+     * True if the thief carries a canvas.
+     */
+    private boolean hasCanvas;
 
     /**
      * OrdinaryThief constructor.
