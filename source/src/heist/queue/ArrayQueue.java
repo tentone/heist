@@ -14,22 +14,22 @@ public class ArrayQueue<T> implements Queue<T>
      * Max size for this ArrayQueue.
      * If the push method is called and the queue is already full a Exception is thrown.
      */
-    private final int maxSize;
+    protected final int maxSize;
     
     /**
      * Current size of the queue.
      */
-    private int size;
+    protected int size;
     
     /**
      * Fist and last queue elements pointer. 
      */
-    private int last;
+    protected int last;
     
     /**
      * Array with data stored in the queue.
      */
-    private T[] array;
+    protected T[] array;
     
     /**
      * ArrayQueue constructor.
@@ -47,12 +47,6 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public void push(T e)
     {
-        if(this.size == this.maxSize)
-        {
-            System.err.println("Queue is already full");
-            System.exit(0);
-        }
-        
         this.last++;
         this.array[this.last] = e;
         this.size++;
@@ -141,6 +135,22 @@ public class ArrayQueue<T> implements Queue<T>
         return new ArrayQueueIterator<>(this.array, this.size);
     }
     
+    /**
+     * Get queue elements as an array.
+     * @return Array with elements inside this queue.
+     */
+    public T[] toArray()
+    {
+        T[] array = (T[]) new Object[this.size];
+        
+        for(int i = 0; i < array.length; i++)
+        {
+            array[i] = this.array[i];
+        }
+        
+        return array;
+    }
+            
     /**
      * Generate string with all elements inside the FIFO.
      * [Element1, Element2, Element3, ...]

@@ -90,8 +90,8 @@ public class Configuration
         
         this.logFile = "log.txt";
         this.logToFile = false;
-        this.debug = false;
-        this.log = true;
-        this.logHeader = true;
+        this.debug = true;
+        this.log = false;
+        this.logHeader = false;
     }
 }

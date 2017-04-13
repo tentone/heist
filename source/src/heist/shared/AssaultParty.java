@@ -4,7 +4,6 @@ import heist.queue.ArrayQueue;
 import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
-import heist.queue.LinkedQueue;
 import heist.queue.Queue;
 
 /**
@@ -59,6 +58,11 @@ public class AssaultParty
     private final Queue<OrdinaryThief> thieves;
     
     /**
+     * Crawling queue.
+     */
+    private final Queue<OrdinaryThief> crawlingQueue;
+    
+    /**
      * Targeted room.
      */
     private final RoomStatus room;
@@ -82,7 +86,9 @@ public class AssaultParty
     public AssaultParty(int partySize, int thiefDistance, RoomStatus room)
     {
         this.id = IDCounter++;
-        this.thieves = new ArrayQueue<>(partySize);//new LinkedQueue<>();
+        
+        this.thieves = new ArrayQueue<>(partySize);
+        this.crawlingQueue = new ArrayQueue<>(partySize);
         
         this.partySize = partySize;
         this.thiefDistance = thiefDistance;

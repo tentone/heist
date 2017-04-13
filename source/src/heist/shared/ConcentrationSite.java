@@ -2,6 +2,7 @@ package heist.shared;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
+import heist.queue.LeakingQueue;
 import heist.queue.LinkedQueue;
 import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
@@ -27,9 +28,8 @@ public class ConcentrationSite
     /**
      * Array with the last created assault parties
      */
-    private final AssaultParty[] parties;
-    private int partiesPointer;
-    
+    private final LeakingQueue<AssaultParty> parties;
+
     /**
      * ConcentrationSite constructor.
      * @param configuration Configuration to be used.
@@ -39,8 +39,7 @@ public class ConcentrationSite
         this.waitingThieves = new ArrayQueue<>(configuration.numberThieves);
         this.waitingParties = new LinkedQueue<>();
 
-        this.parties = new AssaultParty[configuration.numberThieves / configuration.partySize];
-        this.partiesPointer = 0;
+        this.parties = new LeakingQueue<>(configuration.numberThieves / configuration.partySize);
     }
     
     /**
@@ -50,7 +49,7 @@ public class ConcentrationSite
      */
     public synchronized AssaultParty[] getParties()
     {
-        return this.parties;
+        return this.parties.toArray();
     }
     
     /**
@@ -67,11 +66,7 @@ public class ConcentrationSite
     {
         AssaultParty party = new AssaultParty(partySize, maxDistance, room);
 
-        this.parties[this.partiesPointer++] = party;
-        if(this.partiesPointer >= this.parties.length)
-        {
-            this.partiesPointer = 0;
-        }
+        this.parties.push(party);
         
         this.waitingParties.push(party);
         this.notifyAll();
