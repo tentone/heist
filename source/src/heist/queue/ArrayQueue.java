@@ -134,13 +134,7 @@ public class ArrayQueue<T> implements Queue<T>
     {
         return new ArrayQueueIterator<>(this.array, this.size);
     }
-
-    @Override
-    public T[] toArray()
-    {
-        return this.array;
-    }
-            
+ 
     /**
      * Generate string with all elements inside the FIFO.
      * [Element1, Element2, Element3, ...]

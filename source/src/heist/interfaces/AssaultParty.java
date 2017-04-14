@@ -8,7 +8,5 @@ public interface AssaultParty
      */
     public void sendParty();
     
-    /**
-     * 
-     */
+
 }

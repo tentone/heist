@@ -3,10 +3,10 @@ package heist.shared;
 import heist.Configuration;
 import heist.queue.ArrayQueue;
 import heist.queue.LeakingQueue;
-import heist.queue.LinkedQueue;
 import heist.queue.Queue;
-import heist.thief.OrdinaryThief;
+import heist.queue.iterator.Iterator;
 import heist.room.RoomStatus;
+import heist.thief.OrdinaryThief;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
@@ -28,18 +28,25 @@ public class ConcentrationSite
     /**
      * Array with the last created assault parties
      */
-    private final LeakingQueue<AssaultParty> parties;
+    private final Queue<AssaultParty> parties;
 
+    /**
+     * Maximum number of parties.
+     */
+    private final int numberParties;
+    
     /**
      * ConcentrationSite constructor.
      * @param configuration Configuration to be used.
      */
     public ConcentrationSite(Configuration configuration)
     {   
+        this.numberParties = configuration.numberThieves / configuration.partySize;
+        
         this.waitingThieves = new ArrayQueue<>(configuration.numberThieves);
-        this.waitingParties = new ArrayQueue<>(configuration.numberThieves / configuration.partySize);
+        this.waitingParties = new ArrayQueue<>(this.numberParties);
 
-        this.parties = new LeakingQueue<>(configuration.numberThieves / configuration.partySize);
+        this.parties = new LeakingQueue<>(this.numberParties);
     }
     
     /**
@@ -49,7 +56,16 @@ public class ConcentrationSite
      */
     public synchronized AssaultParty[] getParties()
     {
-        return this.parties.toArray();
+        AssaultParty[] array = new AssaultParty[this.numberParties];
+        int i = 0;
+        
+        Iterator<AssaultParty> it = this.parties.iterator();
+        while(it.hasNext())
+        {
+            array[i++] = it.next();
+        }
+        
+        return array;
     }
     
     /**

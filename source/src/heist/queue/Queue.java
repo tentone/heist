@@ -61,12 +61,6 @@ public interface Queue<T>
     public Iterator<T> iterator();
     
     /**
-     * Get all elements in the FIFO as an array.
-     * @return Array with all elements in the FIFO.
-     */
-    public T[] toArray();
-    
-    /**
      * Check if the FIFO is empty.
      * @return True if the FIFO is empty.
      */

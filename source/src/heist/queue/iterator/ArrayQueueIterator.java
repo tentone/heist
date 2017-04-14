@@ -12,7 +12,6 @@ public class ArrayQueueIterator<T> implements Iterator
      */
     private T[] array;
     
-    
     /**
      * How many elements to iterate in the array.
      */
