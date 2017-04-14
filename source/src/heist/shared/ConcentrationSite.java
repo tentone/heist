@@ -37,7 +37,7 @@ public class ConcentrationSite
     public ConcentrationSite(Configuration configuration)
     {   
         this.waitingThieves = new ArrayQueue<>(configuration.numberThieves);
-        this.waitingParties = new LinkedQueue<>();
+        this.waitingParties = new ArrayQueue<>(configuration.numberThieves / configuration.partySize);
 
         this.parties = new LeakingQueue<>(configuration.numberThieves / configuration.partySize);
     }

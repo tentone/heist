@@ -12,7 +12,7 @@ import heist.queue.Queue;
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
-public class AssaultParty implements heist.interfaces.AssaultParty
+public class AssaultParty
 {
     /**
      * Waiting state.
