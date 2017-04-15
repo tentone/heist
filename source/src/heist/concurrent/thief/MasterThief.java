@@ -1,12 +1,12 @@
-package heist.thief;
+package heist.concurrent.thief;
 
 import heist.room.RoomStatus;
 import heist.Configuration;
 import heist.GeneralRepository;
-import heist.shared.AssaultParty;
-import heist.shared.ControlCollectionSite;
-import heist.shared.ConcentrationSite;
-import heist.log.Logger;
+import heist.concurrent.shared.AssaultParty;
+import heist.concurrent.shared.ControlCollectionSite;
+import heist.concurrent.shared.ConcentrationSite;
+import heist.Logger;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
@@ -92,8 +92,31 @@ public class MasterThief extends Thread
     private void setState(int state)
     {
         this.state = state;
-
-        this.logger.debug("Master change state " + this.state);
+        
+        if(this.state == MasterThief.WAITING_FOR_GROUP_ARRIVAL)
+        {
+            this.logger.debug("Master WAITING_FOR_GROUP_ARRIVAL");
+        }
+        else if(this.state == MasterThief.ASSEMBLING_A_GROUP)
+        {
+            this.logger.debug("Master ASSEMBLING_A_GROUP");
+        }
+        else if(this.state == MasterThief.PRESENTING_THE_REPORT)
+        {
+            this.logger.debug("Master PRESENTING_THE_REPORT");
+        }
+        else if(this.state == MasterThief.DECIDING_WHAT_TO_DO)
+        {
+            this.logger.debug("Master DECIDING_WHAT_TO_DO");
+        } 
+        else if(this.state == MasterThief.PLANNING_THE_HEIST)
+        {
+            this.logger.debug("Master PLANNING_THE_HEIST");
+        }
+        else
+        {
+            this.logger.debug("Master change state " + this.state);
+        }
     }
     
     /**
@@ -218,18 +241,15 @@ public class MasterThief extends Thread
 
                 if(this.state == MasterThief.WAITING_FOR_GROUP_ARRIVAL)
                 {
-                    this.logger.debug("Master WAITING_FOR_GROUP_ARRIVAL");
                     this.takeARest();
                     this.collectCanvas();
                 }
                 else if(this.state == MasterThief.ASSEMBLING_A_GROUP)
                 {
-                    this.logger.debug("Master ASSEMBLING_A_GROUP");
                     this.sendAssaultParty(this.prepareAssaultParty());
                 }
             }
             
-            this.logger.debug("Master PRESENTING_THE_REPORT");
             this.sumUpResults();
         }
         catch(InterruptedException e)

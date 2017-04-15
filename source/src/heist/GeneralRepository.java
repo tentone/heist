@@ -1,11 +1,10 @@
 package heist;
 
-import heist.log.Logger;
-import heist.shared.Museum;
-import heist.shared.ControlCollectionSite;
-import heist.shared.ConcentrationSite;
-import heist.thief.MasterThief;
-import heist.thief.OrdinaryThief;
+import heist.concurrent.shared.Museum;
+import heist.concurrent.shared.ControlCollectionSite;
+import heist.concurrent.shared.ConcentrationSite;
+import heist.concurrent.thief.MasterThief;
+import heist.concurrent.thief.OrdinaryThief;
 
 /**
  * The general repository stores all the components of the system. It is a shared memory region that is accessed by every active entity in the system.
@@ -125,5 +124,13 @@ public class GeneralRepository
     public OrdinaryThief[] getOrdinaryThieves()
     {
         return this.thieves;
+    }
+    
+    /**
+     * Create new log entry.
+     */
+    public void log()
+    {
+        this.logger.log();
     }
 }

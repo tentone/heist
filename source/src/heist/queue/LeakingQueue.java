@@ -5,6 +5,7 @@ package heist.queue;
  * @author Jose Manuel
  * @param <T> Type of FIFO elements.
  */
+@SuppressWarnings("unchecked")
 public class LeakingQueue<T> extends ArrayQueue<T>
 {
     /**
@@ -19,7 +20,7 @@ public class LeakingQueue<T> extends ArrayQueue<T>
     /**
      * Add new element to the Queue top.
      * If the queue is full the oldest element is removed to free space for the new element.
-     * @param e 
+     * @param e Element to add to the queue.
      */
     @Override
     public void push(T e)

@@ -1,12 +1,11 @@
-package heist.log;
+package heist;
 
-import heist.Configuration;
-import heist.GeneralRepository;
+import heist.queue.LinkedQueue;
 import heist.room.Room;
 import heist.queue.iterator.Iterator;
-import heist.shared.AssaultParty;
-import heist.thief.MasterThief;
-import heist.thief.OrdinaryThief;
+import heist.concurrent.shared.AssaultParty;
+import heist.concurrent.thief.MasterThief;
+import heist.concurrent.thief.OrdinaryThief;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -28,6 +27,16 @@ import java.io.PrintStream;
  */
 public class Logger
 {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     /**
      * Repository to be logged.
      */
@@ -42,7 +51,7 @@ public class Logger
      * PrintStream used to write the log.
      */
     private PrintStream out;
-
+    
     /**
      * Logger constructor from GeneralRepository and Configuration file.
      * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
@@ -53,6 +62,7 @@ public class Logger
     {
         this.repository = repository;
         this.configuration = configuration;
+        
         this.out = System.out;
         
         if(this.configuration.logToFile)
@@ -79,17 +89,23 @@ public class Logger
         }
     }
     
+    public int c = 0;
+    
     /**
      * Create a log entry of everything in the general repository.
      * Flushes after log has been written.
      */
     public synchronized void log()
     {
+        out.println(c++);
+        out.flush();
+        
         if(this.configuration.log)
         {
             MasterThief master = this.repository.getMasterThief();
             OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
-
+            AssaultParty[] parties = this.repository.getConcentrationSite().getParties();
+            
             if(this.configuration.logHeader)
             {
                 out.print("\n\n\nMstT      ");
@@ -112,16 +128,14 @@ public class Logger
             }
             out.print("\n");
 
-            AssaultParty[] parties = this.repository.getConcentrationSite().getParties();
-
             if(this.configuration.logHeader)
             {
                 out.print("\n");
                 for(int i = 0; i < parties.length; i++)
                 {
-                    out.print("               Assault party " + (parties[i] != null ? parties[i].getID() : "-"));
+                    out.print("              Assault party " + (parties[i] != null ? parties[i].getID() : "--") + "        ");
                 }
-                out.print("                       Museum");
+                out.print("                 Museum");
 
                 out.print("\n");
                 for(int i = 0; i < parties.length; i++)
@@ -132,10 +146,11 @@ public class Logger
                         out.print("     Elem " + j);
                     }
                 }
-
+                
+                out.print("   ");
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    out.print("     Room " + j + "  ");
+                    out.print("  Room " + j);
                 }
 
                 out.print("\n");
@@ -161,15 +176,15 @@ public class Logger
             {
                 if(parties[i] == null)
                 {
-                    out.print("-    ");
+                    out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        out.print("-  -  -    ");
+                        out.print("-- --  --  ");
                     }
                 }
                 else
                 {
-                    out.printf("%2d    ", parties[i].getTarget());
+                    out.printf("%2d   ", parties[i].getTarget());
 
                     Iterator<OrdinaryThief> it = parties[i].getThieves();
                     for(int j = 0; j < 3; j++)
@@ -177,11 +192,11 @@ public class Logger
                         OrdinaryThief thief = it.next();
                         if(thief == null)
                         {
-                            out.print(" -  -  -   ");
+                            out.print("-- --  --  ");
                         }
                         else
                         {
-                            out.printf(" %d %2d  %d   ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                            out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                     }
                 }
@@ -190,7 +205,7 @@ public class Logger
             Room[] rooms = this.repository.getMuseum().getRooms();
             for(int i = 0; i < rooms.length; i++)
             {
-                out.printf("%2d %2d   ", rooms[i].getPaintings(), rooms[i].getDistance());
+                out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
             }
 
             out.flush();
@@ -203,5 +218,40 @@ public class Logger
     public synchronized void end()
     {
         out.println("\nMy friends, tonight's effort produced " + this.repository.getCollectionSite().totalPaintingsStolen() + " priceless paintings!");
+        out.close();
+    }
+    
+    /**
+     * Compares two strings with the same length and returns an array of indexes where the chars are different.
+     * @param a String to be compared.
+     * @param b String to be compared.
+     * @return Array of indexed where the strings are different
+     * 
+     */
+    public int[] compareStrings(String a, String b)
+    {
+        if(a.length() != b.length())
+        {
+            return null;
+        }
+        
+        LinkedQueue<Integer> queue = new LinkedQueue<>();
+        
+        for(int i = 0; i < a.length(); i++)
+        {
+            if(a.charAt(i) != b.charAt(i))
+            {
+                queue.push(i);
+            }
+        }
+        
+        Iterator<Integer> it = queue.iterator();
+        int[] array = new int[queue.size()];
+        for(int i = 0;i < array.length; i++)
+        {
+            array[i] = it.next();
+        }
+        
+        return array;
     }
 }

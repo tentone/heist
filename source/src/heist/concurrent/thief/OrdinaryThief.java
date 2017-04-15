@@ -1,12 +1,12 @@
-package heist.thief;
+package heist.concurrent.thief;
 
-import heist.shared.AssaultParty;
+import heist.concurrent.shared.AssaultParty;
 import heist.Configuration;
 import heist.GeneralRepository;
-import heist.log.Logger;
-import heist.shared.Museum;
-import heist.shared.ControlCollectionSite;
-import heist.shared.ConcentrationSite;
+import heist.Logger;
+import heist.concurrent.shared.Museum;
+import heist.concurrent.shared.ControlCollectionSite;
+import heist.concurrent.shared.ConcentrationSite;
 
 /**
  * OrdinaryThief represents a thief active entity.

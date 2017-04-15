@@ -1,4 +1,4 @@
-package heist.shared;
+package heist.concurrent.shared;
 
 import heist.room.Room;
 import heist.Configuration;
@@ -50,10 +50,19 @@ public class Museum
     }
     
     /**
+     * Get room array
+     * @return Array of Room objects
+     */
+    public Room[] getRooms()
+    {
+        return this.rooms;
+    }
+    
+    /**
      * Check how many paintings there are inside the museum.
      * @return Number of paintings inside the museum.
      */
-    private int countPaintings()
+    private synchronized int countPaintings()
     {
         int sum = 0;
         
@@ -66,20 +75,11 @@ public class Museum
     }
     
     /**
-     * Get room array
-     * @return Array of Room objects
-     */
-    public Room[] getRooms()
-    {
-        return this.rooms;
-    }
-    
-    /**
-     * Roll a canvas
+     * Roll a canvas.
      * @param id Room id
      * @return True if was able to get a canvas, false if the room was already empty
      */
-    public boolean rollACanvas(int id)
+    public synchronized boolean rollACanvas(int id)
     {
         return this.rooms[id].rollACanvas();
     }

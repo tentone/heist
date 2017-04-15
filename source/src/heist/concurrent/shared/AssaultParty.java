@@ -1,7 +1,7 @@
-package heist.shared;
+package heist.concurrent.shared;
 
 import heist.queue.ArrayQueue;
-import heist.thief.OrdinaryThief;
+import heist.concurrent.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
 import heist.queue.Queue;

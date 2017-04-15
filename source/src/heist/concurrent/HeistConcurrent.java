@@ -1,6 +1,8 @@
-package heist;
+package heist.concurrent;
 
-import heist.thief.OrdinaryThief;
+import heist.Configuration;
+import heist.GeneralRepository;
+import heist.concurrent.thief.OrdinaryThief;
 
 /**
  * Concurrent version of the Heist.

@@ -1,12 +1,12 @@
-package heist.shared;
+package heist.concurrent.shared;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
 import heist.room.Room;
 import heist.room.RoomStatus;
 import heist.queue.Queue;
-import heist.thief.MasterThief;
-import heist.thief.OrdinaryThief;
+import heist.concurrent.thief.MasterThief;
+import heist.concurrent.thief.OrdinaryThief;
 
 /**
  * The ControlCollection site is where the OrdinaryThieves deliver the canvas to the MasterThief.

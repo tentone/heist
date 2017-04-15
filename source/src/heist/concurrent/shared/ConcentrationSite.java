@@ -1,4 +1,4 @@
-package heist.shared;
+package heist.concurrent.shared;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
@@ -6,7 +6,7 @@ import heist.queue.LeakingQueue;
 import heist.queue.Queue;
 import heist.queue.iterator.Iterator;
 import heist.room.RoomStatus;
-import heist.thief.OrdinaryThief;
+import heist.concurrent.thief.OrdinaryThief;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
