@@ -207,7 +207,6 @@ public class MasterThief extends Thread
         
         this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
         this.logger.log();
-        
     }
     
     /**
@@ -252,7 +251,7 @@ public class MasterThief extends Thread
             
             this.sumUpResults();
         }
-        catch(InterruptedException e)
+        catch(Exception e)
         {
             this.logger.debug("Master error");
             e.printStackTrace();
