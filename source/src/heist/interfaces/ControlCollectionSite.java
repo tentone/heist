@@ -1,5 +1,6 @@
 package heist.interfaces;
 
+import heist.concurrent.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 
 public interface ControlCollectionSite
@@ -38,10 +39,11 @@ public interface ControlCollectionSite
     
     /**
      * Called by the OrdinaryThieves to check if they are still needed.
+     * @param thief Thief checking if he is needed.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      * @return True if the thief is still needed, false otherwise.
      */
-    public boolean amINeeded() throws Exception;
+    public boolean amINeeded(OrdinaryThief thief) throws Exception;
     
     
 }

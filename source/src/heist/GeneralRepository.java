@@ -68,7 +68,7 @@ public class GeneralRepository
         }
         
         this.master = new MasterThief(this, this.configuration);
-        
+
         this.logger.log();
     }
     

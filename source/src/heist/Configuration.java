@@ -27,6 +27,11 @@ public class Configuration
     public final int partySize;
     
     /**
+     * Number of parties in this simulation.
+     */
+    public final int numberParties;
+    
+    /**
      * Max distance between crawling thieves.
      * Distance is only verified for the party.
      */
@@ -83,6 +88,7 @@ public class Configuration
         this.thiefDisplacement = new Range(2, 6);
         
         this.partySize = 3;
+        this.numberParties = this.numberThieves / this.partySize;
         
         this.numberRooms = 5;
         this.roomDistance = new Range(15, 30);

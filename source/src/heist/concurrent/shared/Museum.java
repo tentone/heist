@@ -7,7 +7,7 @@ import heist.Configuration;
  * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
  * @author Jose Manuel
  */
-public class Museum
+public class Museum implements heist.interfaces.Museum
 {
     /**
      * Rooms inside the museum.

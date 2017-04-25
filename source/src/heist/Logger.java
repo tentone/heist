@@ -108,7 +108,7 @@ public class Logger
             
             if(this.configuration.logHeader)
             {
-                out.print("\n\n\nMstT      ");
+                out.print("\n\nMstT      ");
                 for(int i = 0; i < thieves.length; i++)
                 {
                     out.print("Thief " + i + "      ");
@@ -174,7 +174,7 @@ public class Logger
 
             for(int i = 0; i < parties.length; i++)
             {
-                if(parties[i] == null)
+                if(parties[i].getState() == AssaultParty.DISMISSED)
                 {
                     out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
@@ -207,7 +207,8 @@ public class Logger
             {
                 out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
             }
-
+            out.println("");
+            
             out.flush();
         }
     }

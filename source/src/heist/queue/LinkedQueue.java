@@ -22,7 +22,7 @@ public class LinkedQueue<T> implements Queue<T>
     private int size;
     
     /**
-     * LinkedQueue constructor, initializes first and last nodes and sets the size.
+     * LinkedQueue constructor, initialises first and last nodes and sets the size.
      */
     public LinkedQueue()
     {

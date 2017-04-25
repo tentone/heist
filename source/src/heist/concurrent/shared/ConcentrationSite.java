@@ -2,9 +2,7 @@ package heist.concurrent.shared;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
-import heist.queue.LeakingQueue;
 import heist.queue.Queue;
-import heist.queue.iterator.Iterator;
 import heist.room.RoomStatus;
 import heist.concurrent.thief.OrdinaryThief;
 
@@ -13,8 +11,13 @@ import heist.concurrent.thief.OrdinaryThief;
  * ConcentrationSite is accessed by the MasterThief to get OrdinaryThieves to create and join AssaultParties.
  * @author Jose Manuel
  */
-public class ConcentrationSite
-{
+public class ConcentrationSite implements heist.interfaces.ConcentrationSite
+{    
+    /**
+     * AssaultParties.
+     */
+    private final AssaultParty[] parties;
+    
     /**
      * List of thieves waiting to enter a team.
      */
@@ -26,27 +29,19 @@ public class ConcentrationSite
     private final Queue<AssaultParty> waitingParties;
     
     /**
-     * Array with the last created assault parties
-     */
-    private final Queue<AssaultParty> parties;
-
-    /**
-     * Maximum number of parties.
-     */
-    private final int numberParties;
-    
-    /**
      * ConcentrationSite constructor.
      * @param configuration Configuration to be used.
      */
     public ConcentrationSite(Configuration configuration)
     {   
-        this.numberParties = configuration.numberThieves / configuration.partySize;
-        
         this.waitingThieves = new ArrayQueue<>(configuration.numberThieves);
-        this.waitingParties = new ArrayQueue<>(this.numberParties);
+        this.waitingParties = new ArrayQueue<>(configuration.numberParties);
 
-        this.parties = new LeakingQueue<>(this.numberParties);
+        this.parties = new AssaultParty[configuration.numberParties];
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            this.parties[i] = new AssaultParty(configuration);
+        }
     }
     
     /**
@@ -56,42 +51,70 @@ public class ConcentrationSite
      */
     public synchronized AssaultParty[] getParties()
     {
-        AssaultParty[] array = new AssaultParty[this.numberParties];
-        int i = 0;
-        
-        Iterator<AssaultParty> it = this.parties.iterator();
-        while(it.hasNext())
+        return this.parties;
+    }
+
+    /**
+     * Check if there is some party available to be prepared and sent.
+     * @return True if there is some party in DISMISSED state.
+     */
+    public synchronized boolean somePartyAvailable()
+    {
+        for(int i = 0; i < this.parties.length; i++)
         {
-            array[i++] = it.next();
+            if(this.parties[i].getState() == AssaultParty.DISMISSED)
+            {
+                return true;
+            }
         }
         
-        return array;
+        return false;
     }
     
     /**
      * Create new Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
      * The MasterThief creates the party and adds it to the party list and gets locked until all thieves join the party.
      * The last thief to join the party wakes up the MasterThief.
-     * @param partySize AssaultParty size.
      * @param room Target room.
-     * @param maxDistance Maximum distance allowed between thieves when crawling.
      * @return AssaultParty created.
      * @throws java.lang.InterruptedException Exception
      */
-    public synchronized AssaultParty createNewParty(int partySize, int maxDistance, RoomStatus room) throws InterruptedException
+    @Override
+    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
     {
-        AssaultParty party = new AssaultParty(partySize, maxDistance, room);
-
-        this.parties.push(party);
+        AssaultParty party = null;
+        
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            if(this.parties[i].getState() == AssaultParty.DISMISSED)
+            {
+                party = this.parties[i];
+                party.prepareParty(room);
+                break;
+            }
+        }
         
         this.waitingParties.push(party);
         this.notifyAll();
 
-        while(!party.partyFull())
+        //TODO <REMOVE TRY CATCH>
+        try
         {
-            this.wait();
+            while(!party.partyFull())
+            {
+                this.wait();
+            }
         }
-
+        catch(Exception e)
+        {
+            System.out.println("-----------------------ERROR-----------------------");
+            for(int i = 0; i < this.parties.length; i++)
+            {
+                System.out.println("Party " + i + ": " + this.parties[i].getState());
+            }
+            System.exit(1);
+        }
+        
         this.waitingParties.pop();
 
         return party;
@@ -103,6 +126,7 @@ public class ConcentrationSite
      * @param thief OrdinaryThief to add.
      * @throws java.lang.InterruptedException Exception
      */
+    @Override
     public synchronized void prepareExcursion(OrdinaryThief thief) throws InterruptedException, Exception
     {
         this.waitingThieves.push(thief);

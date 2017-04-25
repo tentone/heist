@@ -1,5 +1,6 @@
 package heist.concurrent.shared;
 
+import heist.Configuration;
 import heist.queue.ArrayQueue;
 import heist.concurrent.thief.OrdinaryThief;
 import heist.room.RoomStatus;
@@ -8,11 +9,11 @@ import heist.queue.Queue;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
- * Its used as a synchronization point between thieves.
+ * Its used as a synchronisation point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
-public class AssaultParty
+public class AssaultParty implements heist.interfaces.AssaultParty
 {
     /**
      * Waiting state.
@@ -58,14 +59,9 @@ public class AssaultParty
     private final Queue<OrdinaryThief> thieves;
     
     /**
-     * Crawling queue.
-     */
-    private final Queue<OrdinaryThief> crawlingQueue;
-    
-    /**
      * Targeted room.
      */
-    private final RoomStatus room;
+    private RoomStatus room;
     
     /**
      * Number of OrdinaryThieves waiting to reverse direction.
@@ -79,22 +75,19 @@ public class AssaultParty
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
-     * @param partySize Assault party size.
-     * @param thiefDistance Maximum distance between thieves.
-     * @param room Target room.
+     * @param configuration Simulation configuration
      */
-    public AssaultParty(int partySize, int thiefDistance, RoomStatus room)
+    public AssaultParty(Configuration configuration)
     {
         this.id = IDCounter++;
         
-        this.thieves = new ArrayQueue<>(partySize);
-        this.crawlingQueue = new ArrayQueue<>(partySize);
+        this.thieves = new ArrayQueue<>(configuration.partySize);
         
-        this.partySize = partySize;
-        this.thiefDistance = thiefDistance;
-        this.room = room;
+        this.room = null;
+        this.partySize = configuration.partySize;
+        this.thiefDistance = configuration.thiefDistance;
         
-        this.state = AssaultParty.WAITING;
+        this.state = AssaultParty.DISMISSED;
         this.waitingToReverse = 0;
     }
     
@@ -111,7 +104,7 @@ public class AssaultParty
      * Get party state.
      * @return Party state.
      */
-    public synchronized int state()
+    public synchronized int getState()
     {
         return this.state;
     }
@@ -123,6 +116,16 @@ public class AssaultParty
     public synchronized int getTarget()
     {
         return this.room.getID();
+    }
+    
+    /**
+     * Reset party to its initial state.
+     */
+    private synchronized void reset()
+    {
+        this.state = AssaultParty.DISMISSED;
+        this.room = null;
+        this.waitingToReverse = 0;
     }
     
     /**
@@ -142,14 +145,16 @@ public class AssaultParty
     {
         return this.room.getDistance();
     }
-    
+
     /**
-     * Get assault party size.
-     * @return Assault party size.
+     * Prepare party, set state to WAITING and set target room.
+     * 
+     * @param room TargetRoom.
      */
-    public synchronized int getSize()
+    public void prepareParty(RoomStatus room)
     {
-        return this.partySize;
+        this.room = room;
+        this.state = AssaultParty.WAITING;
     }
     
     /**
@@ -172,16 +177,16 @@ public class AssaultParty
     
     /**
      * Remove thief from party.
-     * After all thieves are removed from the party the party is dismissed
+     * After all thieves are removed from the party the party is dismissed.
      * @param thief Thief to be removed from party.
      */
     public synchronized void removeThief(OrdinaryThief thief)
     {
         this.thieves.remove(thief);
         
-        if(thieves.size() == 0)
+        if(this.thieves.isEmpty())
         {
-            this.state = AssaultParty.DISMISSED;
+            this.reset();
         }
     }
     
@@ -190,6 +195,7 @@ public class AssaultParty
      * Wakes up the first thief that is waiting to crawlIn.
      * @throws java.lang.InterruptedException Exception
      */
+    @Override
     public synchronized void sendParty() throws InterruptedException
     {
         this.state = AssaultParty.CRAWLING;
@@ -202,7 +208,7 @@ public class AssaultParty
      */
     public synchronized boolean partyFull()
     {
-        return this.thieves.size() == this.partySize;
+        return this.partySize == this.thieves.size();
     }
     
     /**

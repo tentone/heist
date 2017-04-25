@@ -8,6 +8,4 @@ public interface AssaultParty
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
     public void sendParty() throws Exception;
-    
-
 }

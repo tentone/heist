@@ -158,8 +158,8 @@ public class MasterThief extends Thread
      */
     private AssaultParty prepareAssaultParty() throws InterruptedException
     {
-        RoomStatus room = this.collection.getRoomToAttack(this.configuration.partySize);
-        AssaultParty party = this.concentration.createNewParty(this.configuration.partySize, this.configuration.thiefDistance, room);
+        RoomStatus room = this.collection.getRoomToAttack();
+        AssaultParty party = this.concentration.prepareNewParty(room);
         
         this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
         this.logger.log();

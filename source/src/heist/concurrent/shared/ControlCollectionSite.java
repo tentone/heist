@@ -13,7 +13,7 @@ import heist.concurrent.thief.OrdinaryThief;
  * It is also responsible for decisions taken by booth the MasterThief and the OrdinaryThieves.
  * @author Jose Manuel
  */
-public class ControlCollectionSite
+public class ControlCollectionSite implements heist.interfaces.ControlCollectionSite
 {
     /**
      * Configuration used by this ControlCollectionSite.
@@ -212,13 +212,12 @@ public class ControlCollectionSite
     /**
      * MasterThief gets a room for the OrdinaryThieves to attack.
      * The room is marked undeAttack by a partySize number of thieves.
-     * @param partySize Party size.
      * @return Returns RoomStatus that describes the room to be attacked.
      */
-    public synchronized RoomStatus getRoomToAttack(int partySize)
+    public synchronized RoomStatus getRoomToAttack()
     {
         RoomStatus room = this.nextTargetRoom();
-        room.addThievesAttacking(partySize);
+        room.addThievesAttacking(configuration.partySize);
         
         return room;
     }
