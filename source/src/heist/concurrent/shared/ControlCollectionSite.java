@@ -24,7 +24,12 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
      * RoomStatus array, used to store information about who are assaulting rooms, how many paintings where stolen from each room and if the room is empty.
      */
     private final RoomStatus[] rooms;
-
+    
+    /**
+     * AssaultParties used for the simulation.
+     */
+    private final AssaultParty[] parties;
+    
     /**
      * Queue for OrdinaryThieves waiting to deliver a canvas.
      */
@@ -59,6 +64,12 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
             this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
         }
         
+        this.parties = new AssaultParty[configuration.numberParties];
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            this.parties[i] = new AssaultParty(configuration);
+        }
+        
         this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
         this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
         
@@ -72,6 +83,33 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
     public synchronized boolean hasThief()
     {
         return !this.canvasDeliverQueue.isEmpty();
+    }
+    
+    /**
+     * Get parties queue, contains the last parties created during this simulation.
+     * These parties are used for logging.
+     * @return Parties created during the simulation.
+     */
+    public synchronized AssaultParty[] getParties()
+    {
+        return this.parties;
+    }
+
+    /**
+     * Check if there is some party available to be prepared and sent.
+     * @return True if there is some party in DISMISSED state.
+     */
+    public synchronized boolean somePartyAvailable()
+    {
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            if(this.parties[i].getState() == AssaultParty.DISMISSED)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -148,7 +186,7 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
      */
     public synchronized boolean canCreateParty()
     {
-        return this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize;
+        return this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize && this.somePartyAvailable();
     }
     
     /**
@@ -170,6 +208,30 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
         while(this.amINeededQueue.contains(thief));
         
         return !this.heistTerminated;
+    }
+    
+    /**
+     * MasterThief call this function to prepare an assault party to be filled with OrdinaryThieves waiting in the concentration site.
+     * @param room Target room.
+     * @return AssaultParty created.
+     * @throws java.lang.InterruptedException Exception
+     */
+    @Override
+    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
+    {
+        AssaultParty party = null;
+        
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            if(this.parties[i].getState() == AssaultParty.DISMISSED)
+            {
+                party = this.parties[i];
+                party.prepareParty(room);
+                break;
+            }
+        }
+        
+        return party;
     }
     
     /**

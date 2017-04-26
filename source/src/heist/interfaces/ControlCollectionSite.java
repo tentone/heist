@@ -13,6 +13,14 @@ public interface ControlCollectionSite
     public int appraiseSit() throws Exception;
     
     /**
+     * Called by the MasterThief to prepare an assault party to be filled with OrdinaryThieves waiting in the concentration site.
+     * @param room Target room.
+     * @return AssaultParty created.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
+     */
+    public AssaultParty prepareNewParty(RoomStatus room) throws Exception;
+    
+    /**
      * Called by the MasterThief to get what room to attack next.
      * @return Room to attack next.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.

@@ -78,7 +78,7 @@ public class MasterThief extends Thread
     {
         this.state = MasterThief.PLANNING_THE_HEIST;
         
-        this.collection = repository.getCollectionSite();
+        this.collection = repository.getControlCollectionSite();
         this.concentration = repository.getConcentrationSite();
         this.logger = repository.getLogger();
         
@@ -159,7 +159,8 @@ public class MasterThief extends Thread
     private AssaultParty prepareAssaultParty() throws InterruptedException
     {
         RoomStatus room = this.collection.getRoomToAttack();
-        AssaultParty party = this.concentration.prepareNewParty(room);
+        AssaultParty party = this.collection.prepareNewParty(room);
+        this.concentration.fillAssaultParty(party);
         
         this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
         this.logger.log();

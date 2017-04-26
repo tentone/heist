@@ -100,7 +100,7 @@ public class OrdinaryThief extends Thread
         this.id = id;
         this.state = OrdinaryThief.OUTSIDE;
         
-        this.collection = repository.getCollectionSite();
+        this.collection = repository.getControlCollectionSite();
         this.concentration = repository.getConcentrationSite();
         this.museum = repository.getMuseum();
         this.logger = repository.getLogger();

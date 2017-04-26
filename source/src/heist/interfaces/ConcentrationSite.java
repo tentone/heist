@@ -1,17 +1,18 @@
 package heist.interfaces;
 
 import heist.concurrent.thief.OrdinaryThief;
-import heist.room.RoomStatus;
+import heist.concurrent.shared.AssaultParty;
 
 public interface ConcentrationSite
 {
     /**
-     * Called by the MasterThief to create a new AssaultParty.
-     * @return AssaultParty created.
-     * @param room Target room for the party
+     * Fill a Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
+     * The MasterThief creates the party and adds it to the waiting party list and gets locked until all thieves join the party.
+     * The last thief to join the party wakes up the MasterThief.
+     * @param party Party to be filled with thieves.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public AssaultParty prepareNewParty(RoomStatus room) throws Exception;
+    public void fillAssaultParty(AssaultParty party) throws Exception;
     
     /**
      * Called by the OrdinaryThieves to enter the concentration site and wait until a party is assigned to them.

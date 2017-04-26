@@ -94,7 +94,7 @@ public class GeneralRepository
      * Get collection site.
      * @return CollectionSite.
      */
-    public ControlCollectionSite getCollectionSite()
+    public ControlCollectionSite getControlCollectionSite()
     {
         return this.collection;
     }

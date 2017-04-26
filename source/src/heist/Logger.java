@@ -89,22 +89,17 @@ public class Logger
         }
     }
     
-    public int c = 0;
-    
     /**
      * Create a log entry of everything in the general repository.
      * Flushes after log has been written.
      */
     public synchronized void log()
-    {
-        out.println(c++);
-        out.flush();
-        
+    {        
         if(this.configuration.log)
         {
             MasterThief master = this.repository.getMasterThief();
             OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
-            AssaultParty[] parties = this.repository.getConcentrationSite().getParties();
+            AssaultParty[] parties = this.repository.getControlCollectionSite().getParties();
             
             if(this.configuration.logHeader)
             {
@@ -218,7 +213,7 @@ public class Logger
      */
     public synchronized void end()
     {
-        out.println("\nMy friends, tonight's effort produced " + this.repository.getCollectionSite().totalPaintingsStolen() + " priceless paintings!");
+        out.println("\nMy friends, tonight's effort produced " + this.repository.getControlCollectionSite().totalPaintingsStolen() + " priceless paintings!");
         out.close();
     }
     
