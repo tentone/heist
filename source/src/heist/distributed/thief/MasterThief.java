@@ -1,4 +1,4 @@
-package heist.concurrent.thief;
+package heist.distributed.thief;
 
 import heist.room.RoomStatus;
 import heist.Configuration;

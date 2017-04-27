@@ -98,6 +98,6 @@ public class Configuration
         this.logToFile = false;
         this.debug = false;
         this.log = true;
-        this.logHeader = false;
+        this.logHeader = true;
     }
 }

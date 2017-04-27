@@ -1,5 +1,7 @@
-package heist;
+package heist.concurrent;
 
+import heist.Configuration;
+import heist.Logger;
 import heist.concurrent.shared.SharedMuseum;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;

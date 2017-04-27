@@ -1,7 +1,6 @@
 package heist.concurrent;
 
 import heist.Configuration;
-import heist.GeneralRepository;
 import heist.concurrent.thief.OrdinaryThief;
 
 /**
