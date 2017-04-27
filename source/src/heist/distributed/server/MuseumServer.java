@@ -1,6 +1,6 @@
 package heist.distributed.server;
 
-public class CollectionSiteServer
+public class MuseumServer
 {
     
 }

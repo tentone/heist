@@ -5,11 +5,10 @@ import java.net.*;
 
 public class SocketClient
 {
-    public static void main(String argv[]) throws Exception
+    /*public static void main(String argv[]) throws Exception
     {
-        SocketClient client = new SocketClient("localhost", 6789);
-        System.out.println(client.sendMessage("test_message"));
-    }
+        SocketClient client = new SocketClient("127.0.0.1", 6789);
+    */
     
     private final String address;
     private final int port;
@@ -22,6 +21,11 @@ public class SocketClient
     
     public String sendMessage(String message) throws Exception
     {
+        if(!message.endsWith("\n"))
+        {
+            message += "\n";
+        }
+        
         Socket socket = new Socket(this.address, this.port);
         
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
@@ -30,7 +34,6 @@ public class SocketClient
         out.writeBytes(message);
         
         String received = in.readLine();
-        System.out.println("Received " + received);
         
         socket.close();
         

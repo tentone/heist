@@ -22,7 +22,7 @@ public class GeneralRepository
     /**
      * The control and collection site.
      */
-    private final SharedControlCollectionSite collection;
+    private final SharedControlCollectionSite controlCollection;
     
     /**
      * Concentration site where the OrdinaryThieves wait to be assigned to an AssaultParty.
@@ -60,7 +60,7 @@ public class GeneralRepository
         
         this.museum = new SharedMuseum(this.configuration);
         this.concentration = new SharedConcentrationSite(this.configuration);
-        this.collection = new SharedControlCollectionSite(this.configuration, this.museum);
+        this.controlCollection = new SharedControlCollectionSite(this.configuration, this.museum);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)
@@ -95,7 +95,7 @@ public class GeneralRepository
      */
     public SharedControlCollectionSite getControlCollectionSite()
     {
-        return this.collection;
+        return this.controlCollection;
     }
     
     /**
