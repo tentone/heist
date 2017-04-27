@@ -6,7 +6,7 @@ import heist.concurrent.GeneralRepository;
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;
-import heist.Logger;
+import heist.concurrent.Logger;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.

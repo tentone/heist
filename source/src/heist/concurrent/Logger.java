@@ -1,6 +1,6 @@
-package heist;
+package heist.concurrent;
 
-import heist.concurrent.GeneralRepository;
+import heist.Configuration;
 import heist.queue.LinkedQueue;
 import heist.room.Room;
 import heist.queue.iterator.Iterator;

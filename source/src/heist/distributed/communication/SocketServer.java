@@ -1,4 +1,4 @@
-package heist.tests;
+package heist.distributed.communication;
 
 import java.net.*;
 

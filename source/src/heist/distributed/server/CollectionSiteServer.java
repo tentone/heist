@@ -1,4 +1,4 @@
-package heist.distributed;
+package heist.distributed.server;
 
 public class CollectionSiteServer
 {

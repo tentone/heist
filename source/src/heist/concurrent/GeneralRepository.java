@@ -1,7 +1,6 @@
 package heist.concurrent;
 
 import heist.Configuration;
-import heist.Logger;
 import heist.concurrent.shared.SharedMuseum;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;
@@ -70,8 +69,6 @@ public class GeneralRepository
         }
         
         this.master = new MasterThief(this, this.configuration);
-
-        this.logger.log();
     }
     
     /**
@@ -126,13 +123,5 @@ public class GeneralRepository
     public OrdinaryThief[] getOrdinaryThieves()
     {
         return this.thieves;
-    }
-    
-    /**
-     * Create new log entry.
-     */
-    public void log()
-    {
-        this.logger.log();
     }
 }

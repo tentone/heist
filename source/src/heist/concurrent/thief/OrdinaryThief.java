@@ -3,7 +3,7 @@ package heist.concurrent.thief;
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.Configuration;
 import heist.concurrent.GeneralRepository;
-import heist.Logger;
+import heist.concurrent.Logger;
 import heist.concurrent.shared.SharedMuseum;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;
