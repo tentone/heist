@@ -3,9 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/interfaces/ConcentrationSite.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/MuseumServer.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/AssaultPartyServer.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/GeneralRepository.java</file>
-            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/interfaces/Museum.java</file>
-            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/concurrent/shared/AssaultParty.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/interfaces/ControlCollectionSite.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/ConcentrationSiteServer.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/ConfigurationDistributed.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/Configuration.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/CollectionSiteServer.java</file>
         </group>
     </open-files>
 </project-private>

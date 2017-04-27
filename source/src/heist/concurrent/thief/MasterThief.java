@@ -3,9 +3,9 @@ package heist.concurrent.thief;
 import heist.room.RoomStatus;
 import heist.Configuration;
 import heist.GeneralRepository;
-import heist.concurrent.shared.AssaultParty;
-import heist.concurrent.shared.ControlCollectionSite;
-import heist.concurrent.shared.ConcentrationSite;
+import heist.concurrent.shared.SharedAssaultParty;
+import heist.concurrent.shared.SharedControlCollectionSite;
+import heist.concurrent.shared.SharedConcentrationSite;
 import heist.Logger;
 
 /**
@@ -47,12 +47,12 @@ public class MasterThief extends Thread
     /**
      * Control and Collection Site
      */
-    private final ControlCollectionSite collection;
+    private final SharedControlCollectionSite collection;
    
     /**
      * Concentration Site
      */
-    private final ConcentrationSite concentration;
+    private final SharedConcentrationSite concentration;
     
     /**
      * Logger
@@ -156,10 +156,10 @@ public class MasterThief extends Thread
      * @return AssaultParty assembled.
      * @throws java.lang.InterruptedException Exception
      */
-    private AssaultParty prepareAssaultParty() throws InterruptedException
+    private SharedAssaultParty prepareAssaultParty() throws InterruptedException
     {
         RoomStatus room = this.collection.getRoomToAttack();
-        AssaultParty party = this.collection.prepareNewParty(room);
+        SharedAssaultParty party = this.collection.prepareNewParty(room);
         this.concentration.fillAssaultParty(party);
         
         this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
@@ -174,7 +174,7 @@ public class MasterThief extends Thread
      * @param party Party to send.
      * @throws java.lang.InterruptedException Exception
      */
-    private void sendAssaultParty(AssaultParty party) throws InterruptedException
+    private void sendAssaultParty(SharedAssaultParty party) throws InterruptedException
     {
         party.sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);

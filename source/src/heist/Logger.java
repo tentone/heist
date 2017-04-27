@@ -3,7 +3,7 @@ package heist;
 import heist.queue.LinkedQueue;
 import heist.room.Room;
 import heist.queue.iterator.Iterator;
-import heist.concurrent.shared.AssaultParty;
+import heist.concurrent.shared.SharedAssaultParty;
 import heist.concurrent.thief.MasterThief;
 import heist.concurrent.thief.OrdinaryThief;
 import java.io.File;
@@ -99,7 +99,7 @@ public class Logger
         {
             MasterThief master = this.repository.getMasterThief();
             OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
-            AssaultParty[] parties = this.repository.getControlCollectionSite().getParties();
+            SharedAssaultParty[] parties = this.repository.getControlCollectionSite().getParties();
             
             if(this.configuration.logHeader)
             {
@@ -169,7 +169,7 @@ public class Logger
 
             for(int i = 0; i < parties.length; i++)
             {
-                if(parties[i].getState() == AssaultParty.DISMISSED)
+                if(parties[i].getState() == SharedAssaultParty.DISMISSED)
                 {
                     out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)

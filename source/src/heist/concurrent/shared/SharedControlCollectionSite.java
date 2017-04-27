@@ -7,13 +7,14 @@ import heist.room.RoomStatus;
 import heist.queue.Queue;
 import heist.concurrent.thief.MasterThief;
 import heist.concurrent.thief.OrdinaryThief;
+import heist.interfaces.ControlCollectionSite;
 
 /**
  * The ControlCollection site is where the OrdinaryThieves deliver the canvas to the MasterThief.
  * It is also responsible for decisions taken by booth the MasterThief and the OrdinaryThieves.
  * @author Jose Manuel
  */
-public class ControlCollectionSite implements heist.interfaces.ControlCollectionSite
+public class SharedControlCollectionSite implements ControlCollectionSite
 {
     /**
      * Configuration used by this ControlCollectionSite.
@@ -28,7 +29,7 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
     /**
      * AssaultParties used for the simulation.
      */
-    private final AssaultParty[] parties;
+    private final SharedAssaultParty[] parties;
     
     /**
      * Queue for OrdinaryThieves waiting to deliver a canvas.
@@ -52,7 +53,7 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
      * @param configuration Simulation configuration
      * @param museum Museum
      */
-    public ControlCollectionSite(Configuration configuration, Museum museum)
+    public SharedControlCollectionSite(Configuration configuration, SharedMuseum museum)
     {   
         this.configuration = configuration;
 
@@ -64,10 +65,10 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
             this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
         }
         
-        this.parties = new AssaultParty[configuration.numberParties];
+        this.parties = new SharedAssaultParty[configuration.numberParties];
         for(int i = 0; i < this.parties.length; i++)
         {
-            this.parties[i] = new AssaultParty(configuration);
+            this.parties[i] = new SharedAssaultParty(configuration);
         }
         
         this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
@@ -90,7 +91,7 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
      * These parties are used for logging.
      * @return Parties created during the simulation.
      */
-    public synchronized AssaultParty[] getParties()
+    public synchronized SharedAssaultParty[] getParties()
     {
         return this.parties;
     }
@@ -103,7 +104,7 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
     {
         for(int i = 0; i < this.parties.length; i++)
         {
-            if(this.parties[i].getState() == AssaultParty.DISMISSED)
+            if(this.parties[i].getState() == SharedAssaultParty.DISMISSED)
             {
                 return true;
             }
@@ -217,13 +218,13 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
      * @throws java.lang.InterruptedException Exception
      */
     @Override
-    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
+    public synchronized SharedAssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
     {
-        AssaultParty party = null;
+        SharedAssaultParty party = null;
         
         for(int i = 0; i < this.parties.length; i++)
         {
-            if(this.parties[i].getState() == AssaultParty.DISMISSED)
+            if(this.parties[i].getState() == SharedAssaultParty.DISMISSED)
             {
                 party = this.parties[i];
                 party.prepareParty(room);
@@ -325,7 +326,7 @@ public class ControlCollectionSite implements heist.interfaces.ControlCollection
         if(!this.canvasDeliverQueue.isEmpty())
         {
             OrdinaryThief thief = this.canvasDeliverQueue.pop();
-            AssaultParty party = thief.getParty();
+            SharedAssaultParty party = thief.getParty();
             
             try
             {

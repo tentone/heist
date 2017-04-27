@@ -1,7 +1,7 @@
 package heist.interfaces;
 
 import heist.concurrent.thief.OrdinaryThief;
-import heist.concurrent.shared.AssaultParty;
+import heist.concurrent.shared.SharedAssaultParty;
 
 public interface ConcentrationSite
 {
@@ -12,7 +12,7 @@ public interface ConcentrationSite
      * @param party Party to be filled with thieves.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public void fillAssaultParty(AssaultParty party) throws Exception;
+    public void fillAssaultParty(SharedAssaultParty party) throws Exception;
     
     /**
      * Called by the OrdinaryThieves to enter the concentration site and wait until a party is assigned to them.

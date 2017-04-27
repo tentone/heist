@@ -2,12 +2,13 @@ package heist.concurrent.shared;
 
 import heist.room.Room;
 import heist.Configuration;
+import heist.interfaces.Museum;
 
 /**
  * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
  * @author Jose Manuel
  */
-public class Museum implements heist.interfaces.Museum
+public class SharedMuseum implements Museum
 {
     /**
      * Rooms inside the museum.
@@ -15,10 +16,10 @@ public class Museum implements heist.interfaces.Museum
     private final Room[] rooms;
 
     /**
-     * Museum constructor, initializes rooms with values from the configuration.
+     * Museum constructor, initialises rooms with values from the configuration.
      * @param configuration Simulation configuration
      */
-    public Museum(Configuration configuration)
+    public SharedMuseum(Configuration configuration)
     {
         this.rooms = new Room[configuration.numberRooms];
         

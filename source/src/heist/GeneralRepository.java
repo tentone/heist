@@ -1,8 +1,8 @@
 package heist;
 
-import heist.concurrent.shared.Museum;
-import heist.concurrent.shared.ControlCollectionSite;
-import heist.concurrent.shared.ConcentrationSite;
+import heist.concurrent.shared.SharedMuseum;
+import heist.concurrent.shared.SharedControlCollectionSite;
+import heist.concurrent.shared.SharedConcentrationSite;
 import heist.concurrent.thief.MasterThief;
 import heist.concurrent.thief.OrdinaryThief;
 
@@ -16,17 +16,17 @@ public class GeneralRepository
     /**
      * Museum to be assaulted by AssaultParties.
      */
-    private final Museum museum;
+    private final SharedMuseum museum;
     
     /**
      * The control and collection site.
      */
-    private final ControlCollectionSite collection;
+    private final SharedControlCollectionSite collection;
     
     /**
      * Concentration site where the OrdinaryThieves wait to be assigned to an AssaultParty.
      */
-    private final ConcentrationSite concentration;
+    private final SharedConcentrationSite concentration;
     
     /**
      * MasterThieve that controls and assigns OrdinaryThieves to AssaultParties.
@@ -57,9 +57,9 @@ public class GeneralRepository
         this.configuration = configuration;
         this.logger = new Logger(this, configuration);
         
-        this.museum = new Museum(this.configuration);
-        this.concentration = new ConcentrationSite(this.configuration);
-        this.collection = new ControlCollectionSite(this.configuration, this.museum);
+        this.museum = new SharedMuseum(this.configuration);
+        this.concentration = new SharedConcentrationSite(this.configuration);
+        this.collection = new SharedControlCollectionSite(this.configuration, this.museum);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)
@@ -85,7 +85,7 @@ public class GeneralRepository
      * Get museum.
      * @return Museum
      */
-    public Museum getMuseum()
+    public SharedMuseum getMuseum()
     {
         return this.museum;
     }
@@ -94,7 +94,7 @@ public class GeneralRepository
      * Get collection site.
      * @return CollectionSite.
      */
-    public ControlCollectionSite getControlCollectionSite()
+    public SharedControlCollectionSite getControlCollectionSite()
     {
         return this.collection;
     }
@@ -103,7 +103,7 @@ public class GeneralRepository
      * Get concentration site.
      * @return ConcentrationSite.
      */
-    public ConcentrationSite getConcentrationSite()
+    public SharedConcentrationSite getConcentrationSite()
     {
         return this.concentration;
     }

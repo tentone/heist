@@ -3,6 +3,7 @@ package heist.concurrent.shared;
 import heist.Configuration;
 import heist.queue.ArrayQueue;
 import heist.concurrent.thief.OrdinaryThief;
+import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
 import heist.queue.Queue;
@@ -13,7 +14,7 @@ import heist.queue.Queue;
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
-public class AssaultParty implements heist.interfaces.AssaultParty
+public class SharedAssaultParty implements AssaultParty
 {
     /**
      * Waiting state.
@@ -77,7 +78,7 @@ public class AssaultParty implements heist.interfaces.AssaultParty
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
      * @param configuration Simulation configuration
      */
-    public AssaultParty(Configuration configuration)
+    public SharedAssaultParty(Configuration configuration)
     {
         this.id = IDCounter++;
         
@@ -87,7 +88,7 @@ public class AssaultParty implements heist.interfaces.AssaultParty
         this.partySize = configuration.partySize;
         this.thiefDistance = configuration.thiefDistance;
         
-        this.state = AssaultParty.DISMISSED;
+        this.state = SharedAssaultParty.DISMISSED;
         this.waitingToReverse = 0;
     }
     
@@ -123,7 +124,7 @@ public class AssaultParty implements heist.interfaces.AssaultParty
      */
     private synchronized void reset()
     {
-        this.state = AssaultParty.DISMISSED;
+        this.state = SharedAssaultParty.DISMISSED;
         this.room = null;
         this.waitingToReverse = 0;
     }
@@ -154,7 +155,7 @@ public class AssaultParty implements heist.interfaces.AssaultParty
     public void prepareParty(RoomStatus room)
     {
         this.room = room;
-        this.state = AssaultParty.WAITING;
+        this.state = SharedAssaultParty.WAITING;
     }
     
     /**
@@ -198,7 +199,7 @@ public class AssaultParty implements heist.interfaces.AssaultParty
     @Override
     public synchronized void sendParty() throws InterruptedException
     {
-        this.state = AssaultParty.CRAWLING;
+        this.state = SharedAssaultParty.CRAWLING;
         this.notifyAll();
     }
     
@@ -224,7 +225,7 @@ public class AssaultParty implements heist.interfaces.AssaultParty
             this.thieves.popPush();
         }
         
-        while(this.thieves.peek() != thief || this.state != AssaultParty.CRAWLING)
+        while(this.thieves.peek() != thief || this.state != SharedAssaultParty.CRAWLING)
         {
             this.wait();
             

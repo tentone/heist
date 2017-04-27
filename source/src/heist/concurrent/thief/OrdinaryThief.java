@@ -1,12 +1,12 @@
 package heist.concurrent.thief;
 
-import heist.concurrent.shared.AssaultParty;
+import heist.concurrent.shared.SharedAssaultParty;
 import heist.Configuration;
 import heist.GeneralRepository;
 import heist.Logger;
-import heist.concurrent.shared.Museum;
-import heist.concurrent.shared.ControlCollectionSite;
-import heist.concurrent.shared.ConcentrationSite;
+import heist.concurrent.shared.SharedMuseum;
+import heist.concurrent.shared.SharedControlCollectionSite;
+import heist.concurrent.shared.SharedConcentrationSite;
 
 /**
  * OrdinaryThief represents a thief active entity.
@@ -41,17 +41,17 @@ public class OrdinaryThief extends Thread
     /**
      * Concentration site
      */
-    private final ConcentrationSite concentration;
+    private final SharedConcentrationSite concentration;
     
     /**
      * Collection site
      */
-    private final ControlCollectionSite collection;
+    private final SharedControlCollectionSite collection;
     
     /**
      * Museum
      */
-    private final Museum museum;
+    private final SharedMuseum museum;
     
     /**
      * Logger
@@ -62,7 +62,7 @@ public class OrdinaryThief extends Thread
      * Current AssaultParty attributed to this thief.
      * Null if the thief is not in an AssaultParty.
      */
-    private AssaultParty party;
+    private SharedAssaultParty party;
     
     /**
      * Thief unique id.
@@ -139,7 +139,7 @@ public class OrdinaryThief extends Thread
      * Get the OrdinaryThief party
      * @return Party assigned to the OrdinaryThief.
      */
-    public AssaultParty getParty()
+    public SharedAssaultParty getParty()
     {
         return this.party;
     }
@@ -148,7 +148,7 @@ public class OrdinaryThief extends Thread
      * Set assault party.
      * @param party Assault party.
      */
-    public void setParty(AssaultParty party)
+    public void setParty(SharedAssaultParty party)
     {
         this.party = party;
     }
