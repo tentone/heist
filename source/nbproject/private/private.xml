@@ -4,6 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/concurrent/shared/SharedAssaultParty.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/communication/SocketServer.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/communication/Message.java</file>
+            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/communication/ClientHandler.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/concurrent/thief/OrdinaryThief.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/communication/SocketClient.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/ConfigurationDistributed.java</file>
@@ -12,10 +15,8 @@
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/concurrent/SharedLogger.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/concurrent/HeistConcurrent.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/server/AssaultPartyServer.java</file>
-            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/server/ClientHandler.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/server/ConcentrationSiteServer.java</file>
             <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/interfaces/Logger.java</file>
-            <file>file:/C:/Users/Jose%20Manuel/Documents/Git/heist/source/src/heist/distributed/server/SocketServer.java</file>
         </group>
     </open-files>
 </project-private>

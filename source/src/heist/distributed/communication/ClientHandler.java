@@ -1,4 +1,4 @@
-package heist.distributed.server;
+package heist.distributed.communication;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

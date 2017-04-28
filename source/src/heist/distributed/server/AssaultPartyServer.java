@@ -1,5 +1,7 @@
 package heist.distributed.server;
 
+import heist.distributed.communication.ClientHandler;
+import heist.distributed.communication.SocketServer;
 import heist.concurrent.shared.SharedAssaultParty;
 import java.io.IOException;
 import java.net.Socket;
