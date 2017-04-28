@@ -42,7 +42,7 @@ public class GeneralRepository
     /**
      * Logger object used to log the state of this GeneralRepository
      */
-    private final Logger logger;
+    private final SharedLogger logger;
     
     /**
      * Configuration used for the simulation.
@@ -56,7 +56,7 @@ public class GeneralRepository
     public GeneralRepository(Configuration configuration)
     {
         this.configuration = configuration;
-        this.logger = new Logger(this, configuration);
+        this.logger = new SharedLogger(this, configuration);
         
         this.museum = new SharedMuseum(this.configuration);
         this.concentration = new SharedConcentrationSite(this.configuration);
@@ -75,7 +75,7 @@ public class GeneralRepository
      * Return logger object.
      * @return Logger.
      */
-    public Logger getLogger()
+    public SharedLogger getLogger()
     {
         return this.logger;
     }

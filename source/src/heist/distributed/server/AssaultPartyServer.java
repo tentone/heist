@@ -30,12 +30,17 @@ public class AssaultPartyServer extends SocketServer
         }
     }
     
-    class AssaultPartyClientHandler extends Thread
+    class AssaultPartyClientHandler extends ClientHandler
     {
-        public AssaultPartyClientHandler(Socket socket)
+        public AssaultPartyClientHandler(Socket socket) throws IOException
         {
-            
+            super(socket);          
         }
-        //TODO <ADD CODE HERE>
+        
+        @Override
+        public void run()
+        {
+            //TODO <ADD CODE HERE> 
+        }
     }
 }

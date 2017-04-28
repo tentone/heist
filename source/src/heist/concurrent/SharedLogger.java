@@ -7,6 +7,7 @@ import heist.queue.iterator.Iterator;
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.concurrent.thief.MasterThief;
 import heist.concurrent.thief.OrdinaryThief;
+import heist.interfaces.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -26,7 +27,7 @@ import java.io.PrintStream;
  * Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30
  * @author Jose Manuel
  */
-public class Logger
+public class SharedLogger implements Logger
 {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -59,7 +60,7 @@ public class Logger
      * @param repository GeneralRepository to be logged.
      * @param configuration Configuration
      */
-    public Logger(GeneralRepository repository, Configuration configuration)
+    public SharedLogger(GeneralRepository repository, Configuration configuration)
     {
         this.repository = repository;
         this.configuration = configuration;

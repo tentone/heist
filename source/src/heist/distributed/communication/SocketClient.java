@@ -5,11 +5,6 @@ import java.net.*;
 
 public class SocketClient
 {
-    /*public static void main(String argv[]) throws Exception
-    {
-        SocketClient client = new SocketClient("127.0.0.1", 6789);
-    */
-    
     private final String address;
     private final int port;
     
