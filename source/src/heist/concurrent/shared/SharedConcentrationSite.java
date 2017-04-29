@@ -3,7 +3,8 @@ package heist.concurrent.shared;
 import heist.Configuration;
 import heist.queue.ArrayQueue;
 import heist.queue.Queue;
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.OrdinaryThief;
+import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 
 /**
@@ -21,7 +22,7 @@ public class SharedConcentrationSite implements ConcentrationSite
     /**
      * List of parties waiting to be filled with thieves.
      */
-    private final Queue<SharedAssaultParty> waitingParties;
+    private final Queue<AssaultParty> waitingParties;
     
     /**
      * ConcentrationSite constructor.
@@ -41,7 +42,7 @@ public class SharedConcentrationSite implements ConcentrationSite
      * @throws java.lang.InterruptedException Exception
      */
     @Override
-    public synchronized void fillAssaultParty(SharedAssaultParty party) throws InterruptedException
+    public synchronized void fillAssaultParty(AssaultParty party) throws InterruptedException
     {
         this.waitingParties.push(party);
         this.notifyAll();
@@ -65,7 +66,7 @@ public class SharedConcentrationSite implements ConcentrationSite
     {
         this.waitingThieves.push(thief);
 
-        SharedAssaultParty party = null;
+        AssaultParty party = null;
         while(party == null)
         {
             party = this.waitingParties.peek();

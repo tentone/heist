@@ -1,11 +1,12 @@
 package heist.concurrent;
 
+import heist.concurrent.shared.SharedLogger;
 import heist.Configuration;
 import heist.concurrent.shared.SharedMuseum;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;
-import heist.concurrent.thief.MasterThief;
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.MasterThief;
+import heist.thief.OrdinaryThief;
 
 /**
  * The general repository stores all the components of the system. It is a shared memory region that is accessed by every active entity in the system.
@@ -56,7 +57,8 @@ public class GeneralRepository
     public GeneralRepository(Configuration configuration)
     {
         this.configuration = configuration;
-        this.logger = new SharedLogger(this, configuration);
+        
+        this.logger = new SharedLogger(this, this.configuration);
         
         this.museum = new SharedMuseum(this.configuration);
         this.concentration = new SharedConcentrationSite(this.configuration);
@@ -65,10 +67,10 @@ public class GeneralRepository
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)
         {
-            this.thieves[i] = new OrdinaryThief(i, this, this.configuration);
+            this.thieves[i] = new OrdinaryThief(i, this.controlCollection, this.concentration, this.museum, this.logger, this.configuration);
         }
         
-        this.master = new MasterThief(this, this.configuration);
+        this.master = new MasterThief(this.controlCollection, this.concentration, this.logger, this.configuration);
     }
     
     /**

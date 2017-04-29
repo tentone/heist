@@ -1,12 +1,13 @@
 package heist.concurrent.shared;
 
 import heist.Configuration;
+import heist.interfaces.AssaultParty;
 import heist.queue.ArrayQueue;
 import heist.room.Room;
 import heist.room.RoomStatus;
 import heist.queue.Queue;
-import heist.concurrent.thief.MasterThief;
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.MasterThief;
+import heist.thief.OrdinaryThief;
 import heist.interfaces.ControlCollectionSite;
 
 /**
@@ -29,7 +30,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
     /**
      * AssaultParties used for the simulation.
      */
-    private final SharedAssaultParty[] parties;
+    private final AssaultParty[] parties;
     
     /**
      * Queue for OrdinaryThieves waiting to deliver a canvas.
@@ -91,7 +92,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * These parties are used for logging.
      * @return Parties created during the simulation.
      */
-    public synchronized SharedAssaultParty[] getParties()
+    public synchronized AssaultParty[] getParties()
     {
         return this.parties;
     }
@@ -218,9 +219,9 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * @throws java.lang.InterruptedException Exception
      */
     @Override
-    public synchronized SharedAssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
+    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
     {
-        SharedAssaultParty party = null;
+        AssaultParty party = null;
         
         for(int i = 0; i < this.parties.length; i++)
         {

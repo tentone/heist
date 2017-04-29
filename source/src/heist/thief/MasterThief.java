@@ -1,11 +1,10 @@
-package heist.concurrent.thief;
+package heist.thief;
 
 import heist.room.RoomStatus;
 import heist.Configuration;
-import heist.concurrent.GeneralRepository;
-import heist.concurrent.shared.SharedAssaultParty;
-import heist.concurrent.shared.SharedControlCollectionSite;
-import heist.concurrent.shared.SharedConcentrationSite;
+import heist.interfaces.AssaultParty;
+import heist.interfaces.ConcentrationSite;
+import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
 
 /**
@@ -47,12 +46,12 @@ public class MasterThief extends Thread
     /**
      * Control and Collection Site
      */
-    private final SharedControlCollectionSite collection;
+    private final ControlCollectionSite controlCollection;
    
     /**
      * Concentration Site
      */
-    private final SharedConcentrationSite concentration;
+    private final ConcentrationSite concentration;
     
     /**
      * Logger
@@ -71,16 +70,18 @@ public class MasterThief extends Thread
 
     /**
      * MasterThief constructor
-     * @param repository GeneralRepository
+     * @param controlCollection ControlCollectionSite
+     * @param concentration ConcentrationSite
+     * @param logger Logger
      * @param configuration Simulation configuration
      */
-    public MasterThief(GeneralRepository repository, Configuration configuration)
+    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration, Logger logger, Configuration configuration)
     {
         this.state = MasterThief.PLANNING_THE_HEIST;
         
-        this.collection = repository.getControlCollectionSite();
-        this.concentration = repository.getConcentrationSite();
-        this.logger = repository.getLogger();
+        this.controlCollection = controlCollection;
+        this.concentration = concentration;
+        this.logger = logger;
         
         this.configuration = configuration;
     }
@@ -92,31 +93,7 @@ public class MasterThief extends Thread
     private void setState(int state)
     {
         this.state = state;
-        
-        if(this.state == MasterThief.WAITING_FOR_GROUP_ARRIVAL)
-        {
-            this.logger.debug("Master WAITING_FOR_GROUP_ARRIVAL");
-        }
-        else if(this.state == MasterThief.ASSEMBLING_A_GROUP)
-        {
-            this.logger.debug("Master ASSEMBLING_A_GROUP");
-        }
-        else if(this.state == MasterThief.PRESENTING_THE_REPORT)
-        {
-            this.logger.debug("Master PRESENTING_THE_REPORT");
-        }
-        else if(this.state == MasterThief.DECIDING_WHAT_TO_DO)
-        {
-            this.logger.debug("Master DECIDING_WHAT_TO_DO");
-        } 
-        else if(this.state == MasterThief.PLANNING_THE_HEIST)
-        {
-            this.logger.debug("Master PLANNING_THE_HEIST");
-        }
-        else
-        {
-            this.logger.debug("Master change state " + this.state);
-        }
+        //this.logger.debug("Master change state " + this.state);
     }
     
     /**
@@ -139,15 +116,15 @@ public class MasterThief extends Thread
     }
     
     /**
-     * Analyse the situation and take a decision.
+     * analyst the situation and take a decision.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
      * @throws java.lang.InterruptedException Exception
      */
-    private void appraiseSit() throws InterruptedException
+    private void appraiseSit() throws Exception
     {
-        this.setState(this.collection.appraiseSit());
+        this.setState(this.controlCollection.appraiseSit());
         
-        this.logger.debug("Master appraiseSit");
+        //this.logger.debug("Master appraiseSit");
         this.logger.log();
     }
     
@@ -156,13 +133,13 @@ public class MasterThief extends Thread
      * @return AssaultParty assembled.
      * @throws java.lang.InterruptedException Exception
      */
-    private SharedAssaultParty prepareAssaultParty() throws InterruptedException
+    private AssaultParty prepareAssaultParty() throws Exception
     {
-        RoomStatus room = this.collection.getRoomToAttack();
-        SharedAssaultParty party = this.collection.prepareNewParty(room);
+        RoomStatus room = this.controlCollection.getRoomToAttack();
+        AssaultParty party = this.controlCollection.prepareNewParty(room);
         this.concentration.fillAssaultParty(party);
         
-        this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetDistance:" + party.getTargetDistance() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
+        //this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
         this.logger.log();
         
         return party;
@@ -174,12 +151,12 @@ public class MasterThief extends Thread
      * @param party Party to send.
      * @throws java.lang.InterruptedException Exception
      */
-    private void sendAssaultParty(SharedAssaultParty party) throws InterruptedException
+    private void sendAssaultParty(AssaultParty party) throws Exception
     {
         party.sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
-        this.logger.debug("Master sendAssaultParty " + party.getID());
+        //this.logger.debug("Master sendAssaultParty " + party.getID());
         this.logger.log();
     }
     
@@ -187,11 +164,11 @@ public class MasterThief extends Thread
      * The MasterThief waits in the CollectionSite until is awaken by an incoming OrdinaryThief.
      * @throws java.lang.InterruptedException Exception
      */
-    private void takeARest() throws InterruptedException
+    private void takeARest() throws Exception
     {
-        this.logger.debug("Master takeARest");
+        //this.logger.debug("Master takeARest");
         
-        this.collection.takeARest();
+        this.controlCollection.takeARest();
         
         this.logger.log();
     }
@@ -201,12 +178,12 @@ public class MasterThief extends Thread
      * Add canvas to the correspondent RoomStatus, if empty handed mark the room as clean.
      * @throws java.lang.InterruptedException Exception
      */
-    private void collectCanvas() throws InterruptedException
+    private void collectCanvas() throws Exception
     {
-        this.collection.collectCanvas();
+        this.controlCollection.collectCanvas();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
-        this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
+        //this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
         this.logger.log();
     }
     
@@ -214,11 +191,11 @@ public class MasterThief extends Thread
      * Sum up the heist results, prepare a log of the heist and end the hole simulation.
      * Stop all thieves.
      */
-    private void sumUpResults()
+    private void sumUpResults() throws Exception
     {
-        this.collection.sumUpResults();
+        this.controlCollection.sumUpResults();
         
-        this.logger.debug(this.collection.totalPaintingsStolen() + " paintings were stolen!");
+        //this.logger.debug(this.collection.totalPaintingsStolen() + " paintings were stolen!");
         this.logger.log();
         this.logger.end();
     }
@@ -229,7 +206,7 @@ public class MasterThief extends Thread
     @Override
     public void run()
     {
-        this.logger.debug("Master started");
+        //this.logger.debug("Master started");
         
         try
         {
@@ -254,11 +231,11 @@ public class MasterThief extends Thread
         }
         catch(Exception e)
         {
-            this.logger.debug("Master error");
+            //this.logger.debug("Master error");
             e.printStackTrace();
         }
 
         
-        this.logger.debug("Master terminated");
+        //this.logger.debug("Master terminated");
     }
 }

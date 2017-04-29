@@ -1,6 +1,7 @@
 package heist;
 
 import heist.utils.Range;
+import java.io.Serializable;
 
 /**
  * This class is used to store the simulation configuration.
@@ -8,8 +9,9 @@ import heist.utils.Range;
  * This configuration can be distributed to all elements in a distributed implementation.
  * @author Jose Manuel
  */
-public class Configuration
+public class Configuration implements Serializable
 {   
+    
     /**
      * Number of thieves to be created for this simulation.
      */

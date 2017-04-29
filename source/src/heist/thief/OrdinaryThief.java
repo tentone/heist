@@ -1,12 +1,11 @@
-package heist.concurrent.thief;
+package heist.thief;
 
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.Configuration;
-import heist.concurrent.GeneralRepository;
-import heist.concurrent.shared.SharedMuseum;
-import heist.concurrent.shared.SharedControlCollectionSite;
-import heist.concurrent.shared.SharedConcentrationSite;
+import heist.interfaces.ConcentrationSite;
+import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
+import heist.interfaces.Museum;
 
 /**
  * OrdinaryThief represents a thief active entity.
@@ -41,17 +40,17 @@ public class OrdinaryThief extends Thread
     /**
      * Concentration site
      */
-    private final SharedConcentrationSite concentration;
+    private final ConcentrationSite concentration;
     
     /**
      * Collection site
      */
-    private final SharedControlCollectionSite collection;
+    private final ControlCollectionSite controlCollection;
     
     /**
      * Museum
      */
-    private final SharedMuseum museum;
+    private final Museum museum;
     
     /**
      * Logger
@@ -92,18 +91,21 @@ public class OrdinaryThief extends Thread
     /**
      * OrdinaryThief constructor.
      * @param id Thief id.
-     * @param repository General repository.
-     * @param configuration Simulation configuration.
+     * @param controlCollection ControlCollectionSite
+     * @param concentration ConcentrationSite
+     * @param museum Museum
+     * @param logger Logger
+     * @param configuration Simulation configuration
      */
-    public OrdinaryThief(int id, GeneralRepository repository, Configuration configuration)
+    public OrdinaryThief(int id, ControlCollectionSite controlCollection, ConcentrationSite concentration, Museum museum, Logger logger, Configuration configuration)
     {
         this.id = id;
         this.state = OrdinaryThief.OUTSIDE;
         
-        this.collection = repository.getControlCollectionSite();
-        this.concentration = repository.getConcentrationSite();
-        this.museum = repository.getMuseum();
-        this.logger = repository.getLogger();
+        this.controlCollection = controlCollection;
+        this.concentration = concentration;
+        this.museum = museum;
+        this.logger = logger;
         
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         
@@ -231,19 +233,19 @@ public class OrdinaryThief extends Thread
     {
         this.state = state;
         
-        this.logger.debug("Thief " + this.id + " change state " + this.state);
+        //this.logger.debug("Thief " + this.id + " change state " + this.state);
     }
     
     /**
      * Check if the thief is still needed.
      * @throws java.lang.InterruptedException Exception   
      */
-    private boolean amINeeded() throws InterruptedException
+    private boolean amINeeded() throws Exception
     {
-        this.logger.debug("Thief " + this.id + " amINeeded");
+        //this.logger.debug("Thief " + this.id + " amINeeded");
         this.logger.log();
         
-        return this.collection.amINeeded(this);
+        return this.controlCollection.amINeeded(this);
     }
     
     /**
@@ -253,11 +255,11 @@ public class OrdinaryThief extends Thread
      */
     private void prepareExecution() throws Exception
     {
-        this.logger.debug("Thief " + this.id + " entered the concentration site");
+        //this.logger.debug("Thief " + this.id + " entered the concentration site");
         
         this.concentration.prepareExcursion(this);
         
-        this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
+        //this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
         this.logger.log();
     }
     
@@ -272,34 +274,34 @@ public class OrdinaryThief extends Thread
         
         while(this.party.crawlIn(this))
         {
-            this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
+            //this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
             this.logger.log();
         }
         
-        this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
+        //this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
         this.logger.log();
     }
     
     /**
      * Try to collect a canvas from the room and reverse direction after.
      */
-    private void rollACanvas()
+    private void rollACanvas() throws Exception
     {
         this.setState(OrdinaryThief.AT_A_ROOM);
         this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
 
-        this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
+        //this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
         this.logger.log();
     }
     
     /**
      * Change state to crawling outwards.
      */
-    private void reverseDirection() throws InterruptedException
+    private void reverseDirection() throws Exception
     {      
         this.party.reverseDirection();
         
-        this.logger.debug("Thief " + this.id + " reverse");
+        //this.logger.debug("Thief " + this.id + " reverse");
         this.logger.log();
     }
     
@@ -307,32 +309,32 @@ public class OrdinaryThief extends Thread
      * Update position crawling out of the museum.
      * @throws java.lang.InterruptedException Exception
      */
-    private void crawlOut() throws InterruptedException
+    private void crawlOut() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         this.logger.log();
         
         while(this.party.crawlOut(this))
         {
-            this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
+            //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
             this.logger.log();
         }
         
-        this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
+        //this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
         this.logger.log();
     }
     
     /**
      * Hand the canvas (if there is one) to the master thief. Waits inside handACanvas until the whole Party has returned.
      */
-    private void handACanvas() throws InterruptedException
+    private void handACanvas() throws Exception
     {
         this.setState(OrdinaryThief.OUTSIDE);
         
-        this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
+        //this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
         this.logger.log();
         
-        this.collection.handACanvas(this);
+        this.controlCollection.handACanvas(this);
         this.leaveParty();
         
         this.logger.log();
@@ -344,7 +346,7 @@ public class OrdinaryThief extends Thread
     @Override
     public void run()
     {
-        this.logger.debug("Thief " + this.id + " started (MD:" + this.maximumDisplacement + ")");
+        //this.logger.debug("Thief " + this.id + " started (MD:" + this.maximumDisplacement + ")");
         
         try
         {
@@ -364,10 +366,28 @@ public class OrdinaryThief extends Thread
         }
         catch(Exception e)
         {
-            this.logger.debug("Thief " + this.id + " error");
+            //this.logger.debug("Thief " + this.id + " error");
             e.printStackTrace();
         }
         
-        this.logger.debug("Thief " + this.id + " terminated");
+        //this.logger.debug("Thief " + this.id + " terminated");
     }
+
+    /**
+     * Compares two OrdinaryThieves.
+     * @param object Object to be compared.
+     * @return True if the thieves have the same id.
+     */
+    @Override
+    public boolean equals(Object object)
+    {
+        if(object instanceof OrdinaryThief)
+        {
+            OrdinaryThief thief = (OrdinaryThief) object;
+            
+            return thief.getID() == this.id;
+        }
+        return false;
+    }
+    
 }

@@ -1,10 +1,18 @@
 package heist.interfaces;
 
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 
 public interface ControlCollectionSite
 {
+    /**
+     * Called by the OrdinaryThieves to check if they are still needed.
+     * @param thief Thief checking if he is needed.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
+     * @return True if the thief is still needed, false otherwise.
+     */
+    public boolean amINeeded(OrdinaryThief thief) throws Exception;
+    
     /**
      * Called by the MasterThief to get his next state
      * @return MasterThief next state.
@@ -34,6 +42,14 @@ public interface ControlCollectionSite
     public void takeARest() throws Exception;
     
     /**
+     * Called by the OrdinaryThief to be added to the collection site and wake up the MasterThief to collect its canvas.
+     * The OrdinaryThief enters the queue wakes up the MasterThief and waits until is waken up.
+     * @param thief Thief to be added.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
+     */
+    public void handACanvas(OrdinaryThief thief) throws Exception;
+    
+    /**
      * Called by the MasterThief to collect canvas from OrdinaryThieves waiting to deliver a canvas.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
@@ -44,14 +60,4 @@ public interface ControlCollectionSite
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
     public void sumUpResults() throws Exception;
-    
-    /**
-     * Called by the OrdinaryThieves to check if they are still needed.
-     * @param thief Thief checking if he is needed.
-     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
-     * @return True if the thief is still needed, false otherwise.
-     */
-    public boolean amINeeded(OrdinaryThief thief) throws Exception;
-    
-    
 }

@@ -16,27 +16,20 @@ public class ConcentrationSiteServer extends SocketServer
     }
     
     @Override
-    public void run()
+    public void onClientConnection(Socket socket) throws IOException
     {
-        try
-        {
-            while(true)
-            {
-                new ConcentrationSiteClientHandler(this.serverSocket.accept()).start();
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        new ConcentrationSiteClientHandler(socket, this.concentration).start();
     }
     
     class ConcentrationSiteClientHandler extends ClientHandler
     {
-        public ConcentrationSiteClientHandler(Socket socket) throws IOException
+        private SharedConcentrationSite concentration;
+        
+        public ConcentrationSiteClientHandler(Socket socket, SharedConcentrationSite concentration) throws IOException
         {
-            super(socket);          
+            super(socket);
+            
+            this.concentration = concentration;
         }
         
         @Override

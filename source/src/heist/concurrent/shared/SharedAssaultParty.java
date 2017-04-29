@@ -2,7 +2,7 @@ package heist.concurrent.shared;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.OrdinaryThief;
 import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
@@ -10,30 +10,12 @@ import heist.queue.Queue;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
- * Its used as a synchronisation point between thieves.
+ * Its used as a synchronization point between thieves.
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
 public class SharedAssaultParty implements AssaultParty
 {
-    /**
-     * Waiting state.
-     * When the party is in this state the OrdinaryThieves are joining or waiting for the MasterThieve to send them.
-     */
-    public static final int WAITING = 1000;
-    
-    /**
-     * Crawling state.
-     * When the party is in this state the OrdinaryThieves are crawling, or inside the room.
-     */
-    public static final int CRAWLING = 2000;
-    
-    /**
-     * Dismissed state.
-     * The party is set to this state after the last OrdinaryThieve delivers the canvas (or notifies the MasterThieve that he arrived empty handed).
-     */
-    public static final int DISMISSED = 3000;
-    
     /**
      * AssaultParty id counter.
      */
@@ -112,11 +94,25 @@ public class SharedAssaultParty implements AssaultParty
     
     /**
      * Get assault party target room.
-     * @return Target room.
+     * @return Target room ID, if no room is assigned to the party returns -1.
      */
     public synchronized int getTarget()
     {
+        if(this.room == null)
+        {
+            return -1;
+        }
+        
         return this.room.getID();
+    }
+    
+    /**
+     * Check if the party is full.
+     * @return True if the party element queue has the same size as the party size.
+     */
+    public synchronized boolean partyFull()
+    {
+        return this.partySize == this.thieves.size();
     }
     
     /**
@@ -130,12 +126,21 @@ public class SharedAssaultParty implements AssaultParty
     }
     
     /**
-     * Get AssaultParty OrdinaryThieves iterator
-     * @return Iterator.
+     * Get thieves in this party.
+     * @return Array of thieves.
      */
-    public synchronized Iterator<OrdinaryThief> getThieves()
+    @Override
+    public synchronized OrdinaryThief[] getThieves()
     {
-        return this.thieves.iterator();
+        OrdinaryThief[] thieves = new OrdinaryThief[this.thieves.size()];
+        Iterator<OrdinaryThief> it = this.thieves.iterator();
+        
+        for(int i = 0; i < thieves.length; i++)
+        {
+            thieves[i] = it.next();
+        }
+        
+        return thieves;
     }
     
     /**
@@ -149,7 +154,6 @@ public class SharedAssaultParty implements AssaultParty
 
     /**
      * Prepare party, set state to WAITING and set target room.
-     * 
      * @param room TargetRoom.
      */
     public void prepareParty(RoomStatus room)
@@ -201,15 +205,6 @@ public class SharedAssaultParty implements AssaultParty
     {
         this.state = SharedAssaultParty.CRAWLING;
         this.notifyAll();
-    }
-    
-    /**
-     * Check if the party is full.
-     * @return True if the party element queue has the same size as the party size.
-     */
-    public synchronized boolean partyFull()
-    {
-        return this.partySize == this.thieves.size();
     }
     
     /**
@@ -418,6 +413,23 @@ public class SharedAssaultParty implements AssaultParty
         this.notifyAll();
         
         return thief.getPosition() != 0;
+    }
+    
+    /**
+     * Compares two AssaultParties
+     * @param object Object to be compared.
+     * @return True if the assault parties have the same id.
+     */
+    @Override
+    public boolean equals(Object object)
+    {
+        if(object instanceof SharedAssaultParty)
+        {
+            SharedAssaultParty party = (SharedAssaultParty) object;
+            
+            return party.id == this.id;
+        }
+        return false;
     }
     
     /**

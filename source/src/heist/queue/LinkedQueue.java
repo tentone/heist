@@ -135,7 +135,7 @@ public class LinkedQueue<T> implements Queue<T>
         Iterator<T> it = this.iterator();
         while(it.hasNext())
         {
-            if(it.next() == e)
+            if(it.next().equals(e))
             {
                 return true;
             }

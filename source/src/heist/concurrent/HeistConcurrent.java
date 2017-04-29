@@ -1,7 +1,7 @@
 package heist.concurrent;
 
 import heist.Configuration;
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.OrdinaryThief;
 
 /**
  * Concurrent version of the Heist.

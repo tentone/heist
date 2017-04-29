@@ -118,9 +118,9 @@ public class ArrayQueue<T> implements Queue<T>
     @Override
     public boolean contains(T e)
     {
-        for(int i = 0; i < this.array.length; i++)
+        for(int i = 0; i < this.size; i++)
         {
-            if(this.array[i] == e)
+            if(this.array[i].equals(e))
             {
                 return true;
             }

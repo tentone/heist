@@ -1,12 +1,13 @@
-package heist.concurrent;
+package heist.concurrent.shared;
 
 import heist.Configuration;
+import heist.concurrent.GeneralRepository;
+import heist.interfaces.AssaultParty;
 import heist.queue.LinkedQueue;
 import heist.room.Room;
 import heist.queue.iterator.Iterator;
-import heist.concurrent.shared.SharedAssaultParty;
-import heist.concurrent.thief.MasterThief;
-import heist.concurrent.thief.OrdinaryThief;
+import heist.thief.MasterThief;
+import heist.thief.OrdinaryThief;
 import heist.interfaces.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -101,7 +102,7 @@ public class SharedLogger implements Logger
         {
             MasterThief master = this.repository.getMasterThief();
             OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
-            SharedAssaultParty[] parties = this.repository.getControlCollectionSite().getParties();
+            AssaultParty[] parties = this.repository.getControlCollectionSite().getParties();
             
             if(this.configuration.logHeader)
             {
@@ -183,17 +184,18 @@ public class SharedLogger implements Logger
                 {
                     out.printf("%2d   ", parties[i].getTarget());
 
-                    Iterator<OrdinaryThief> it = parties[i].getThieves();
-                    for(int j = 0; j < 3; j++)
+                    OrdinaryThief[] partyThieves = parties[i].getThieves();
+                    
+                    for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        OrdinaryThief thief = it.next();
-                        if(thief == null)
+                        if(j < partyThieves.length)
                         {
-                            out.print("-- --  --  ");
+                            OrdinaryThief thief = partyThieves[j];
+                            out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                         else
                         {
-                            out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                            out.print("-- --  --  "); 
                         }
                     }
                 }
