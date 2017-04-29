@@ -1,6 +1,7 @@
 package heist.distributed.communication;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -20,15 +21,12 @@ public abstract class ClientHandler extends Thread
     public ClientHandler(Socket socket) throws IOException
     {
         this.socket = socket;
-        
-        System.out.println("Creating object input stream");
-        this.in = new ObjectInputStream(this.socket.getInputStream());
-        
-        System.out.println("Creating output stream");
+
         OutputStream output = this.socket.getOutputStream();
-        
-        System.out.println("Creating object output stream");
         this.out = new ObjectOutputStream(output);
+
+        InputStream input = this.socket.getInputStream();;
+        this.in = new ObjectInputStream(input);
     }
     
     public abstract void processMessage(Message message) throws Exception;
@@ -49,12 +47,8 @@ public abstract class ClientHandler extends Thread
     
     public Message getMessage() throws IOException, ClassNotFoundException
     {
-        System.out.println("Getting message");
-        
         Object object = this.in.readObject();
-        
-        System.out.println("Readed message");
-        
+
         if(object instanceof Message)
         {
             return (Message) object;

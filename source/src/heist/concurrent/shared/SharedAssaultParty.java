@@ -74,6 +74,7 @@ public class SharedAssaultParty implements AssaultParty
      * Get party id
      * @return Party ID
      */
+    @Override
     public synchronized int getID()
     {
         return this.id;
@@ -83,6 +84,7 @@ public class SharedAssaultParty implements AssaultParty
      * Get party state.
      * @return Party state.
      */
+    @Override
     public synchronized int getState()
     {
         return this.state;
@@ -92,6 +94,7 @@ public class SharedAssaultParty implements AssaultParty
      * Get assault party target room.
      * @return Target room ID, if no room is assigned to the party returns -1.
      */
+    @Override
     public synchronized int getTarget()
     {
         if(this.room == null)
@@ -106,6 +109,7 @@ public class SharedAssaultParty implements AssaultParty
      * Check if the party is full.
      * @return True if the party element queue has the same size as the party size.
      */
+    @Override
     public synchronized boolean partyFull()
     {
         return this.partySize == this.thieves.size();
@@ -152,6 +156,7 @@ public class SharedAssaultParty implements AssaultParty
      * Prepare party, set state to WAITING and set target room.
      * @param room TargetRoom.
      */
+    @Override
     public void prepareParty(RoomStatus room)
     {
         this.room = room;
@@ -163,6 +168,7 @@ public class SharedAssaultParty implements AssaultParty
      * @param thief Thief to be added to the party.
      * @throws java.lang.Exception Throws exception if party is already full.
      */
+    @Override
     public synchronized void addThief(OrdinaryThief thief) throws Exception
     {
         if(!this.partyFull())

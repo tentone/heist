@@ -10,8 +10,6 @@ public class TestClientHandler extends ClientHandler
     public TestClientHandler(Socket socket) throws IOException
     {
         super(socket);
-    
-        System.out.println("Created client handler");
     }
 
     @Override
