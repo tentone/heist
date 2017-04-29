@@ -1,13 +1,19 @@
 package heist.utils;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Range is used to represent a numeric integer range.
  */
-public class Range
+public class Range implements Serializable
 {
-    private static Random random = new Random();
+    private static final long serialVersionUID = 6384912740L; 
+    
+    /**
+     * Random generator used to generate number in range.
+     */
+    private static final Random random = new Random();
     
     /**
      * Min value in range.

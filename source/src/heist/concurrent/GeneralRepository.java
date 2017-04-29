@@ -2,9 +2,11 @@ package heist.concurrent;
 
 import heist.concurrent.shared.SharedLogger;
 import heist.Configuration;
+import heist.concurrent.shared.SharedAssaultParty;
 import heist.concurrent.shared.SharedMuseum;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;
+import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
@@ -35,6 +37,11 @@ public class GeneralRepository
     private final ConcentrationSite concentration;
     
     /**
+     * AssaultParties to be used in the simulation.
+     */
+    private final AssaultParty[] parties;
+    
+    /**
      * MasterThieve that controls and assigns OrdinaryThieves to AssaultParties.
      */
     private final MasterThief master;
@@ -63,10 +70,16 @@ public class GeneralRepository
         this.configuration = configuration;
         
         this.logger = new SharedLogger(this, this.configuration);
+
+        this.parties = new AssaultParty[configuration.numberParties];
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            this.parties[i] = new SharedAssaultParty(i, configuration);
+        }
         
         this.museum = new SharedMuseum(this.configuration);
         this.concentration = new SharedConcentrationSite(this.configuration);
-        this.controlCollection = new SharedControlCollectionSite(this.configuration, this.museum);
+        this.controlCollection = new SharedControlCollectionSite(this.parties, this.museum, this.configuration);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)

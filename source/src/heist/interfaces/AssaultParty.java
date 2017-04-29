@@ -67,6 +67,14 @@ public interface AssaultParty
     public void addThief(OrdinaryThief thief) throws Exception;
     
     /**
+     * Remove thief from party.
+     * After all thieves are removed from the party the party is dismissed.
+     * @param id ID of the thief to be removed
+     * @throws java.lang.Exception Throws exception if party is already full.
+     */
+    public void removeThief(int id) throws Exception;
+            
+    /**
      * Called by the MasterThief to send this party to the museum.
      * Party can start crawling after this method was called.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.

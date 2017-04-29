@@ -1,5 +1,6 @@
 package heist.distributed.communication;
 
+import heist.room.RoomStatus;
 import java.io.Serializable;
 
 /**
@@ -13,20 +14,22 @@ public class Message implements Serializable
     public static int OK = 0;
     public static int ERROR = 1;
 
-    public int status; 
+    public int status;
     public int type;
     public String data;
+    public RoomStatus room;
     
     public Message(int type, String data)
     {
         this.status = Message.OK;
         this.type = type;
         this.data = data;
+        this.room = new RoomStatus(2, 4);
     }
     
     @Override
     public String toString()
     {
-        return "Status:" + this.status + " Type:" + this.type + " Data:" + this.data;
+        return "Status:" + this.status + " Type:" + this.type + " Data:" + this.data + " RoomID" + this.room.getID() + " RoomDistance:" + this.room.getDistance();
     }
 }

@@ -1,11 +1,15 @@
 package heist.utils;
 
+import java.io.Serializable;
+
 /**
  * Address class is used to store an address and respective port for a socket connection.
  * @author Tentone
  */
-public class Address
+public class Address implements Serializable
 {
+    private static final long serialVersionUID = 9023789543L;
+    
     /**
      * Server address.
      */

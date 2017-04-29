@@ -71,4 +71,9 @@ public class AssaultPartyClient implements AssaultParty
         return false;
     }
 
+    @Override
+    public void removeThief(int id) throws Exception
+    {
+        
+    }
 }

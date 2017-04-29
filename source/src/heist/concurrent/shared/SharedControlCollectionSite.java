@@ -55,7 +55,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * @param configuration Simulation configuration
      * @param museum Museum
      */
-    public SharedControlCollectionSite(Configuration configuration, Museum museum)
+    public SharedControlCollectionSite(AssaultParty[] parties, Museum museum, Configuration configuration)
     {   
         this.configuration = configuration;
 
@@ -67,11 +67,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
             this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
         }
         
-        this.parties = new SharedAssaultParty[configuration.numberParties];
-        for(int i = 0; i < this.parties.length; i++)
-        {
-            this.parties[i] = new SharedAssaultParty(i, configuration);
-        }
+        this.parties = parties;
         
         this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
         this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
@@ -327,7 +323,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
         if(!this.canvasDeliverQueue.isEmpty())
         {
             OrdinaryThief thief = this.canvasDeliverQueue.pop();
-            SharedAssaultParty party = thief.getParty();
+            AssaultParty party = thief.getParty();
             
             try
             {

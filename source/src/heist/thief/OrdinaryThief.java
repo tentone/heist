@@ -2,6 +2,7 @@ package heist.thief;
 
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.Configuration;
+import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
@@ -61,7 +62,7 @@ public class OrdinaryThief extends Thread
      * Current AssaultParty attributed to this thief.
      * Null if the thief is not in an AssaultParty.
      */
-    private SharedAssaultParty party;
+    private AssaultParty party;
     
     /**
      * Thief unique id.
@@ -164,7 +165,7 @@ public class OrdinaryThief extends Thread
      * Get the OrdinaryThief party
      * @return Party assigned to the OrdinaryThief.
      */
-    public SharedAssaultParty getParty()
+    public AssaultParty getParty()
     {
         return this.party;
     }
@@ -181,11 +182,11 @@ public class OrdinaryThief extends Thread
     /**
      * Leave party is called after handing the canvas to the MasterThief.
      */
-    public void leaveParty()
+    public void leaveParty() throws Exception
     {
         if(this.party != null)
         {
-            this.party.removeThief(this);
+            this.party.removeThief(this.id);
             this.party = null;
         }
     }
@@ -290,7 +291,7 @@ public class OrdinaryThief extends Thread
      * Updates thief position inside the museum and set thief back to sleep, until another thief wakes it up.
      * @throws java.lang.InterruptedException Exception
      */
-    private void crawlIn() throws InterruptedException
+    private void crawlIn() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_INWARDS);
         this.logger.log();

@@ -185,11 +185,20 @@ public class SharedAssaultParty implements AssaultParty
     /**
      * Remove thief from party.
      * After all thieves are removed from the party the party is dismissed.
-     * @param thief Thief to be removed from party.
+     * @param id ID of the thief to be removed
      */
-    public synchronized void removeThief(OrdinaryThief thief)
+    public synchronized void removeThief(int id)
     {
-        this.thieves.remove(thief);
+        Iterator<OrdinaryThief> it = this.thieves.iterator();
+        while(it.hasNext())
+        {
+            OrdinaryThief thief = it.next();
+            if(thief.getID() == id)
+            {
+                this.thieves.remove(thief);
+                break;
+            }
+        }
         
         if(this.thieves.isEmpty())
         {
