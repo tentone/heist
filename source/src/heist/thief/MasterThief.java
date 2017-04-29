@@ -64,7 +64,7 @@ public class MasterThief extends Thread
     private final Configuration configuration;
     
     /**
-     * Thief state.
+     * MasterThief state.
      */
     private int state;
 

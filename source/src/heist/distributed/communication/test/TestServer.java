@@ -1,11 +1,10 @@
 package heist.distributed.communication.test;
 
-import heist.distributed.communication.ClientHandler;
-import heist.distributed.communication.SocketServer;
+import heist.distributed.communication.Server;
 import java.io.IOException;
 import java.net.Socket;
 
-public class TestServer extends SocketServer
+public class TestServer extends Server
 {
     public static void main(String[] args) throws IOException
     {
@@ -14,12 +13,18 @@ public class TestServer extends SocketServer
     
     public TestServer() throws IOException
     {
-        super(8000);
+        super(6001);
+        
+        System.out.println("Started server");
     }
 
     @Override
-    public void onClientConnection(Socket socket) throws IOException
+    public void acceptConnection(Socket socket) throws IOException
     {
+        System.out.println("Incoming connection");
+
         new TestClientHandler(socket).start();
+        
+        System.out.println("Accepted connection");
     }
 }

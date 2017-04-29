@@ -2,6 +2,7 @@ package heist.distributed.server.assaultparty;
 
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.distributed.communication.ClientHandler;
+import heist.distributed.communication.Message;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -17,8 +18,8 @@ public class AssaultPartyClientHandler extends ClientHandler
     }
 
     @Override
-    public void run()
+    public void processMessage(Message message) throws Exception
     {
-        //TODO <ADD CODE HERE> 
+        //TODO <ADD CODE HERE>
     }
 }

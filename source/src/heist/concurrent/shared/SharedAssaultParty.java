@@ -15,12 +15,7 @@ import heist.queue.Queue;
  * Assault party is shared between thieves.
  */
 public class SharedAssaultParty implements AssaultParty
-{
-    /**
-     * AssaultParty id counter.
-     */
-    private static int IDCounter = 0;
-    
+{    
     /**
      * AssaultParty unique identifier.
      */
@@ -58,11 +53,12 @@ public class SharedAssaultParty implements AssaultParty
     
     /**
      * AssaultParty constructor, assault parties are constructed by the MasterThief.
+     * @param id AssaultParty id.
      * @param configuration Simulation configuration
      */
-    public SharedAssaultParty(Configuration configuration)
+    public SharedAssaultParty(int id, Configuration configuration)
     {
-        this.id = IDCounter++;
+        this.id = id;
         
         this.thieves = new ArrayQueue<>(configuration.partySize);
         

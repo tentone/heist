@@ -60,4 +60,16 @@ public interface ControlCollectionSite
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
     public void sumUpResults() throws Exception;
+    
+    /**
+     * Get AssaultParties array.
+     * @return Array of AssaultParties used.
+     */
+    public AssaultParty[] getParties();
+    
+    /**
+     * Check how many paintings were stolen.
+     * @return Number of paintings.
+     */
+    public int totalPaintingsStolen();
 }

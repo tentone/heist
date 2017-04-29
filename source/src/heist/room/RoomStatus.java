@@ -1,11 +1,15 @@
 package heist.room;
 
+import java.io.Serializable;
+
 /**
  * Class to represent the room as the MasterThief perceives it.
  * Stores how many paintings were retrieved from a room, if the room is cleared and if there is an AssaultParty currently attacking the room.
  */
-public class RoomStatus extends Room
+public class RoomStatus extends Room implements Serializable
 {
+    private static final long serialVersionUID = 79438573L;
+    
     /**
      * Flag to mark if the room has been cleared out.
      */

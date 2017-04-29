@@ -5,6 +5,10 @@ import heist.Configuration;
 import heist.concurrent.shared.SharedMuseum;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedConcentrationSite;
+import heist.interfaces.ConcentrationSite;
+import heist.interfaces.ControlCollectionSite;
+import heist.interfaces.Logger;
+import heist.interfaces.Museum;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
@@ -18,17 +22,17 @@ public class GeneralRepository
     /**
      * Museum to be assaulted by AssaultParties.
      */
-    private final SharedMuseum museum;
+    private final Museum museum;
     
     /**
      * The control and collection site.
      */
-    private final SharedControlCollectionSite controlCollection;
+    private final ControlCollectionSite controlCollection;
     
     /**
      * Concentration site where the OrdinaryThieves wait to be assigned to an AssaultParty.
      */
-    private final SharedConcentrationSite concentration;
+    private final ConcentrationSite concentration;
     
     /**
      * MasterThieve that controls and assigns OrdinaryThieves to AssaultParties.
@@ -43,7 +47,7 @@ public class GeneralRepository
     /**
      * Logger object used to log the state of this GeneralRepository
      */
-    private final SharedLogger logger;
+    private final Logger logger;
     
     /**
      * Configuration used for the simulation.
@@ -77,7 +81,7 @@ public class GeneralRepository
      * Return logger object.
      * @return Logger.
      */
-    public SharedLogger getLogger()
+    public Logger getLogger()
     {
         return this.logger;
     }
@@ -86,7 +90,7 @@ public class GeneralRepository
      * Get museum.
      * @return Museum
      */
-    public SharedMuseum getMuseum()
+    public Museum getMuseum()
     {
         return this.museum;
     }
@@ -95,7 +99,7 @@ public class GeneralRepository
      * Get collection site.
      * @return CollectionSite.
      */
-    public SharedControlCollectionSite getControlCollectionSite()
+    public ControlCollectionSite getControlCollectionSite()
     {
         return this.controlCollection;
     }
@@ -104,7 +108,7 @@ public class GeneralRepository
      * Get concentration site.
      * @return ConcentrationSite.
      */
-    public SharedConcentrationSite getConcentrationSite()
+    public ConcentrationSite getConcentrationSite()
     {
         return this.concentration;
     }

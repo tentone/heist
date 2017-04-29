@@ -9,6 +9,7 @@ import heist.queue.Queue;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.ControlCollectionSite;
+import heist.interfaces.Museum;
 
 /**
  * The ControlCollection site is where the OrdinaryThieves deliver the canvas to the MasterThief.
@@ -54,7 +55,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * @param configuration Simulation configuration
      * @param museum Museum
      */
-    public SharedControlCollectionSite(Configuration configuration, SharedMuseum museum)
+    public SharedControlCollectionSite(Configuration configuration, Museum museum)
     {   
         this.configuration = configuration;
 
@@ -69,7 +70,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
         this.parties = new SharedAssaultParty[configuration.numberParties];
         for(int i = 0; i < this.parties.length; i++)
         {
-            this.parties[i] = new SharedAssaultParty(configuration);
+            this.parties[i] = new SharedAssaultParty(i, configuration);
         }
         
         this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
@@ -88,9 +89,8 @@ public class SharedControlCollectionSite implements ControlCollectionSite
     }
     
     /**
-     * Get parties queue, contains the last parties created during this simulation.
-     * These parties are used for logging.
-     * @return Parties created during the simulation.
+     * Get AssaultParties array.
+     * @return Array of AssaultParties used.
      */
     public synchronized AssaultParty[] getParties()
     {

@@ -1,5 +1,7 @@
 package heist.interfaces;
 
+import heist.room.Room;
+
 public interface Museum
 {
     /**
@@ -9,4 +11,10 @@ public interface Museum
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
     public boolean rollACanvas(int id) throws Exception;
+    
+    /**
+     * Get room array
+     * @return Array of Room objects
+     */
+    public Room[] getRooms();
 }

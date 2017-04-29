@@ -115,6 +115,29 @@ public class OrdinaryThief extends Thread
     }
     
     /**
+     * Alternative constructor for usage as data container.
+     * @param id Thief id
+     * @param state Thief state
+     * @param position Thief position
+     * @param hasCanvas Thief hasCanvas
+     */
+    public OrdinaryThief(int id, int state, int position, boolean hasCanvas)
+    {
+        this.id = id;
+        this.state = state;
+        this.position = position;
+        this.hasCanvas = hasCanvas;
+        
+        this.maximumDisplacement = -1;
+        
+        this.controlCollection = null;
+        this.concentration = null;
+        this.museum = null;
+        this.logger = null;
+        this.party = null;
+    }
+    
+    /**
      * Get ordinary thief state
      * @return Thief state.
      */
