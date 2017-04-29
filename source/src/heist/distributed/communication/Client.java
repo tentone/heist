@@ -1,5 +1,6 @@
 package heist.distributed.communication;
 
+import heist.utils.Address;
 import java.io.*;
 import java.net.*;
 
@@ -31,6 +32,16 @@ public class Client
     }
     
     /**
+     * Client constructor.
+     * @param address Server address.
+     */
+    public Client(Address address)
+    {
+        this.address = address.address;
+        this.port = address.port;   
+    }
+    
+    /**
      * Send message to server and wait for the answer.
      * @param message Message to send.
      * @return Server answer Message.
@@ -42,10 +53,10 @@ public class Client
         
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        
         out.writeObject(message);
         
         Object received = in.readObject();
-        
         socket.close();
         
         if(received instanceof Message)

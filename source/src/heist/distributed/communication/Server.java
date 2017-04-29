@@ -4,19 +4,44 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * The server class should be used as base for every server implementation.
+ * @author Jose Manuel
+ */
 public abstract class Server extends Thread
 {
+    /**
+     * Server socket.
+     */
     public ServerSocket serverSocket;
+    
+    /**
+     * Server port.
+     */
     public int port;
     
+    /**
+     * Server constructor
+     * @param port Port used for comunication.
+     * @throws IOException 
+     */
     public Server(int port) throws IOException
     {
         this.port = port;
         this.serverSocket = new ServerSocket(this.port);
     }
-
+    
+    /**
+     * This method is used to launch new ClientHandlers.
+     * Should be implemented by all servers.
+     * @param socket
+     * @throws IOException 
+     */
     public abstract void acceptConnection(Socket socket) throws IOException;
     
+    /**
+     * Thread run method implements the server life cycle.
+     */
     @Override
     public void run()
     {

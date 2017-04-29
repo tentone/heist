@@ -1,35 +1,53 @@
 package heist.distributed.communication;
 
-import heist.room.RoomStatus;
 import java.io.Serializable;
 
 /**
  * Messages are exchanged by clients and servers.
+ * This class is used as base to implement other message structures.
  * @author Jose Manuel
  */
 public class Message implements Serializable
 {
     private static final long serialVersionUID = 7526471155622776147L;
     
-    public static int OK = 0;
-    public static int ERROR = 1;
-
-    public int status;
-    public int type;
-    public String data;
-    public RoomStatus room;
+    /**
+     * Message OK state.
+     */
+    public final static int OK = 0;
     
-    public Message(int type, String data)
+    /**
+     * Message ERROR state.
+     */
+    public final static int ERROR = 1;
+
+    /**
+     * Message state.
+     */
+    public int status;
+    
+    /**
+     * Message type.
+     */
+    public int type;
+    
+    /**
+     * Message constructor.
+     * @param type Message type.
+     */
+    public Message(int type)
     {
         this.status = Message.OK;
         this.type = type;
-        this.data = data;
-        this.room = new RoomStatus(2, 4);
     }
     
+    /**
+     * Message information for debugging.
+     * @return Message status and type as string.
+     */
     @Override
     public String toString()
     {
-        return "Status:" + this.status + " Type:" + this.type + " Data:" + this.data + " RoomID" + this.room.getID() + " RoomDistance:" + this.room.getDistance();
+        return "Status:" + this.status + " Type:" + this.type;
     }
 }

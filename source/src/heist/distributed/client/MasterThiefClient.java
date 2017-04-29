@@ -1,6 +1,6 @@
 package heist.distributed.client;
 
-import heist.Configuration;
+import heist.distributed.ConfigurationDistributed;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
@@ -10,7 +10,8 @@ public class MasterThiefClient
 {
     public static void main(String[] args)
     {
-        Configuration configuration = null;
+        ConfigurationDistributed configuration = null;
+        
         Logger logger = null;
         ConcentrationSite concentration = null;
         ControlCollectionSite controlCollection = null;

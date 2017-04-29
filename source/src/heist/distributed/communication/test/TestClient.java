@@ -9,7 +9,7 @@ public class TestClient
     {
         Client client = new Client("localhost", 6001);
         
-        Message sent = new Message(123, "cocoxixi");
+        Message sent = new Message(123);
         System.out.println("Message sent\n" + sent.toString());
         
         Message received = client.sendMessage(sent);

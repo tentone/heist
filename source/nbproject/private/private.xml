@@ -3,15 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/concurrent/GeneralRepository.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/concurrent/shared/SharedLogger.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/Configuration.java</file>
             <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/thief/MasterThief.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/concurrent/shared/SharedConcentrationSite.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/concurrent/shared/SharedAssaultParty.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/queue/ArrayQueue.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/server/assaultparty/AssaultPartyClient.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/communication/Message.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/server/configuration/ConfigurationServer.java</file>
             <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/interfaces/AssaultParty.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/interfaces/ConcentrationSite.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/queue/Queue.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/communication/Server.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/ConfigurationDistributed.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/room/Room.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/client/MasterThiefClient.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/server/assaultparty/AssaultPartyMessage.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/communication/ClientHandler.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/server/assaultparty/AssaultPartyServer.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/server/assaultparty/AssaultPartyClientHandler.java</file>
+            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/thief/OrdinaryThief.java</file>
         </group>
     </open-files>
 </project-private>

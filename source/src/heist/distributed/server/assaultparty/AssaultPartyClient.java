@@ -1,14 +1,22 @@
 package heist.distributed.server.assaultparty;
 
+import heist.distributed.communication.Client;
 import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
+import heist.utils.Address;
 
-public class AssaultPartyClient implements AssaultParty
+public class AssaultPartyClient extends Client implements AssaultParty
 {
+    public AssaultPartyClient(Address address)
+    {
+        super(address);
+    }
+    
     @Override
     public int getID()
     {
+        
         return 0;
     }
 

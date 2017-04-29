@@ -15,6 +15,8 @@
             <definitions>.\lib\nblibraries.properties</definitions>
         </libraries>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>aditional</word>
+            <word>comunication</word>
             <word>destructed</word>
         </spellchecker-wordlist>
     </configuration>

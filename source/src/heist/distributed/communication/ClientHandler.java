@@ -14,10 +14,26 @@ import java.net.Socket;
  */
 public abstract class ClientHandler extends Thread
 {
+    /**
+     * Connection socket.
+     */
     private final Socket socket;
+    
+    /**
+     * ObjectInputStream used to receive messages.
+     */
     private final ObjectInputStream in;
+    
+    /**
+     * ObjectOutputStream used to send messages.
+     */
     private final ObjectOutputStream out;
     
+    /**
+     * ClientHandler constructor, the server creates Handlers for every incoming client connection.
+     * @param socket Communication socket.
+     * @throws IOException 
+     */
     public ClientHandler(Socket socket) throws IOException
     {
         this.socket = socket;
@@ -29,14 +45,33 @@ public abstract class ClientHandler extends Thread
         this.in = new ObjectInputStream(input);
     }
     
+    /**
+     * This method should be implemented by ClientHandlers and is used to process received messages.
+     * @param message Message received.
+     * @throws Exception An exception can be thrown.
+     */
     public abstract void processMessage(Message message) throws Exception;
     
+    /**
+     * Send message to the client.
+     * @throws Exception An exception can be thrown.
+     */
+    public void sendMessage(Message message) throws Exception
+    {
+        this.out.writeObject(message);
+    }
+    
+    /**
+     * Client handler thread run.
+     */
     @Override
     public void run()
     {
         try
         {
             this.processMessage(this.getMessage());
+            
+            this.close();
         }
         catch(Exception e)
         {
@@ -45,7 +80,12 @@ public abstract class ClientHandler extends Thread
         }
     }
     
-    public Message getMessage() throws IOException, ClassNotFoundException
+    /**
+     * Get the received message.
+     * @return Message object
+     * @throws Exception An exception can be thrown.
+     */
+    private Message getMessage() throws Exception
     {
         Object object = this.in.readObject();
 
@@ -57,12 +97,11 @@ public abstract class ClientHandler extends Thread
         return null;
     }
     
-    public void sendMessage(Message message) throws IOException
-    {
-        this.out.writeObject(message);
-    }
-    
-    public void close() throws IOException
+    /**
+     * Close this handler.
+     * @throws IOException 
+     */
+    private void close() throws IOException
     {
         this.in.close();
         this.out.close();

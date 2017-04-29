@@ -54,7 +54,7 @@ public class GeneralRepository
     /**
      * Logger object used to log the state of this GeneralRepository
      */
-    private final Logger logger;
+    private final SharedLogger logger;
     
     /**
      * Configuration used for the simulation.
@@ -69,7 +69,7 @@ public class GeneralRepository
     {
         this.configuration = configuration;
         
-        this.logger = new SharedLogger(this, this.configuration);
+        this.logger = new SharedLogger(this.configuration);
 
         this.parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < this.parties.length; i++)
@@ -88,6 +88,8 @@ public class GeneralRepository
         }
         
         this.master = new MasterThief(this.controlCollection, this.concentration, this.logger, this.configuration);
+        
+        this.logger.attachElements(this.thieves, this.master, this.parties, this.museum, this.controlCollection);
     }
     
     /**

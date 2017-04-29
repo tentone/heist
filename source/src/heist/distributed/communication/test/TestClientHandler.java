@@ -16,8 +16,7 @@ public class TestClientHandler extends ClientHandler
     public void processMessage(Message message) throws Exception
     {
         message.type++;
-        message.data = message.data.toUpperCase();
-        
+
         this.sendMessage(message);
     }
 }

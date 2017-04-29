@@ -3,12 +3,14 @@ package heist.concurrent.shared;
 import heist.Configuration;
 import heist.concurrent.GeneralRepository;
 import heist.interfaces.AssaultParty;
+import heist.interfaces.ControlCollectionSite;
 import heist.queue.LinkedQueue;
 import heist.room.Room;
 import heist.queue.iterator.Iterator;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.Logger;
+import heist.interfaces.Museum;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -39,16 +41,6 @@ public class SharedLogger implements Logger
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
-
-    /**
-     * Repository to be logged.
-     */
-    private final GeneralRepository repository;
-    
-    /**
-     * Configuration object.
-     */
-    private final Configuration configuration;
     
     /**
      * PrintStream used to write the log.
@@ -56,17 +48,50 @@ public class SharedLogger implements Logger
     private PrintStream out;
     
     /**
+     * Configuration object.
+     */
+    private final Configuration configuration;
+    
+    /**
+     * Museum to be assaulted by AssaultParties.
+     */
+    private Museum museum;
+    
+    /**
+     * AssaultParties to be used in the simulation.
+     */
+    private AssaultParty[] parties;
+    
+    /**
+     * MasterThieve that controls and assigns OrdinaryThieves to AssaultParties.
+     */
+    private MasterThief master;
+    
+    /**
+     * OrdinaryThieves array
+     */
+    private OrdinaryThief[] thieves;
+    
+    /**
+     * CollectionSite
+     */
+    private ControlCollectionSite controlCollection;
+    
+    /**
      * Logger constructor from GeneralRepository and Configuration file.
      * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
-     * @param repository GeneralRepository to be logged.
      * @param configuration Configuration
      */
-    public SharedLogger(GeneralRepository repository, Configuration configuration)
+    public SharedLogger(Configuration configuration)
     {
-        this.repository = repository;
         this.configuration = configuration;
         
         this.out = System.out;
+        
+        this.thieves = null;
+        this.parties = null;
+        this.master = null;
+        this.museum = null;
         
         if(this.configuration.logToFile)
         {
@@ -79,6 +104,24 @@ public class SharedLogger implements Logger
         }
     }
 
+    /**
+     * Change the elements to be logged using this logger.
+     * @param thieves OrdinaryThieves
+     * @param master MasterThief
+     * @param parties AssaultParties
+     * @param museum Museum
+     * @param controlCollection ControlCollectionSite
+     */
+    public void attachElements(OrdinaryThief[] thieves, MasterThief master, AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection)
+    {
+        this.thieves = thieves;
+        this.master = master;
+        this.parties = parties;
+        this.museum = museum;
+        this.controlCollection = controlCollection;
+    }
+    
+    
     /**
      * Write message directly to the PrintStream.
      * Flushes the PrintStream after every message.
@@ -100,9 +143,9 @@ public class SharedLogger implements Logger
     {        
         if(this.configuration.log)
         {
-            MasterThief master = this.repository.getMasterThief();
-            OrdinaryThief[] thieves = this.repository.getOrdinaryThieves();
-            AssaultParty[] parties = this.repository.getControlCollectionSite().getParties();
+            MasterThief master = this.master;
+            OrdinaryThief[] thieves = this.thieves;
+            AssaultParty[] parties = this.parties;
             
             if(this.configuration.logHeader)
             {
@@ -201,7 +244,7 @@ public class SharedLogger implements Logger
                 }
             }
 
-            Room[] rooms = this.repository.getMuseum().getRooms();
+            Room[] rooms = this.museum.getRooms();
             for(int i = 0; i < rooms.length; i++)
             {
                 out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
@@ -217,7 +260,7 @@ public class SharedLogger implements Logger
      */
     public synchronized void end()
     {
-        out.println("\nMy friends, tonight's effort produced " + this.repository.getControlCollectionSite().totalPaintingsStolen() + " priceless paintings!");
+        out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
         out.close();
     }
     

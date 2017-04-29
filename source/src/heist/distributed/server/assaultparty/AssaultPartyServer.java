@@ -1,5 +1,6 @@
 package heist.distributed.server.assaultparty;
 
+import heist.Configuration;
 import heist.distributed.communication.Server;
 import heist.concurrent.shared.SharedAssaultParty;
 import java.io.IOException;
@@ -9,16 +10,16 @@ public class AssaultPartyServer extends Server
 {
     public static void main(String[] args) throws IOException
     {
-        new AssaultPartyServer(23291).start();
+        new AssaultPartyServer(0, null).start();
     }
     
     private SharedAssaultParty party;
     
-    public AssaultPartyServer(int port) throws IOException
+    public AssaultPartyServer(int id, Configuration configuration) throws IOException
     {
-        super(port);
+        super(10000);
         
-        //this.party = new SharedAssaultParty(...);
+        //this.party = new SharedAssaultParty();
     }
     
     @Override

@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class Configuration implements Serializable
 {   
+    private static final long serialVersionUID = 832654734123L;
     
     /**
      * Number of thieves to be created for this simulation.
