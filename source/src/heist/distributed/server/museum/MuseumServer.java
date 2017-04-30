@@ -1,5 +1,6 @@
 package heist.distributed.server.museum;
 
+import heist.concurrent.shared.SharedMuseum;
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Server;
 import heist.interfaces.Museum;
@@ -14,7 +15,7 @@ public class MuseumServer extends Server
     {
         super(configuration.museumServer.port);
         
-        //this.museum = new Museum(...);
+        this.museum = new SharedMuseum(configuration);
     }
 
     @Override

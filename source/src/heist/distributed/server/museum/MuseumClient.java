@@ -1,27 +1,36 @@
 package heist.distributed.server.museum;
 
+import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.Museum;
 import heist.room.Room;
-import heist.utils.Address;
 
 public class MuseumClient extends Client implements Museum
 {
-    public MuseumClient(Address address)
+    public MuseumClient(ConfigurationDistributed configuration)
     {
-        super(address);
+        super(configuration.museumServer);
     }
 
     @Override
     public boolean rollACanvas(int id) throws Exception
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        MuseumMessage send = new MuseumMessage(MuseumMessage.ROLL_A_CANVAS);
+        send.roomID = id;
+        
+        MuseumMessage response = (MuseumMessage) this.sendMessage(send);
+        
+        return response.gotCanvas;
     }
 
     @Override
     public Room[] getRooms() throws Exception
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        MuseumMessage send = new MuseumMessage(MuseumMessage.GET_ROOMS);
+        
+        MuseumMessage response = (MuseumMessage) this.sendMessage(send);
+        
+        return response.rooms;
     }
     
 }

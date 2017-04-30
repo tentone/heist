@@ -5,17 +5,17 @@
  */
 package heist.distributed.server.concentration;
 
+import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.thief.OrdinaryThief;
-import heist.utils.Address;
 
 public class ConcentrationSiteClient extends Client implements ConcentrationSite
 {
-    public ConcentrationSiteClient(Address address)
+    public ConcentrationSiteClient(ConfigurationDistributed configuration)
     {
-        super(address);
+        super(configuration.concentrationServer);
     }
 
     @Override

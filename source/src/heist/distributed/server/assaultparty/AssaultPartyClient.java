@@ -1,16 +1,16 @@
 package heist.distributed.server.assaultparty;
 
+import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
-import heist.utils.Address;
 
 public class AssaultPartyClient extends Client implements AssaultParty
 {
-    public AssaultPartyClient(Address address)
+    public AssaultPartyClient(int id, ConfigurationDistributed configuration)
     {
-        super(address);
+        super(configuration.assaultPartiesServers[id]);
     }
     
     @Override

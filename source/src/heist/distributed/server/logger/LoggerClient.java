@@ -1,14 +1,15 @@
 package heist.distributed.server.logger;
 
+import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.Logger;
 import heist.utils.Address;
 
 public class LoggerClient extends Client implements Logger
 {
-    public LoggerClient(Address address)
+    public LoggerClient(ConfigurationDistributed configuration)
     {
-        super(address);
+        super(configuration.loggerServer);
     }
 
     @Override

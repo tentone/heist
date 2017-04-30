@@ -1,17 +1,17 @@
 package heist.distributed.server.controlcollection;
 
+import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ControlCollectionSite;
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
-import heist.utils.Address;
 
 public class ControlCollectionSiteClient extends Client implements ControlCollectionSite
 {
-    public ControlCollectionSiteClient(Address address)
+    public ControlCollectionSiteClient(ConfigurationDistributed configuration)
     {
-        super(address);
+        super(configuration.controlCollectionServer);
     }
 
     @Override

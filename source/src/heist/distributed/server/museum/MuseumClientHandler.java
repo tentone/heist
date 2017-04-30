@@ -25,10 +25,10 @@ public class MuseumClientHandler extends ClientHandler
         
         if(type == MuseumMessage.ROLL_A_CANVAS)
         {
-            //int id = message.roomID;
-            //this.museum.rollACanvas(id);
+            MuseumMessage response = new MuseumMessage(Message.DEFAULT);
+            response.gotCanvas = this.museum.rollACanvas(message.roomID);
             
-            //TODO <ADD CODE HERE>
+            this.sendMessage(response);
         }
         else if(type == MuseumMessage.GET_ROOMS)
         {
