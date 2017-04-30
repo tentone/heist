@@ -2,6 +2,7 @@ package heist.distributed.server.concentration;
 
 import heist.distributed.communication.ClientHandler;
 import heist.distributed.communication.Message;
+import heist.distributed.communication.Server;
 import heist.interfaces.ConcentrationSite;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,9 +11,9 @@ public class ConcentrationSiteClientHandler extends ClientHandler
 {
     private final ConcentrationSite concentration;
 
-    public ConcentrationSiteClientHandler(Socket socket, ConcentrationSite concentration) throws IOException
+    public ConcentrationSiteClientHandler(Socket socket, Server server, ConcentrationSite concentration) throws IOException
     {
-        super(socket);          
+        super(socket, server);          
 
         this.concentration = concentration;
     }
@@ -33,6 +34,10 @@ public class ConcentrationSiteClientHandler extends ClientHandler
         {
             this.concentration.prepareExcursion(message.thief);
             response.thief = message.thief;
+        }
+        else
+        {
+            response.status = Message.ERROR;
         }
         
         this.sendMessage(response);

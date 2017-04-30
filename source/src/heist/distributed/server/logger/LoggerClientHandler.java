@@ -2,6 +2,7 @@ package heist.distributed.server.logger;
 
 import heist.distributed.communication.ClientHandler;
 import heist.distributed.communication.Message;
+import heist.distributed.communication.Server;
 import heist.interfaces.Logger;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,9 +11,9 @@ public class LoggerClientHandler extends ClientHandler
 {
     private final Logger logger;
     
-    public LoggerClientHandler(Socket socket, Logger logger) throws IOException
+    public LoggerClientHandler(Socket socket, Server server, Logger logger) throws IOException
     {
-        super(socket);
+        super(socket, server);
         
         this.logger = logger;
     }
@@ -37,12 +38,17 @@ public class LoggerClientHandler extends ClientHandler
         {
             this.logger.log(message.master);
         }
-        else if(type == LoggerMessage.END)
+        else
         {
-            this.logger.end();
+            response.status = Message.ERROR;
         }
         
         this.sendMessage(response);
+
+        if(type == Message.END)
+        {
+            this.logger.end();
+        }
     }
     
 }

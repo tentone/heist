@@ -2,6 +2,7 @@ package heist.distributed.server.controlcollection;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
+import heist.distributed.communication.Message;
 import heist.interfaces.ControlCollectionSite;
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
@@ -90,4 +91,10 @@ public class ControlCollectionSiteClient extends Client implements ControlCollec
         return response.paintings;
     }
     
+    @Override
+    public void end() throws Exception
+    {
+        ControlCollectionSiteMessage message = new ControlCollectionSiteMessage(Message.END);
+        this.sendMessage(message);
+    }
 }

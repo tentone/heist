@@ -2,6 +2,7 @@ package heist.distributed.server.assaultparty;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
+import heist.distributed.communication.Message;
 import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
@@ -117,6 +118,13 @@ public class AssaultPartyClient extends Client implements AssaultParty
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.REMOVE_THIEF);
         message.id = id;
+        this.sendMessage(message);
+    }
+    
+    @Override
+    public void end() throws Exception
+    {
+        AssaultPartyMessage message = new AssaultPartyMessage(Message.END);
         this.sendMessage(message);
     }
 }

@@ -2,6 +2,7 @@ package heist.distributed.server.controlcollection;
 
 import heist.distributed.communication.ClientHandler;
 import heist.distributed.communication.Message;
+import heist.distributed.communication.Server;
 import heist.interfaces.ControlCollectionSite;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,9 +11,9 @@ public class ControlCollectionSiteClientHandler extends ClientHandler
 {
     private ControlCollectionSite controlCollection;
     
-    public ControlCollectionSiteClientHandler(Socket socket, ControlCollectionSite controlCollection) throws IOException
+    public ControlCollectionSiteClientHandler(Socket socket, Server server, ControlCollectionSite controlCollection) throws IOException
     {
-        super(socket);
+        super(socket, server);
         
         this.controlCollection = controlCollection;
     }
@@ -63,7 +64,11 @@ public class ControlCollectionSiteClientHandler extends ClientHandler
         {
             response.paintings = this.controlCollection.totalPaintingsStolen();
         }
-
+        else
+        {
+            response.status = Message.ERROR;
+        }
+        
         this.sendMessage(response);
     }
 }

@@ -18,10 +18,10 @@ public class Message implements Serializable
     public final static int DEFAULT = 1000;
     
     /**
-     * Ping message.
-     * Used for testing server connection.
+     * End message.
+     * Used to request server shutdown.
      */
-    public final static int PING = 2000;
+    public final static int END = 2000;
     
     /**
      * Message OK state.

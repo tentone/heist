@@ -22,6 +22,6 @@ public class ConcentrationSiteServer extends Server
     @Override
     public void acceptConnection(Socket socket) throws IOException
     {
-        new ConcentrationSiteClientHandler(socket, this.concentration).start();
+        new ConcentrationSiteClientHandler(socket, this, this.concentration).start();
     }
 }

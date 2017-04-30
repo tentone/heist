@@ -21,7 +21,7 @@ public class MuseumServer extends Server
     @Override
     public void acceptConnection(Socket socket) throws IOException
     {
-        new MuseumClientHandler(socket, this.museum).start();
+        new MuseumClientHandler(socket, this, this.museum).start();
     }
     
 }

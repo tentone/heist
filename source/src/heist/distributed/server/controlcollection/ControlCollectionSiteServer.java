@@ -23,6 +23,6 @@ public class ControlCollectionSiteServer extends Server
     @Override
     public void acceptConnection(Socket socket) throws IOException
     {
-        new ControlCollectionSiteClientHandler(socket, this.controlCollection).start();
+        new ControlCollectionSiteClientHandler(socket, this, this.controlCollection).start();
     }
 }

@@ -31,7 +31,6 @@ public class MasterThiefClient
         
         Logger logger = new LoggerClient(configuration);
         
-        MasterThief thief = new MasterThief(controlCollection, concentration, museum, parties, logger, configuration);
-        thief.start();
+        new MasterThief(controlCollection, concentration, museum, parties, logger, configuration).start();
     }
 }

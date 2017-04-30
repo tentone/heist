@@ -2,6 +2,7 @@ package heist.distributed.server.logger;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
+import heist.distributed.communication.Message;
 import heist.interfaces.Logger;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
@@ -43,7 +44,7 @@ public class LoggerClient extends Client implements Logger
     @Override
     public void end() throws Exception
     {
-        LoggerMessage send = new LoggerMessage(LoggerMessage.END);
+        LoggerMessage send = new LoggerMessage(Message.END);
         this.sendMessage(send);
     }
 }

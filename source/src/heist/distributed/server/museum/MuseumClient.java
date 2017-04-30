@@ -2,6 +2,7 @@ package heist.distributed.server.museum;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
+import heist.distributed.communication.Message;
 import heist.interfaces.Museum;
 import heist.room.Room;
 
@@ -33,4 +34,10 @@ public class MuseumClient extends Client implements Museum
         return response.rooms;
     }
     
+    @Override
+    public void end() throws Exception
+    {
+        MuseumMessage message = new MuseumMessage(Message.END);
+        this.sendMessage(message);
+    }
 }

@@ -440,5 +440,7 @@ public class OrdinaryThief extends Thread implements Serializable
         {
             e.printStackTrace();
         }
+        
+        //System.out.println("Thief " + this.id + " terminated");
     }
 }

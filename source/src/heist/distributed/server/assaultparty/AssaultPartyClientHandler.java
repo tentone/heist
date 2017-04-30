@@ -2,6 +2,7 @@ package heist.distributed.server.assaultparty;
 
 import heist.distributed.communication.ClientHandler;
 import heist.distributed.communication.Message;
+import heist.distributed.communication.Server;
 import heist.interfaces.AssaultParty;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,9 +11,9 @@ public class AssaultPartyClientHandler extends ClientHandler
 {
     private final AssaultParty party;
 
-    public AssaultPartyClientHandler(Socket socket, AssaultParty party) throws IOException
+    public AssaultPartyClientHandler(Socket socket, Server server, AssaultParty party) throws IOException
     {
-        super(socket);          
+        super(socket, server);          
 
         this.party = party;
     }
@@ -77,7 +78,11 @@ public class AssaultPartyClientHandler extends ClientHandler
         {
             this.party.removeThief(message.id);
         }
-
+        else
+        {
+            response.status = Message.ERROR;
+        }
+        
         this.sendMessage(response);
     }
 }

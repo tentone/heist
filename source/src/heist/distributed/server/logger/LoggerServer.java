@@ -24,7 +24,7 @@ public class LoggerServer extends Server
     @Override
     public void acceptConnection(Socket socket) throws IOException
     {
-        new LoggerClientHandler(socket, this.logger).start();
+        new LoggerClientHandler(socket, this, this.logger).start();
     }
     
 }

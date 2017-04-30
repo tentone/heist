@@ -2,6 +2,7 @@ package heist.distributed.server.concentration;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
+import heist.distributed.communication.Message;
 import heist.interfaces.ConcentrationSite;
 import heist.thief.OrdinaryThief;
 
@@ -29,5 +30,12 @@ public class ConcentrationSiteClient extends Client implements ConcentrationSite
         
         ConcentrationSiteMessage response = (ConcentrationSiteMessage) this.sendMessage(message);
         thief.copyState(response.thief);
+    }
+    
+    @Override
+    public void end() throws Exception
+    {
+        ConcentrationSiteMessage message = new ConcentrationSiteMessage(Message.END);
+        this.sendMessage(message);
     }
 }

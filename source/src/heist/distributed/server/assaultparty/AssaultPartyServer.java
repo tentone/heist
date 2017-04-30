@@ -21,6 +21,6 @@ public class AssaultPartyServer extends Server
     @Override
     public void acceptConnection(Socket socket) throws IOException
     {
-        new AssaultPartyClientHandler(socket, this.party).start();
+        new AssaultPartyClientHandler(socket, this, this.party).start();
     }
 }

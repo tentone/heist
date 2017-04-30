@@ -219,6 +219,7 @@ public class MasterThief extends Thread implements Serializable
         this.logger.log(this);
         this.logger.end();
         
+        this.controlCollection.end();
         for(int i = 0; i < this.parties.length; i++)
         {
             this.parties[i].end();
@@ -279,5 +280,7 @@ public class MasterThief extends Thread implements Serializable
         {
             e.printStackTrace();
         }
+        
+        //System.out.println("MasterThief terminated");
     }
 }

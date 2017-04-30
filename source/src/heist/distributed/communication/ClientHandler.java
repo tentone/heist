@@ -20,6 +20,11 @@ public abstract class ClientHandler extends Thread
     private final Socket socket;
     
     /**
+     * Server that created this ClientHandler.
+     */
+    protected final Server server;
+    
+    /**
      * ObjectInputStream used to receive messages.
      */
     private final ObjectInputStream in;
@@ -34,14 +39,15 @@ public abstract class ClientHandler extends Thread
      * @param socket Communication socket.
      * @throws IOException An exception may be thrown.
      */
-    public ClientHandler(Socket socket) throws IOException
+    public ClientHandler(Socket socket, Server server) throws IOException
     {
         this.socket = socket;
-
+        this.server = server;
+        
         OutputStream output = this.socket.getOutputStream();
         this.out = new ObjectOutputStream(output);
 
-        InputStream input = this.socket.getInputStream();;
+        InputStream input = this.socket.getInputStream();
         this.in = new ObjectInputStream(input);
     }
     
@@ -60,6 +66,7 @@ public abstract class ClientHandler extends Thread
     public void sendMessage(Message message) throws Exception
     {
         this.out.writeObject(message);
+        this.out.flush();
     }
     
     /**
@@ -70,7 +77,13 @@ public abstract class ClientHandler extends Thread
     {
         try
         {
-            this.processMessage(this.getMessage());
+            Message message = this.getMessage();
+            this.processMessage(message);
+            
+            if(message.type == Message.END)
+            {
+                this.server.shutdown();
+            }
             
             this.close();
         }

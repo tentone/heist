@@ -18,7 +18,13 @@ public abstract class Server extends Thread
     /**
      * Server port.
      */
-    public int port;
+    protected int port;
+    
+    /**
+     * While true the server continues running.
+     * If false the server stops accepting incoming connections. 
+     */
+    protected boolean alive;
     
     /**
      * Server constructor
@@ -28,6 +34,7 @@ public abstract class Server extends Thread
     public Server(int port) throws IOException
     {
         this.port = port;
+        this.alive = true;
         this.serverSocket = new ServerSocket(this.port);
     }
     
@@ -40,6 +47,15 @@ public abstract class Server extends Thread
     public abstract void acceptConnection(Socket socket) throws IOException;
     
     /**
+     * This method is used to shutdown the server instance.
+     */
+    public void shutdown() throws IOException
+    {
+        this.alive = false;
+        this.serverSocket.close();
+    }
+    
+    /**
      * Thread run method implements the server life cycle.
      */
     @Override
@@ -47,14 +63,19 @@ public abstract class Server extends Thread
     {
         try
         {
-            while(true)
+            while(this.alive)
             {
                 this.acceptConnection(this.serverSocket.accept());
             }
         }
-        catch(IOException e)
+        catch(Exception e)
         {
-            e.printStackTrace();
+            if(this.alive)
+            {
+                e.printStackTrace();
+            }
         }
+        
+        System.out.println("Server " + this.port + " terminated!");
     }
 }
