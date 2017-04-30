@@ -1,9 +1,13 @@
 package heist.distributed.server.assaultparty;
 
 import heist.distributed.communication.Message;
+import heist.room.RoomStatus;
+import java.io.Serializable;
 
-public class AssaultPartyMessage extends Message
+public class AssaultPartyMessage extends Message implements Serializable
 {
+    private static final long serialVersionUID = 26523489490126L;
+
     public static final int GET_ID = 1;
     
     public static final int GET_TARGET = 2;
@@ -25,8 +29,12 @@ public class AssaultPartyMessage extends Message
     public static final int REVERSE_DIRECTION = 10;
     
     public static final int CRAWL_OUT = 11;
-    
+
     public static final int REMOVE_THIEF = 12;
+    
+    public int id, target, state;
+    public boolean partyFull;
+    public RoomStatus room;
     
     /**
      * Simple constructor without any aditional data.

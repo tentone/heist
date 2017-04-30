@@ -5,6 +5,7 @@ import heist.concurrent.shared.SharedConcentrationSite;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedLogger;
 import heist.concurrent.shared.SharedMuseum;
+import heist.distributed.server.assaultparty.AssaultPartyClient;
 import heist.distributed.server.museum.MuseumClient;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
@@ -28,10 +29,12 @@ public class HeistDistributed
         for(int i = 0; i < parties.length; i++)
         {
             parties[i] = new SharedAssaultParty(i, configuration);
+            //parties[i] = new AssaultPartyClient(i, configuration);
         }
         
         //Museum
-        Museum museum = new MuseumClient(configuration);//new SharedMuseum(configuration);
+        Museum museum = new MuseumClient(configuration);
+        //Museum museum = new SharedMuseum(configuration);
         
         //Concetrantion
         ConcentrationSite concentration = new SharedConcentrationSite(configuration);

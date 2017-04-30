@@ -3,7 +3,6 @@ package heist.distributed.server.logger;
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.Logger;
-import heist.utils.Address;
 
 public class LoggerClient extends Client implements Logger
 {
@@ -15,19 +14,23 @@ public class LoggerClient extends Client implements Logger
     @Override
     public void debug(String message) throws Exception
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LoggerMessage send = new LoggerMessage(LoggerMessage.DEBUG);
+        send.debug = message;
+        
+        this.sendMessage(send);
     }
 
     @Override
     public void log() throws Exception
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LoggerMessage send = new LoggerMessage(LoggerMessage.LOG);
+        this.sendMessage(send);
     }
 
     @Override
     public void end() throws Exception
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LoggerMessage send = new LoggerMessage(LoggerMessage.END);
+        this.sendMessage(send);
     }
-    
 }

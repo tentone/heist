@@ -21,21 +21,22 @@ public class MuseumClientHandler extends ClientHandler
     public void processMessage(Message msg) throws Exception
     {
         MuseumMessage message = (MuseumMessage) msg;
+        MuseumMessage response = new MuseumMessage(Message.DEFAULT);
         int type = message.type;
         
         if(type == MuseumMessage.ROLL_A_CANVAS)
         {
-            MuseumMessage response = new MuseumMessage(Message.DEFAULT);
             response.gotCanvas = this.museum.rollACanvas(message.roomID);
-            
-            this.sendMessage(response);
         }
         else if(type == MuseumMessage.GET_ROOMS)
         {
-            MuseumMessage response = new MuseumMessage(Message.DEFAULT);
             response.rooms = this.museum.getRooms();
-            
-            this.sendMessage(response);
         }
+        else
+        {
+            response.status = Message.ERROR;
+        }
+        
+        this.sendMessage(response);
     }
 }

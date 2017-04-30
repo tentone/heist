@@ -18,38 +18,51 @@ public class AssaultPartyClient extends Client implements AssaultParty
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_ID);
         
-        this.sendMessage(message);
+        AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
         
-        //TODO <ADD CODE HERE>
-        return 0;
+        return response.id;
     }
 
     @Override
     public int getTarget() throws Exception
     {
-        //TODO <ADD CODE HERE>
-        return 0;
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_TARGET);
+        
+        AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
+        
+        return response.target;
     }
 
     @Override
     public int getState() throws Exception
     {
-        //TODO <ADD CODE HERE>
-        return 0;
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_STATE);
+        
+        AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
+        
+        return response.state;
     }
 
     @Override
     public boolean partyFull() throws Exception
     {
-        //TODO <ADD CODE HERE>
-        return false;
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_TARGET);
+        
+        AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
+        
+        return response.partyFull;
     }
     
 
     @Override
     public OrdinaryThief[] getThieves() throws Exception
     {
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_THIEVES);
+        
+        AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
+        
         //TODO <ADD CODE HERE>
+         
         return null;
     }
 
@@ -68,7 +81,8 @@ public class AssaultPartyClient extends Client implements AssaultParty
     @Override
     public void sendParty() throws Exception
     {
-        //TODO <ADD CODE HERE>
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.SEND_PARTY);
+        this.sendMessage(message);
     }
 
     @Override
@@ -81,7 +95,8 @@ public class AssaultPartyClient extends Client implements AssaultParty
     @Override
     public void reverseDirection() throws Exception
     {
-        //TODO <ADD CODE HERE>
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.REVERSE_DIRECTION);
+        this.sendMessage(message);
     }
 
     @Override

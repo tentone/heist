@@ -13,17 +13,10 @@ public class LoggerMessage extends Message implements Serializable
     
     public static final int END = 29;
     
-    public String debug = null;
+    public String debug;
     
     public LoggerMessage(int type)
     {
         super(type);
-    }
-    
-    public LoggerMessage(int type, String debug)
-    {
-        super(type);
-        
-        this.debug = debug;
     }
 }

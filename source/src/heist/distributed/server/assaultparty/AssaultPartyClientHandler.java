@@ -21,32 +21,25 @@ public class AssaultPartyClientHandler extends ClientHandler
     public void processMessage(Message msg) throws Exception
     {
         AssaultPartyMessage message = (AssaultPartyMessage) msg;
+        AssaultPartyMessage response = new AssaultPartyMessage(Message.DEFAULT);
         
         int type = message.type;
         
         if(type == AssaultPartyMessage.GET_ID)
         {
-            int id = this.party.getID();
-            
-            //TODO <ADD CODE HERE>
+            response.id = this.party.getID();
         }
         else if(type == AssaultPartyMessage.GET_TARGET)
         {
-            int target = this.party.getTarget();
-            
-            //TODO <ADD CODE HERE>
+            response.target = this.party.getTarget();
         }
         else if(type == AssaultPartyMessage.GET_STATE)
         {
-            int state = this.party.getState();
-            
-            //TODO <ADD CODE HERE>
+            response.state = this.party.getState();
         }
         else if(type == AssaultPartyMessage.PARTY_FULL)
         {
-            boolean partyFull = this.party.partyFull();
-            
-            //TODO <ADD CODE HERE>
+            response.partyFull = this.party.partyFull();
         }
         else if(type == AssaultPartyMessage.GET_THIEVES)
         {
@@ -55,6 +48,7 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.PREPARE_PARTY)
         {
+            
             //RoomStatus room = message.room;
             //this.party.prepareParty(room);
         }
@@ -80,8 +74,6 @@ public class AssaultPartyClientHandler extends ClientHandler
         else if(type == AssaultPartyMessage.REVERSE_DIRECTION)
         {
             this.party.reverseDirection();
-            
-            //TODO <ADD CODE HERE>
         }
         else if(type == AssaultPartyMessage.CRAWL_OUT)
         {
@@ -97,5 +89,7 @@ public class AssaultPartyClientHandler extends ClientHandler
             
             //TODO <ADD CODE HERE>
         }
+        
+        this.sendMessage(response);
     }
 }
