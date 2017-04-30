@@ -1,0 +1,6 @@
+localhost|23291|logger
+localhost|23292|controlCollection
+localhost|23293|concentration
+localhost|23294|museum
+localhost|23295|assaultParty0
+localhost|23296|assaultParty1

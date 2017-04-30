@@ -37,4 +37,17 @@ public class Address implements Serializable
         this.port = port;
         this.name = name;
     }
+    
+    /**
+     * Set address values.
+     * @param address Server address.
+     * @param port Port for connection.
+     * @param name Server name
+     */
+    public void set(String address, int port, String name)
+    {
+        this.address = address;
+        this.port = port;
+        this.name = name;
+    }
 }

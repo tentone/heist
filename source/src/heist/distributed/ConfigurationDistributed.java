@@ -2,7 +2,9 @@ package heist.distributed;
 
 import heist.Configuration;
 import heist.utils.Address;
+import java.io.File;
 import java.io.Serializable;
+import java.util.Scanner;
 
 /**
  * Distributed simulation configuration.
@@ -56,5 +58,46 @@ public class ConfigurationDistributed extends Configuration implements Serializa
         {
             this.assaultPartiesServers[i] = new Address("localhost", port + i, "assaultParty" + i);
         }
+    }
+    
+    /**
+     * Read configuration from file
+     * @return ConfigurationDistributed instance with values from file.
+     */
+    public static ConfigurationDistributed readFromFile()
+    {
+        ConfigurationDistributed configuration = new ConfigurationDistributed();
+        
+        try
+        {
+            File file = new File("configuration.txt");
+            Scanner scanner = new Scanner(file);
+            
+            String line = scanner.nextLine();
+            String[] values = line.split("|");
+            configuration.loggerServer.set(values[0], Integer.parseInt(values[1]), values[2]);
+            
+            line = scanner.nextLine();
+            values = line.split("|");
+            configuration.controlCollectionServer.set(values[0], Integer.parseInt(values[1]), values[2]);
+
+            line = scanner.nextLine();
+            values = line.split("|");
+            configuration.concentrationServer.set(values[0], Integer.parseInt(values[1]), values[2]);
+            
+            line = scanner.nextLine();
+            values = line.split("|");
+            configuration.museumServer.set(values[0], Integer.parseInt(values[1]), values[2]);
+
+            line = scanner.nextLine();
+            values = line.split("|");
+            configuration.assaultPartiesServers[0].set(values[0], Integer.parseInt(values[1]), values[2]);
+            
+            line = scanner.nextLine();
+            values = line.split("|");
+            configuration.assaultPartiesServers[1].set(values[0], Integer.parseInt(values[1]), values[2]);
+        }
+        catch(Exception e){}
+        return configuration;
     }
 }

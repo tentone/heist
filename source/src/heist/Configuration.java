@@ -98,9 +98,9 @@ public class Configuration implements Serializable
         this.numberPaintings = new Range(8, 16);
         
         this.logFile = "log.txt";
-        this.logToFile = false;
+        this.logToFile = true;
         this.debug = false;
-        this.log = false;
+        this.log = true;
         this.logHeader = false;
     }
 }

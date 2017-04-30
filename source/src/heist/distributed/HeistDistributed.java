@@ -23,7 +23,7 @@ public class HeistDistributed
     public static void main(String[] args) throws Exception
     {
         //Configuration
-        ConfigurationDistributed configuration = new ConfigurationDistributed();
+        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile(); //new ConfigurationDistributed();
         
         //Museum server
         new MuseumServer(configuration).start();

@@ -13,8 +13,6 @@ public class ConfigurationMessage extends Message implements Serializable
     
     public static final int CONCENTRATION_SITE = 53;
     
-    public int partyID;
-    
     public ConfigurationMessage(int type)
     {
         super(type);

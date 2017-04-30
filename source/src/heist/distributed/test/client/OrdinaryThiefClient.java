@@ -31,6 +31,9 @@ public class OrdinaryThiefClient
         
         Logger logger = new LoggerClient(configuration);
         
-        new OrdinaryThief(0, controlCollection, concentration, museum, parties, logger, configuration).start();
+        for(int i = 0; i < configuration.numberThieves; i++)
+        {
+            new OrdinaryThief(i, controlCollection, concentration, museum, parties, logger, configuration).start();
+        }
     }
 }
