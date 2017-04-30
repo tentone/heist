@@ -2,7 +2,6 @@ package heist.distributed.server.assaultparty;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
-import heist.distributed.communication.Message;
 import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
@@ -14,18 +13,14 @@ public class AssaultPartyClient extends Client implements AssaultParty
         super(configuration.assaultPartiesServers[id]);
     }
     
-    @Override
+    /*@Override
     public Message sendMessage(Message message) throws Exception
     {
-        
         System.out.println("Party Client: " + message.type + " sent");
-        
         Message response = super.sendMessage(message);
-        
         System.out.println("Party Client: " + message.type + " ok");
-        
         return response;
-    }
+    }*/
     
     @Override
     public int getID() throws Exception

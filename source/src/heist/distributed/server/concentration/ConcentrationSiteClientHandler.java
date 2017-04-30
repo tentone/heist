@@ -21,19 +21,20 @@ public class ConcentrationSiteClientHandler extends ClientHandler
     public void processMessage(Message msg) throws Exception
     {
         ConcentrationSiteMessage message = (ConcentrationSiteMessage) msg;
+        ConcentrationSiteMessage response = new ConcentrationSiteMessage(Message.DEFAULT);
+        
         int type = message.type;
         
         if(type == ConcentrationSiteMessage.FILL_ASSAULT_PARTY)
         {
-            //this.concentration.fillAssaultParty(party);
-            
-            //TODO <ADD CODE HERE>
+            this.concentration.fillAssaultParty(message.party);
         }
         else if(type == ConcentrationSiteMessage.PREPARE_EXCURSION)
         {
-            //this.concentration.prepareExcursion(thief);
-            
-            //TODO <ADD CODE HERE>
+            this.concentration.prepareExcursion(message.thief);
+            response.thief = message.thief;
         }
+        
+        this.sendMessage(response);
     }
 }

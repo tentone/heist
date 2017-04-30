@@ -1,10 +1,14 @@
 package heist.distributed;
 
+import heist.concurrent.shared.SharedAssaultParty;
 import heist.concurrent.shared.SharedConcentrationSite;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedLogger;
+import heist.concurrent.shared.SharedMuseum;
 import heist.distributed.server.assaultparty.AssaultPartyClient;
 import heist.distributed.server.assaultparty.AssaultPartyServer;
+import heist.distributed.server.concentration.ConcentrationSiteClient;
+import heist.distributed.server.concentration.ConcentrationSiteServer;
 import heist.distributed.server.museum.MuseumClient;
 import heist.distributed.server.museum.MuseumServer;
 import heist.interfaces.AssaultParty;
@@ -25,7 +29,7 @@ public class HeistDistributed
         new AssaultPartyServer(0, configuration).start();
         new AssaultPartyServer(1, configuration).start();
         new MuseumServer(configuration).start();
-        
+
         //Logger
         SharedLogger logger = new SharedLogger(configuration);
 
@@ -37,12 +41,16 @@ public class HeistDistributed
             parties[i] = new AssaultPartyClient(i, configuration);
         }
         
+        //ConcentrationSite server
+        new ConcentrationSiteServer(parties, configuration).start();
+        
         //Museum
         Museum museum = new MuseumClient(configuration);
         //Museum museum = new SharedMuseum(configuration);
         
         //Concetrantion
-        ConcentrationSite concentration = new SharedConcentrationSite(parties, configuration);
+        //ConcentrationSite concentration = new SharedConcentrationSite(parties, configuration);
+        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
         
         //Control and collection
         ControlCollectionSite controlCollection = new SharedControlCollectionSite(parties, museum, configuration);

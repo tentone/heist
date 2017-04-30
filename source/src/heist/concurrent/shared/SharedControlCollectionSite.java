@@ -219,19 +219,18 @@ public class SharedControlCollectionSite implements ControlCollectionSite
     @Override
     public synchronized int prepareNewParty(RoomStatus room) throws Exception
     {
-        AssaultParty party = null;
-        
         for(int i = 0; i < this.parties.length; i++)
         {
-            if(this.parties[i].getState() == SharedAssaultParty.DISMISSED)
+            AssaultParty party = this.parties[i];
+             
+            if(party.getState() == SharedAssaultParty.DISMISSED)
             {
-                party = this.parties[i];
                 party.prepareParty(room);
-                break;
+                return party.getID();
             }
         }
         
-        return party.getID();
+        return -1;
     }
     
     /**

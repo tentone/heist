@@ -235,10 +235,6 @@ public class SharedAssaultParty implements AssaultParty
      */
     public synchronized boolean crawlIn(OrdinaryThief thief) throws Exception
     {
-        /*while(this.thieves.peek().getPosition() == this.room.getDistance())
-        {
-            this.thieves.popPush();
-        }*/
         if(this.crawlingQueue.size() == 0)
         {
             throw new Exception("Crawling Queue size equals 0");
@@ -248,21 +244,10 @@ public class SharedAssaultParty implements AssaultParty
             throw new Exception("Crawling peek returned null");
         }
         
-        System.out.println("A");
-        
         while(this.crawlingQueue.peek() != thief.getID() || this.state != SharedAssaultParty.CRAWLING)
         {
             this.wait();
-
-            System.out.println("B");
-                    
-            /*while(this.thieves.peek().getPosition() == this.room.getDistance())
-            {
-                this.thieves.popPush();
-            }*/
         }
-        
-        System.out.println("C");
         
         for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
@@ -327,8 +312,6 @@ public class SharedAssaultParty implements AssaultParty
             }
         }
         
-        System.out.println("D");
-
         boolean keepCrawling = thief.getPosition() != this.room.getDistance();
         if(keepCrawling)
         {
@@ -340,9 +323,7 @@ public class SharedAssaultParty implements AssaultParty
         }
         
         this.notifyAll();
-        
-        System.out.println("E | " + keepCrawling);
-        
+
         return keepCrawling;
     }
     
@@ -384,10 +365,6 @@ public class SharedAssaultParty implements AssaultParty
      */
     public synchronized boolean crawlOut(OrdinaryThief thief) throws Exception
     {
-        /*while(this.thieves.peek().getPosition() == 0)
-        {
-            this.thieves.popPush();
-        }*/
         if(this.crawlingQueue.size() == 0)
         {
             throw new Exception("Crawling Queue size equals 0");
@@ -400,11 +377,6 @@ public class SharedAssaultParty implements AssaultParty
         while(this.crawlingQueue.peek() != thief.getID())
         {
             this.wait();
-            
-            /*while(this.thieves.peek().getPosition() == 0)
-            {
-                this.thieves.popPush();
-            }*/
         }
         
         for(int delta = thief.getDisplacement(); delta > 0; delta--)

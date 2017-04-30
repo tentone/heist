@@ -5,8 +5,8 @@ import heist.thief.OrdinaryThief;
 public interface ConcentrationSite
 {
     /**
-     * Fill a Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
-     * The MasterThief creates the party and adds it to the waiting party list and gets locked until all thieves join the party.
+     * Called by the MasterThief to fill a Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
+     * The MasterThief prepares a party and adds it to the waiting party list and gets locked until all thieves join the party.
      * The last thief to join the party wakes up the MasterThief.
      * @param party Party to be filled with thieves.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.

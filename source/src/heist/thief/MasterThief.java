@@ -143,13 +143,14 @@ public class MasterThief extends Thread
     private int prepareAssaultParty() throws Exception
     {
         RoomStatus room = this.controlCollection.getRoomToAttack();
-        int party = this.controlCollection.prepareNewParty(room);
-        this.concentration.fillAssaultParty(party);
+        
+        int partyID = this.controlCollection.prepareNewParty(room);
+        this.concentration.fillAssaultParty(partyID);
         
         //this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
         this.logger.log();
         
-        return party;
+        return partyID;
     }
     
     /**
@@ -158,9 +159,9 @@ public class MasterThief extends Thread
      * @param party Party to send.
      * @throws java.lang.InterruptedException Exception
      */
-    private void sendAssaultParty(int party) throws Exception
+    private void sendAssaultParty(int partyID) throws Exception
     {
-        this.parties[party].sendParty();
+        this.parties[partyID].sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
         //this.logger.debug("Master sendAssaultParty " + party.getID());

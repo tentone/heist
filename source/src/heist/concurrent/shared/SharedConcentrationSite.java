@@ -6,6 +6,7 @@ import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
+import heist.queue.iterator.Iterator;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
@@ -32,7 +33,7 @@ public class SharedConcentrationSite implements ConcentrationSite
     /**
      * List of parties waiting to be filled with thieves.
      */
-    private final Queue<AssaultParty> waitingParties;
+    private final Queue<Integer> waitingParties;
 
     /**
      * ConcentrationSite constructor.
@@ -58,7 +59,12 @@ public class SharedConcentrationSite implements ConcentrationSite
     @Override
     public synchronized void fillAssaultParty(int party) throws Exception
     {
-        this.waitingParties.push(this.parties[party]);
+        if(this.waitingParties.contains(party))
+        {
+            throw new Exception("Party already in the list " + this.waitingParties.toString() + " (" + party + ")");
+        }
+        
+        this.waitingParties.push(party);
         this.notifyAll();
 
         while(!this.parties[party].partyFull())
@@ -80,20 +86,17 @@ public class SharedConcentrationSite implements ConcentrationSite
     {
         this.waitingThieves.push(thief);
 
-        AssaultParty party = null;
-        while(party == null)
+        while(this.waitingParties.size() == 0)
         {
-            party = this.waitingParties.peek();
-            if(party == null)
-            {
-                this.wait();
-            }
+            this.wait();
         }
         
-        this.waitingThieves.pop();
-        party.addThief(thief);
+        int partyID = this.waitingParties.peek();
         
-        if(party.partyFull())
+        this.waitingThieves.pop();
+        this.parties[partyID].addThief(thief);
+        
+        if(this.parties[partyID].partyFull())
         {
             this.notifyAll();
         }

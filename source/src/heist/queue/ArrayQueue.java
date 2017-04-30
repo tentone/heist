@@ -155,6 +155,6 @@ public class ArrayQueue<T> implements Queue<T>
             }
         }
         
-        return s + "] Size:" + this.size;
+        return s + "]";
     }
 }

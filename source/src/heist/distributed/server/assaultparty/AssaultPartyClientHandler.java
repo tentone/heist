@@ -25,7 +25,7 @@ public class AssaultPartyClientHandler extends ClientHandler
 
         int type = message.type;
 
-        System.out.println("Party Server " + this.party.getID() + ": " + type);
+        //System.out.println("Party Server " + this.party.getID() + ": " + type);
         
         if(type == AssaultPartyMessage.GET_ID)
         {
@@ -80,7 +80,7 @@ public class AssaultPartyClientHandler extends ClientHandler
             this.party.removeThief(message.id);
         }
         
-        System.out.println("Party Server " + this.party.getID() + ": " + type + " ok");
+        //System.out.println("Party Server " + this.party.getID() + ": " + type + " ok");
         
         this.sendMessage(response);
     }
