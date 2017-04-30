@@ -89,6 +89,8 @@ public class MasterThief extends Thread implements Serializable
      * MasterThief constructor
      * @param controlCollection ControlCollectionSite
      * @param concentration ConcentrationSite
+     * @param museum Museum
+     * @param parties AssaultParties
      * @param logger Logger
      * @param configuration Simulation configuration
      */

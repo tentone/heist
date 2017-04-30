@@ -23,7 +23,7 @@ public abstract class Server extends Thread
     /**
      * Server constructor
      * @param port Port used for comunication.
-     * @throws IOException 
+     * @throws IOException An exception may be thrown.
      */
     public Server(int port) throws IOException
     {
@@ -34,8 +34,8 @@ public abstract class Server extends Thread
     /**
      * This method is used to launch new ClientHandlers.
      * Should be implemented by all servers.
-     * @param socket
-     * @throws IOException 
+     * @param socket Socket used for this connection.
+     * @throws IOException An exception may be thrown.
      */
     public abstract void acceptConnection(Socket socket) throws IOException;
     

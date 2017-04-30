@@ -3,12 +3,13 @@ package heist.distributed.server.assaultparty;
 import heist.distributed.communication.Server;
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.distributed.ConfigurationDistributed;
+import heist.interfaces.AssaultParty;
 import java.io.IOException;
 import java.net.Socket;
 
 public class AssaultPartyServer extends Server
 {
-    private SharedAssaultParty party;
+    private AssaultParty party;
     
     public AssaultPartyServer(int id, ConfigurationDistributed configuration) throws IOException
     {

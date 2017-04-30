@@ -20,6 +20,7 @@ public interface Logger
     /**
      * Called by the OrdinaryThief to create a log entry using the data sent.
      * Flushes after log has been written.
+     * @param thief OrdinaryThief to be updated.
      * @throws Exception A exception may be thrown depending on the implementation.
      */
     public void log(OrdinaryThief thief) throws Exception;
@@ -27,6 +28,7 @@ public interface Logger
     /**
      * Called by the MasterThief to create a log entry using the data sent.
      * Flushes after log has been written.
+     * @param master MasterThief to be updated.
      * @throws Exception A exception may be thrown depending on the implementation.
      */
     public void log(MasterThief master) throws Exception;

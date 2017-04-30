@@ -25,17 +25,14 @@ public class HeistDistributed
         //Configuration
         ConfigurationDistributed configuration = new ConfigurationDistributed();
         
-        //AssaultParty servers
-        new AssaultPartyServer(0, configuration).start();
-        new AssaultPartyServer(1, configuration).start();
-        
         //Museum server
         new MuseumServer(configuration).start();
 
-        //AssaultParty clients
+        //AssaultParty servers and clients
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)
         {
+            new AssaultPartyServer(i, configuration).start();
             parties[i] = new AssaultPartyClient(i, configuration);
         }
         

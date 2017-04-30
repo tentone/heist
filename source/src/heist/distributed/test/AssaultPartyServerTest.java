@@ -9,8 +9,9 @@ public class AssaultPartyServerTest
     {
         ConfigurationDistributed configuration = new ConfigurationDistributed();
         
-        new AssaultPartyServer(0, configuration).start();
-        
-        new AssaultPartyServer(1, configuration).start();
+        for(int i = 0; i < configuration.numberParties; i++)
+        {
+            new AssaultPartyServer(i, configuration).start();
+        }
     }
 }

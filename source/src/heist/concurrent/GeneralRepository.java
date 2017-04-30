@@ -64,6 +64,7 @@ public class GeneralRepository
     /**
      * General repository constructor
      * @param configuration Configuration to be used to create elements in this repository.
+     * @throws Exception An exception may be thrown.
      */
     public GeneralRepository(Configuration configuration) throws Exception
     {

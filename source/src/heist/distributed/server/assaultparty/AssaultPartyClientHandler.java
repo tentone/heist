@@ -1,6 +1,5 @@
 package heist.distributed.server.assaultparty;
 
-import heist.concurrent.shared.SharedAssaultParty;
 import heist.distributed.communication.ClientHandler;
 import heist.distributed.communication.Message;
 import heist.interfaces.AssaultParty;
@@ -26,8 +25,6 @@ public class AssaultPartyClientHandler extends ClientHandler
 
         int type = message.type;
 
-        //System.out.println("Party Server " + this.party.getID() + ": " + type);
-        
         if(type == AssaultPartyMessage.GET_ID)
         {
             response.id = this.party.getID();
@@ -80,9 +77,7 @@ public class AssaultPartyClientHandler extends ClientHandler
         {
             this.party.removeThief(message.id);
         }
-        
-        //System.out.println("Party Server " + this.party.getID() + ": " + type + " ok");
-        
+
         this.sendMessage(response);
     }
 }

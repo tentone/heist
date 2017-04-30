@@ -29,10 +29,12 @@ public class Address implements Serializable
      * Address constructor.
      * @param address Server address.
      * @param port Port for connection.
+     * @param name Server name
      */
     public Address(String address, int port, String name)
     {
         this.address = address;
         this.port = port;
+        this.name = name;
     }
 }

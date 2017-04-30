@@ -13,15 +13,6 @@ public class AssaultPartyClient extends Client implements AssaultParty
         super(configuration.assaultPartiesServers[id]);
     }
     
-    /*@Override
-    public Message sendMessage(Message message) throws Exception
-    {
-        System.out.println("Party Client: " + message.type + " sent");
-        Message response = super.sendMessage(message);
-        System.out.println("Party Client: " + message.type + " ok");
-        return response;
-    }*/
-    
     @Override
     public int getID() throws Exception
     {
