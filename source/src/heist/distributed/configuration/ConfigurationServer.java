@@ -1,4 +1,4 @@
-package heist.distributed.server.configuration;
+package heist.distributed.configuration;
 
 public class ConfigurationServer
 {

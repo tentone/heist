@@ -1,25 +1,20 @@
 package heist.distributed.server.assaultparty;
 
-import heist.Configuration;
 import heist.distributed.communication.Server;
 import heist.concurrent.shared.SharedAssaultParty;
+import heist.distributed.ConfigurationDistributed;
 import java.io.IOException;
 import java.net.Socket;
 
 public class AssaultPartyServer extends Server
 {
-    public static void main(String[] args) throws IOException
-    {
-        new AssaultPartyServer(0, null).start();
-    }
-    
     private SharedAssaultParty party;
     
-    public AssaultPartyServer(int id, Configuration configuration) throws IOException
+    public AssaultPartyServer(int id, ConfigurationDistributed configuration) throws IOException
     {
-        super(10000);
+        super(configuration.assaultPartiesServers[id].port);
         
-        //this.party = new SharedAssaultParty();
+        //this.party = new SharedAssaultParty(id, ..., configuration);
     }
     
     @Override

@@ -12,6 +12,12 @@ public class Message implements Serializable
     private static final long serialVersionUID = 7526471155622776147L;
     
     /**
+     * Default message.
+     * Used for response messages.
+     */
+    public final static int DEFAULT = 100;
+    
+    /**
      * Message OK state.
      */
     public final static int OK = 0;

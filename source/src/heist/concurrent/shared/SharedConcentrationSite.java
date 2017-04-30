@@ -39,10 +39,10 @@ public class SharedConcentrationSite implements ConcentrationSite
      * The MasterThief creates the party and adds it to the waiting party list and gets locked until all thieves join the party.
      * The last thief to join the party wakes up the MasterThief.
      * @param party Party to be filled with thieves.
-     * @throws java.lang.InterruptedException Exception
+     * @throws Exception Exception
      */
     @Override
-    public synchronized void fillAssaultParty(AssaultParty party) throws InterruptedException
+    public synchronized void fillAssaultParty(AssaultParty party) throws Exception
     {
         this.waitingParties.push(party);
         this.notifyAll();

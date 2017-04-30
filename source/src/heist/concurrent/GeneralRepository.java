@@ -65,7 +65,7 @@ public class GeneralRepository
      * General repository constructor
      * @param configuration Configuration to be used to create elements in this repository.
      */
-    public GeneralRepository(Configuration configuration)
+    public GeneralRepository(Configuration configuration) throws Exception
     {
         this.configuration = configuration;
         
@@ -79,6 +79,7 @@ public class GeneralRepository
         
         this.museum = new SharedMuseum(this.configuration);
         this.concentration = new SharedConcentrationSite(this.configuration);
+        
         this.controlCollection = new SharedControlCollectionSite(this.parties, this.museum, this.configuration);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];

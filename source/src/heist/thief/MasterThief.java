@@ -107,8 +107,9 @@ public class MasterThief extends Thread
     
     /**
      * This is the first state change in the MasterThief life cycle it changes the MasterThief state to deciding what to do. 
+     * @throws Exception Exception
      */
-    private void startOperations()
+    private void startOperations() throws Exception
     {
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         

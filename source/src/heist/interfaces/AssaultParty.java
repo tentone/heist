@@ -26,38 +26,44 @@ public interface AssaultParty
     /**
      * Get party id
      * @return Party ID
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public int getID();
+    public int getID() throws Exception;
     
     /**
      * Get assault party target room.
      * @return Target room ID, if no room is assigned to the party returns -1.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public int getTarget();
+    public int getTarget() throws Exception;
 
     /**
      * Get party state.
      * @return Party state.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public int getState();
+    public int getState() throws Exception;
             
     /**
      * Check if the party is full.
      * @return True if the party element queue has the same size as the party size.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public boolean partyFull();
+    public boolean partyFull() throws Exception;
     
     /**
      * Get thieves in this party array.
      * @return Array of thieves.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public OrdinaryThief[] getThieves();
+    public OrdinaryThief[] getThieves() throws Exception;
     
     /**
      * Prepare party, set state to WAITING and set target room.
      * @param room TargetRoom.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public void prepareParty(RoomStatus room);
+    public void prepareParty(RoomStatus room) throws Exception;
     
     /**
      * Add thief to party if the party is full the thief is not added.

@@ -36,5 +36,4 @@ public class AssaultPartyMessage extends Message
     {
         super(type);
     }
-    
 }

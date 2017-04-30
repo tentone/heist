@@ -52,13 +52,20 @@ public class SharedControlCollectionSite implements ControlCollectionSite
     
     /**
      * Collection site constructor, creates a queue for OrdinaryThief.
-     * @param configuration Simulation configuration
+     * @param parties AssaultParties
      * @param museum Museum
+     * @param configuration Simulation configuration
+     * @throws Exception Exception
      */
-    public SharedControlCollectionSite(AssaultParty[] parties, Museum museum, Configuration configuration)
+    public SharedControlCollectionSite(AssaultParty[] parties, Museum museum, Configuration configuration) throws Exception
     {   
-        this.configuration = configuration;
-
+        this.configuration = configuration;        
+        this.parties = parties;
+        
+        this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
+        this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
+        
+        this.heistTerminated = false;
         
         Room[] museumRooms = museum.getRooms();
         this.rooms = new RoomStatus[museumRooms.length];
@@ -66,13 +73,6 @@ public class SharedControlCollectionSite implements ControlCollectionSite
         {
             this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
         }
-        
-        this.parties = parties;
-        
-        this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
-        this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
-        
-        this.heistTerminated = false;
     }
     
     /**
@@ -96,8 +96,9 @@ public class SharedControlCollectionSite implements ControlCollectionSite
     /**
      * Check if there is some party available to be prepared and sent.
      * @return True if there is some party in DISMISSED state.
+     * @throws Exception Exception
      */
-    public synchronized boolean somePartyAvailable()
+    public synchronized boolean somePartyAvailable() throws Exception
     {
         for(int i = 0; i < this.parties.length; i++)
         {
@@ -181,8 +182,9 @@ public class SharedControlCollectionSite implements ControlCollectionSite
     /**
      * Check if there is conditions to create a new party.
      * @return True if there is conditions to create a new party.
+     * @throws Exception Exception
      */
-    public synchronized boolean canCreateParty()
+    public synchronized boolean canCreateParty() throws Exception
     {
         return this.nextTargetRoom() != null && this.amINeededQueue.size() >= this.configuration.partySize && this.somePartyAvailable();
     }
@@ -212,10 +214,10 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * MasterThief call this function to prepare an assault party to be filled with OrdinaryThieves waiting in the concentration site.
      * @param room Target room.
      * @return AssaultParty created.
-     * @throws java.lang.InterruptedException Exception
+     * @throws Exception Exception
      */
     @Override
-    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws InterruptedException
+    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws Exception
     {
         AssaultParty party = null;
         
@@ -236,9 +238,9 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * Analyse the situation and take a decision for the MasterThief.
      * Decision can be to create a new assault party, take a rest or to sum up results and end the heist.
      * @return New state to be attributed tho the MasterThief.
-     * @throws java.lang.InterruptedException Exception
+     * @throws Exception Exception
      */
-    public synchronized int appraiseSit() throws InterruptedException
+    public synchronized int appraiseSit() throws Exception
     {
         if(this.allRoomsClear())
         {

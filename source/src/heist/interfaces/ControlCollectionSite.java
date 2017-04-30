@@ -64,12 +64,14 @@ public interface ControlCollectionSite
     /**
      * Get AssaultParties array.
      * @return Array of AssaultParties used.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public AssaultParty[] getParties();
+    public AssaultParty[] getParties() throws Exception;
     
     /**
      * Check how many paintings were stolen.
      * @return Number of paintings.
+     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public int totalPaintingsStolen();
+    public int totalPaintingsStolen() throws Exception;
 }

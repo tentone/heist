@@ -10,7 +10,7 @@ import heist.thief.OrdinaryThief;
  */
 public class HeistConcurrent
 {
-    public static void main(String[] args) throws InterruptedException
+    public static void main(String[] args) throws InterruptedException, Exception
     {
         GeneralRepository repository = new GeneralRepository(new Configuration());
         

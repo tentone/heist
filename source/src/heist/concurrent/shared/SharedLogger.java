@@ -1,7 +1,6 @@
 package heist.concurrent.shared;
 
 import heist.Configuration;
-import heist.concurrent.GeneralRepository;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ControlCollectionSite;
 import heist.queue.LinkedQueue;
@@ -138,8 +137,9 @@ public class SharedLogger implements Logger
     /**
      * Create a log entry of everything in the general repository.
      * Flushes after log has been written.
+     * @throws Exception Exception
      */
-    public synchronized void log()
+    public synchronized void log() throws Exception
     {        
         if(this.configuration.log)
         {
@@ -257,8 +257,9 @@ public class SharedLogger implements Logger
     
     /**
      * End the log and close the internal PrintStream.
+     * @throws Exception Exception
      */
-    public synchronized void end()
+    public synchronized void end() throws Exception
     {
         out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
         out.close();
