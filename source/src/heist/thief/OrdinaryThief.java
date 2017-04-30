@@ -255,7 +255,7 @@ public class OrdinaryThief extends Thread implements Serializable
     private boolean amINeeded() throws Exception
     {
         //this.logger.debug("Thief " + this.id + " amINeeded");
-        this.logger.log();
+        this.logger.log(this);
         
         return this.controlCollection.amINeeded(this);
     }
@@ -272,7 +272,7 @@ public class OrdinaryThief extends Thread implements Serializable
         this.concentration.prepareExcursion(this);
         
         //this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -282,16 +282,16 @@ public class OrdinaryThief extends Thread implements Serializable
     private void crawlIn() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_INWARDS);
-        this.logger.log();
+        this.logger.log(this);
         
         while(this.parties[this.party].crawlIn(this))
         {
             //this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
-            this.logger.log();
+            this.logger.log(this);
         }
         
         //this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -303,7 +303,7 @@ public class OrdinaryThief extends Thread implements Serializable
         this.hasCanvas = this.museum.rollACanvas(this.parties[this.party].getTarget());
 
         //this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -314,7 +314,7 @@ public class OrdinaryThief extends Thread implements Serializable
         this.parties[this.party].reverseDirection(this);
         
         //this.logger.debug("Thief " + this.id + " reverse");
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -324,16 +324,16 @@ public class OrdinaryThief extends Thread implements Serializable
     private void crawlOut() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
-        this.logger.log();
+        this.logger.log(this);
         
         while(this.parties[this.party].crawlOut(this))
         {
             //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
-            this.logger.log();
+            this.logger.log(this);
         }
         
         //this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -344,12 +344,12 @@ public class OrdinaryThief extends Thread implements Serializable
         this.setState(OrdinaryThief.OUTSIDE);
         
         //this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
-        this.logger.log();
+        this.logger.log(this);
         
         this.controlCollection.handACanvas(this);
         this.leaveParty();
         
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -398,6 +398,23 @@ public class OrdinaryThief extends Thread implements Serializable
     }
     
     /**
+     * Compares two OrdinaryThieves.
+     * @param object Object to be compared.
+     * @return True if the thieves have the same id.
+     */
+    @Override
+    public boolean equals(Object object)
+    {
+        if(object instanceof OrdinaryThief)
+        {
+            OrdinaryThief thief = (OrdinaryThief) object;
+            
+            return thief.getID() == this.id;
+        }
+        return false;
+    }
+    
+    /**
      * Implements OrdinaryThief life cycle.
      */
     @Override
@@ -424,22 +441,4 @@ public class OrdinaryThief extends Thread implements Serializable
             e.printStackTrace();
         }
     }
-
-    /**
-     * Compares two OrdinaryThieves.
-     * @param object Object to be compared.
-     * @return True if the thieves have the same id.
-     */
-    @Override
-    public boolean equals(Object object)
-    {
-        if(object instanceof OrdinaryThief)
-        {
-            OrdinaryThief thief = (OrdinaryThief) object;
-            
-            return thief.getID() == this.id;
-        }
-        return false;
-    }
-    
 }

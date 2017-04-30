@@ -3,6 +3,8 @@ package heist.distributed.server.logger;
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
 import heist.interfaces.Logger;
+import heist.thief.MasterThief;
+import heist.thief.OrdinaryThief;
 
 public class LoggerClient extends Client implements Logger
 {
@@ -21,12 +23,23 @@ public class LoggerClient extends Client implements Logger
     }
 
     @Override
-    public void log() throws Exception
+    public void log(OrdinaryThief thief) throws Exception
     {
-        LoggerMessage send = new LoggerMessage(LoggerMessage.LOG);
+        LoggerMessage send = new LoggerMessage(LoggerMessage.LOG_ORDINARY_THIEF);
+        send.thief = thief;
+        
         this.sendMessage(send);
     }
 
+    @Override
+    public void log(MasterThief master) throws Exception
+    {
+        LoggerMessage send = new LoggerMessage(LoggerMessage.LOG_MASTER_THIEF);
+        send.master = master;
+        
+        this.sendMessage(send);
+    }
+    
     @Override
     public void end() throws Exception
     {

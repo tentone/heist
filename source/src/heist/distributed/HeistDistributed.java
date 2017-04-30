@@ -25,55 +25,48 @@ public class HeistDistributed
         //Configuration
         ConfigurationDistributed configuration = new ConfigurationDistributed();
         
-        //Servers
+        //AssaultParty servers
         new AssaultPartyServer(0, configuration).start();
         new AssaultPartyServer(1, configuration).start();
+        
+        //Museum server
         new MuseumServer(configuration).start();
 
-        //Assault Parties clients
+        //AssaultParty clients
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)
         {
-            parties[i] = new AssaultPartyClient(i, configuration); //new SharedAssaultParty(i, configuration);
+            parties[i] = new AssaultPartyClient(i, configuration);
         }
         
         //ConcentrationSite server
         new ConcentrationSiteServer(parties, configuration).start();
         
         //Museum client
-        Museum museum = new MuseumClient(configuration); //new SharedMuseum(configuration);
+        Museum museum = new MuseumClient(configuration);
 
         //ControlCollectionSite server
         new ControlCollectionSiteServer(parties, museum, configuration).start();
         
         //Concetrantion client
-        ConcentrationSite concentration = new ConcentrationSiteClient(configuration); //new SharedConcentrationSite(parties, configuration);
+        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
         
         //ControlCollectionSite client
-        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration); //new SharedControlCollectionSite(parties, museum, configuration);
+        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
         
-        //Logger
-        Logger logger = new LoggerClient(configuration);//new SharedLogger(configuration);
+        //Logger server
+        new LoggerServer(parties, museum, controlCollection, configuration).start();
+       
+        //Logger client
+        Logger logger = new LoggerClient(configuration);
         
         //OrdinaryThieves
-        OrdinaryThief[] thieves = new OrdinaryThief[configuration.numberThieves];
-        for(int i = 0; i < thieves.length; i++)
+        for(int i = 0; i < configuration.numberThieves; i++)
         {
-            thieves[i] = new OrdinaryThief(i, controlCollection, concentration, museum, parties, logger, configuration);
+            new OrdinaryThief(i, controlCollection, concentration, museum, parties, logger, configuration).start();
         }
         
         //MasterThief
-        MasterThief master = new MasterThief(controlCollection, concentration, parties, logger, configuration);
-        
-        //Attach elements to shared logger
-        new LoggerServer(thieves, master, parties, museum, controlCollection, configuration).start();
-        //logger.attachElements(thieves, master, parties, museum, controlCollection);
-        
-        //Start thieves
-        for(int i = 0; i < thieves.length; i++)
-        {
-            thieves[i].start();
-        }
-        master.start();
+        new MasterThief(controlCollection, concentration, museum, parties, logger, configuration).start();
     }
 }

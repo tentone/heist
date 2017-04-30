@@ -6,14 +6,21 @@ import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
+import heist.interfaces.Museum;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * MasterThief is an active entity responsible from planning and prepare the Heist.
  * It creates parties of Thieves and sends them to get Paintings from the Museum.
  * The MasterThief does not know how many paintings exist inside each Room but knows how many rooms there are inside the Museum and where they are.
  */
-public class MasterThief extends Thread
+public class MasterThief extends Thread implements Serializable
 {
+    private static final long serialVersionUID = 8912768866374213L;
+    
     /**
      * Planning the heist state.
      * When the Master thief is in this state we is waiting for the OrdinaryThieves to be ready to start working.
@@ -64,6 +71,11 @@ public class MasterThief extends Thread
     private final AssaultParty[] parties;
     
     /**
+     * Museum
+     */
+    private final Museum museum;
+    
+    /**
      * Simulation configuration.
      */
     private final Configuration configuration;
@@ -80,12 +92,13 @@ public class MasterThief extends Thread
      * @param logger Logger
      * @param configuration Simulation configuration
      */
-    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration, AssaultParty[] parties, Logger logger, Configuration configuration)
+    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration, Museum museum, AssaultParty[] parties, Logger logger, Configuration configuration)
     {
         this.state = MasterThief.PLANNING_THE_HEIST;
         
         this.controlCollection = controlCollection;
         this.concentration = concentration;
+        this.museum = museum;
         this.parties = parties;
         this.logger = logger;
         
@@ -119,7 +132,7 @@ public class MasterThief extends Thread
     {
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -132,7 +145,7 @@ public class MasterThief extends Thread
         this.setState(this.controlCollection.appraiseSit());
         
         //this.logger.debug("Master appraiseSit");
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -147,7 +160,7 @@ public class MasterThief extends Thread
         this.concentration.fillAssaultParty(partyID);
         
         //this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
-        this.logger.log();
+        this.logger.log(this);
         
         return partyID;
     }
@@ -164,7 +177,7 @@ public class MasterThief extends Thread
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
         //this.logger.debug("Master sendAssaultParty " + party.getID());
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -177,7 +190,7 @@ public class MasterThief extends Thread
         
         this.controlCollection.takeARest();
         
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -191,7 +204,7 @@ public class MasterThief extends Thread
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
         //this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
-        this.logger.log();
+        this.logger.log(this);
     }
     
     /**
@@ -201,10 +214,36 @@ public class MasterThief extends Thread
     private void sumUpResults() throws Exception
     {
         this.controlCollection.sumUpResults();
-        
-        //this.logger.debug(this.collection.totalPaintingsStolen() + " paintings were stolen!");
-        this.logger.log();
+        this.logger.log(this);
         this.logger.end();
+        
+        for(int i = 0; i < this.parties.length; i++)
+        {
+            this.parties[i].end();
+        }
+        
+        this.concentration.end();
+        this.museum.end();
+    }
+    /**
+     * The writeObject method is called on serialization and is used to override the default java serialization.
+     * @param out ObjectOutputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.writeInt(this.state);
+    }
+    
+    /**
+     * The writeObject method is called when rebuilding the object from serialized data.
+     * @param in ObjectInputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     * @throws ClassNotFoundException Exception may be thrown. 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        this.state = in.readInt();
     }
     
     /**
@@ -213,8 +252,6 @@ public class MasterThief extends Thread
     @Override
     public void run()
     {
-        //this.logger.debug("Master started");
-        
         try
         {
             this.startOperations();
@@ -238,11 +275,7 @@ public class MasterThief extends Thread
         }
         catch(Exception e)
         {
-            //this.logger.debug("Master error");
             e.printStackTrace();
         }
-
-        
-        //this.logger.debug("Master terminated");
     }
 }

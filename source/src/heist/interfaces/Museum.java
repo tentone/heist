@@ -18,4 +18,11 @@ public interface Museum
      * @throws Exception A exception may be thrown depending on the implementation.
      */
     public Room[] getRooms() throws Exception;
+    
+    /**
+     * Called by the MasterThief to end the simulation.
+     * May be required for some implementations.
+     * @throws Exception A exception may be thrown depending on the implementation.
+     */
+    public default void end() throws Exception {}
 }

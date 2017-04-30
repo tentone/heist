@@ -1,37 +1,29 @@
-package heist.distributed.test.client;
+package heist.distributed.test;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.server.assaultparty.AssaultPartyClient;
-import heist.distributed.server.concentration.ConcentrationSiteClient;
 import heist.distributed.server.controlcollection.ControlCollectionSiteClient;
-import heist.distributed.server.logger.LoggerClient;
+import heist.distributed.server.logger.LoggerServer;
 import heist.distributed.server.museum.MuseumClient;
 import heist.interfaces.AssaultParty;
-import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
-import heist.interfaces.Logger;
 import heist.interfaces.Museum;
-import heist.thief.MasterThief;
 
-public class MasterThiefClient
+public class LoggerServerTest
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
         ConfigurationDistributed configuration = new ConfigurationDistributed();
-
+        
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)
         {
             parties[i] = new AssaultPartyClient(i, configuration);
         }
-        
-        Museum museum = new MuseumClient(configuration);
-        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
+
+        Museum museum = new MuseumClient(configuration);  
         ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
         
-        Logger logger = new LoggerClient(configuration);
-        
-        MasterThief thief = new MasterThief(controlCollection, concentration, museum, parties, logger, configuration);
-        thief.start();
+        new LoggerServer(parties, museum, controlCollection, configuration).start();
     }
 }

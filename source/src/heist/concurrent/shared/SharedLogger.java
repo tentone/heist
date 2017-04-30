@@ -88,9 +88,10 @@ public class SharedLogger implements Logger
         
         this.out = System.out;
         
-        this.thieves = null;
-        this.parties = null;
+        this.thieves = new OrdinaryThief[configuration.numberThieves];
         this.master = null;
+        
+        this.parties = null;
         this.museum = null;
         this.controlCollection = null;
         
@@ -107,19 +108,18 @@ public class SharedLogger implements Logger
     /**
      * Logger constructor Configuration file.
      * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
-     * @param thieves OrdinaryThieves
-     * @param master MasterThief
      * @param parties AssaultParties
      * @param museum Museum
      * @param controlCollection ControlCollectionSite
      * @param configuration Configuration
      */
-    public SharedLogger(OrdinaryThief[] thieves, MasterThief master, AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection, Configuration configuration)
+    public SharedLogger(AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection, Configuration configuration)
     {
         this.configuration = configuration;
- 
-        this.thieves = thieves;
-        this.master = master;
+        
+        this.thieves = new OrdinaryThief[configuration.numberThieves];
+        this.master = null;
+        
         this.parties = parties;
         this.museum = museum;
         this.controlCollection = controlCollection;
@@ -138,22 +138,17 @@ public class SharedLogger implements Logger
     
     /**
      * Change the elements to be logged using this logger.
-     * @param thieves OrdinaryThieves
-     * @param master MasterThief
      * @param parties AssaultParties
      * @param museum Museum
      * @param controlCollection ControlCollectionSite
      */
-    public void attachElements(OrdinaryThief[] thieves, MasterThief master, AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection)
+    public void attachElements(AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection)
     {
-        this.thieves = thieves;
-        this.master = master;
         this.parties = parties;
         this.museum = museum;
         this.controlCollection = controlCollection;
     }
-    
-    
+
     /**
      * Write message directly to the PrintStream.
      * Flushes the PrintStream after every message.
@@ -168,11 +163,35 @@ public class SharedLogger implements Logger
     }
     
     /**
-     * Create a log entry of everything in the general repository.
+     * Updates the MasterThief information and creates new log entry.
+     * @param master MasterThief
+     */
+    @Override
+    public synchronized void log(MasterThief master) throws Exception
+    {
+        this.master = master;
+        
+        this.log();
+    }
+    
+    /**
+     * Updates the OrdinaryThief information and creates new log entry.
+     * @param thief OrdinaryThief
+     */
+    @Override
+    public synchronized void log(OrdinaryThief thief) throws Exception
+    {
+        this.thieves[thief.getID()] = thief;
+        
+        this.log();
+    }
+    
+    /**
+     * Create a log entry of everything
      * Flushes after log has been written.
      * @throws Exception Exception
      */
-    public synchronized void log() throws Exception
+    private void log() throws Exception
     {        
         if(this.configuration.log)
         {
@@ -195,10 +214,26 @@ public class SharedLogger implements Logger
                 }
             }
 
-            out.print("\n" + master.state() + "     ");//
+            if(master == null)
+            {
+                out.print("\n----     ");
+            }
+            else
+            {
+                out.print("\n" + master.state() + "     ");//
+            }
+            
+            
             for(int i = 0; i < thieves.length; i++)
             {
-                out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
+                if(thieves[i] == null)
+                {
+                    out.printf("---- -- --    ");
+                }
+                else
+                {
+                    out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
+                }
             }
             out.print("\n");
 

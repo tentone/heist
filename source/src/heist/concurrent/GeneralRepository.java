@@ -88,9 +88,9 @@ public class GeneralRepository
             this.thieves[i] = new OrdinaryThief(i, this.controlCollection, this.concentration, this.museum,  this.parties, this.logger, this.configuration);
         }
         
-        this.master = new MasterThief(this.controlCollection, this.concentration,  this.parties, this.logger, this.configuration);
+        this.master = new MasterThief(this.controlCollection, this.concentration, this.museum, this.parties, this.logger, this.configuration);
         
-        this.logger.attachElements(this.thieves, this.master, this.parties, this.museum, this.controlCollection);
+        this.logger.attachElements(this.parties, this.museum, this.controlCollection);
     }
     
     /**
