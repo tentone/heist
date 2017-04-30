@@ -16,7 +16,7 @@ public class SharedMuseum implements Museum
     private final Room[] rooms;
 
     /**
-     * Museum constructor, initialises rooms with values from the configuration.
+     * Museum constructor, initializes rooms with values from the configuration.
      * @param configuration Simulation configuration
      */
     public SharedMuseum(Configuration configuration)

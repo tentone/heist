@@ -11,6 +11,11 @@ public class Address implements Serializable
     private static final long serialVersionUID = 9023789543L;
     
     /**
+     * Server name
+     */
+    public String name;
+    
+    /**
      * Server address.
      */
     public String address;
@@ -25,7 +30,7 @@ public class Address implements Serializable
      * @param address Server address.
      * @param port Port for connection.
      */
-    public Address(String address, int port)
+    public Address(String address, int port, String name)
     {
         this.address = address;
         this.port = port;

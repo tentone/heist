@@ -26,7 +26,7 @@ public interface ControlCollectionSite
      * @return AssaultParty created.
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public AssaultParty prepareNewParty(RoomStatus room) throws Exception;
+    public int prepareNewParty(RoomStatus room) throws Exception;
     
     /**
      * Called by the MasterThief to get what room to attack next.
@@ -60,13 +60,6 @@ public interface ControlCollectionSite
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
     public void sumUpResults() throws Exception;
-    
-    /**
-     * Get AssaultParties array.
-     * @return Array of AssaultParties used.
-     * @throws java.lang.Exception A exception may be thrown depending on the implementation.
-     */
-    public AssaultParty[] getParties() throws Exception;
     
     /**
      * Check how many paintings were stolen.

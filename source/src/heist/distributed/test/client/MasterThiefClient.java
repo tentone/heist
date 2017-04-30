@@ -1,6 +1,7 @@
-package heist.distributed.client;
+package heist.distributed.test.client;
 
 import heist.distributed.ConfigurationDistributed;
+import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
@@ -15,8 +16,9 @@ public class MasterThiefClient
         Logger logger = null;
         ConcentrationSite concentration = null;
         ControlCollectionSite controlCollection = null;
+        AssaultParty[] parties = null;
         
-        MasterThief thief = new MasterThief(controlCollection, concentration, logger, configuration);
+        MasterThief thief = new MasterThief(controlCollection, concentration, parties, logger, configuration);
         thief.start();
     }
 }

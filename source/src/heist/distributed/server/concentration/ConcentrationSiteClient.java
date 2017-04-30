@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package heist.distributed.server.concentration;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Client;
-import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.thief.OrdinaryThief;
 
@@ -19,7 +13,7 @@ public class ConcentrationSiteClient extends Client implements ConcentrationSite
     }
 
     @Override
-    public void fillAssaultParty(AssaultParty party) throws Exception
+    public void fillAssaultParty(int party) throws Exception
     {
         //TODO <ADD CODE HERE>
     }

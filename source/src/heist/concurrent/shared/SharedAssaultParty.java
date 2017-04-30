@@ -174,7 +174,7 @@ public class SharedAssaultParty implements AssaultParty
         if(!this.partyFull())
         {
             this.thieves.push(thief);
-            thief.setParty(this);
+            thief.setParty(this.id);
         }
         else
         {

@@ -1,7 +1,8 @@
 package heist.distributed.communication.test;
 
+import heist.Configuration;
 import heist.distributed.communication.Client;
-import heist.distributed.communication.Message;
+import heist.thief.OrdinaryThief;
 
 public class TestClient
 {
@@ -9,10 +10,11 @@ public class TestClient
     {
         Client client = new Client("localhost", 6001);
         
-        Message sent = new Message(123);
+        TestMessage sent = new TestMessage(1);
+        sent.thief = new OrdinaryThief(123, null, null, null, null, null, new Configuration());
         System.out.println("Message sent\n" + sent.toString());
         
-        Message received = client.sendMessage(sent);
-        System.out.println("Message received\n" + received.toString());
+        TestMessage received = (TestMessage) client.sendMessage(sent);
+        System.out.println("Message received\n" + received.toString() + " Thief:" + received.thief.getID());
     }
 }

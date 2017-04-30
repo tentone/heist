@@ -59,6 +59,11 @@ public class MasterThief extends Thread
     private final Logger logger;
     
     /**
+     * AssaultParties
+     */
+    private final AssaultParty[] parties;
+    
+    /**
      * Simulation configuration.
      */
     private final Configuration configuration;
@@ -75,12 +80,13 @@ public class MasterThief extends Thread
      * @param logger Logger
      * @param configuration Simulation configuration
      */
-    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration, Logger logger, Configuration configuration)
+    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration,  AssaultParty[] parties, Logger logger, Configuration configuration)
     {
         this.state = MasterThief.PLANNING_THE_HEIST;
         
         this.controlCollection = controlCollection;
         this.concentration = concentration;
+        this.parties = parties;
         this.logger = logger;
         
         this.configuration = configuration;
@@ -134,10 +140,10 @@ public class MasterThief extends Thread
      * @return AssaultParty assembled.
      * @throws java.lang.InterruptedException Exception
      */
-    private AssaultParty prepareAssaultParty() throws Exception
+    private int prepareAssaultParty() throws Exception
     {
         RoomStatus room = this.controlCollection.getRoomToAttack();
-        AssaultParty party = this.controlCollection.prepareNewParty(room);
+        int party = this.controlCollection.prepareNewParty(room);
         this.concentration.fillAssaultParty(party);
         
         //this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
@@ -152,9 +158,9 @@ public class MasterThief extends Thread
      * @param party Party to send.
      * @throws java.lang.InterruptedException Exception
      */
-    private void sendAssaultParty(AssaultParty party) throws Exception
+    private void sendAssaultParty(int party) throws Exception
     {
-        party.sendParty();
+        this.parties[party].sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
         //this.logger.debug("Master sendAssaultParty " + party.getID());

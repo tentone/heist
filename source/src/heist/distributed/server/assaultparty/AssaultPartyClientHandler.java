@@ -22,8 +22,10 @@ public class AssaultPartyClientHandler extends ClientHandler
     {
         AssaultPartyMessage message = (AssaultPartyMessage) msg;
         AssaultPartyMessage response = new AssaultPartyMessage(Message.DEFAULT);
-        
+
         int type = message.type;
+        
+        System.out.println("Party " + this.party.getID() + ": " + type);
         
         if(type == AssaultPartyMessage.GET_ID)
         {
@@ -43,22 +45,17 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.GET_THIEVES)
         {
-            //OrdinaryThiefState thieves = this.party.getThieves();
-            //TODO <ADD CODE HERE>
+            response.thieves = this.party.getThieves();
         }
         else if(type == AssaultPartyMessage.PREPARE_PARTY)
         {
-            
-            //RoomStatus room = message.room;
-            //this.party.prepareParty(room);
+            this.party.prepareParty(message.room);
         }
         else if(type == AssaultPartyMessage.ADD_THIEF)
         {
-            //OrdinaryThiefState thief = message.thief;
-            //this.party.addThief(thief);
+            this.party.addThief(message.thief);
             
-             //TODO <ADD CODE HERE>
-            //this.sendMessage(...)
+            response.thief = message.thief;
         }
         else if(type == AssaultPartyMessage.SEND_PARTY)
         {
@@ -66,10 +63,8 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.CRAWL_IN)
         {
-            //OrdinaryThiefState thief = message.thief;
-            //this.party.crawlIn(thief);
-            
-            //TODO <ADD CODE HERE>
+            response.keepCrawling = this.party.crawlIn(message.thief);
+            response.thief = message.thief;
         }
         else if(type == AssaultPartyMessage.REVERSE_DIRECTION)
         {
@@ -77,19 +72,14 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.CRAWL_OUT)
         {
-            //OrdinaryThiefState thief = message.thief;
-            //this.party.crawlOut(thief);
-            
-            //TODO <ADD CODE HERE>
+            response.keepCrawling = this.party.crawlOut(message.thief);
+            response.thief = message.thief;
         }
         else if(type == AssaultPartyMessage.REMOVE_THIEF)
         {
-            //int id = message.id;
-            //this.party.removeThief(id);
-            
-            //TODO <ADD CODE HERE>
+            this.party.removeThief(message.id);
         }
-        
+
         this.sendMessage(response);
     }
 }

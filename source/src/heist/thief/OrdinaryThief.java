@@ -1,12 +1,15 @@
 package heist.thief;
 
-import heist.concurrent.shared.SharedAssaultParty;
 import heist.Configuration;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
 import heist.interfaces.Museum;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * OrdinaryThief represents a thief active entity.
@@ -14,8 +17,10 @@ import heist.interfaces.Museum;
  * Thieves attack in parties defined by the MasterThief and cannot move their comrades behind.
  * After taking a step the thief wakes up the last thief in the Party queue to make a step.
  */
-public class OrdinaryThief extends Thread
+public class OrdinaryThief extends Thread implements Serializable
 {
+    private static final long serialVersionUID = 923475271232000L;
+    
     /**
      * Outside state
      * When the thief is outside it is waiting for instructions provided by the master thief
@@ -59,20 +64,24 @@ public class OrdinaryThief extends Thread
     private final Logger logger;
     
     /**
-     * Current AssaultParty attributed to this thief.
-     * Null if the thief is not in an AssaultParty.
+     * AssaultParties
      */
-    private AssaultParty party;
+    private final AssaultParty[] parties;
     
     /**
      * Thief unique id.
      */
-    private final int id;
+    private int id;
     
     /**
      * How far can the thief move in one step.
      */
-    private final int maximumDisplacement;
+    private int maximumDisplacement;
+    
+    /**
+     * Party id
+     */
+    private int party;
     
     /**
      * Thief state.
@@ -88,7 +97,7 @@ public class OrdinaryThief extends Thread
      * True if the thief carries a canvas.
      */
     private boolean hasCanvas;
-
+    
     /**
      * OrdinaryThief constructor.
      * @param id Thief id.
@@ -98,7 +107,7 @@ public class OrdinaryThief extends Thread
      * @param logger Logger
      * @param configuration Simulation configuration
      */
-    public OrdinaryThief(int id, ControlCollectionSite controlCollection, ConcentrationSite concentration, Museum museum, Logger logger, Configuration configuration)
+    public OrdinaryThief(int id, ControlCollectionSite controlCollection, ConcentrationSite concentration, Museum museum, AssaultParty[] parties, Logger logger, Configuration configuration)
     {
         this.id = id;
         this.state = OrdinaryThief.OUTSIDE;
@@ -106,13 +115,14 @@ public class OrdinaryThief extends Thread
         this.controlCollection = controlCollection;
         this.concentration = concentration;
         this.museum = museum;
+        this.parties = parties;
         this.logger = logger;
         
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         
         this.position = 0;
         this.hasCanvas = false;
-        this.party = null;
+        this.party = -1;
     }
     
     /**
@@ -130,7 +140,7 @@ public class OrdinaryThief extends Thread
      */
     public char hasParty()
     {
-        if(this.party == null)
+        if(this.party == -1)
         {
             return 'W';
         }
@@ -142,7 +152,7 @@ public class OrdinaryThief extends Thread
      * Get the OrdinaryThief party
      * @return Party assigned to the OrdinaryThief.
      */
-    public AssaultParty getParty()
+    public int getParty()
     {
         return this.party;
     }
@@ -151,7 +161,7 @@ public class OrdinaryThief extends Thread
      * Set assault party.
      * @param party Assault party.
      */
-    public void setParty(SharedAssaultParty party)
+    public void setParty(int party)
     {
         this.party = party;
     }
@@ -161,10 +171,10 @@ public class OrdinaryThief extends Thread
      */
     public void leaveParty() throws Exception
     {
-        if(this.party != null)
+        if(this.party != -1)
         {
-            this.party.removeThief(this.id);
-            this.party = null;
+            this.parties[this.party].removeThief(this.id);
+            this.party = -1;
         }
     }
     
@@ -273,7 +283,7 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_INWARDS);
         this.logger.log();
         
-        while(this.party.crawlIn(this))
+        while(this.parties[this.party].crawlIn(this))
         {
             //this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
             this.logger.log();
@@ -289,7 +299,7 @@ public class OrdinaryThief extends Thread
     private void rollACanvas() throws Exception
     {
         this.setState(OrdinaryThief.AT_A_ROOM);
-        this.hasCanvas = this.museum.rollACanvas(this.party.getTarget());
+        this.hasCanvas = this.museum.rollACanvas(this.parties[this.party].getTarget());
 
         //this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
         this.logger.log();
@@ -300,7 +310,7 @@ public class OrdinaryThief extends Thread
      */
     private void reverseDirection() throws Exception
     {      
-        this.party.reverseDirection();
+        this.parties[this.party].reverseDirection();
         
         //this.logger.debug("Thief " + this.id + " reverse");
         this.logger.log();
@@ -315,7 +325,7 @@ public class OrdinaryThief extends Thread
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         this.logger.log();
         
-        while(this.party.crawlOut(this))
+        while(this.parties[this.party].crawlOut(this))
         {
             //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
             this.logger.log();
@@ -340,15 +350,58 @@ public class OrdinaryThief extends Thread
         
         this.logger.log();
     }
-
+    
+    /**
+     * The writeObject method is called on serialization and is used to override the default java serialization.
+     * @param out ObjectOutputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.writeInt(this.id);
+        out.writeInt(this.maximumDisplacement);
+        out.writeInt(this.party);
+        out.writeInt(this.state);
+        out.writeInt(this.position);
+        out.writeBoolean(this.hasCanvas);
+    }
+    
+    /**
+     * The writeObject method is called when rebuilding the object from serialized data.
+     * @param in ObjectInputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     * @throws ClassNotFoundException Exception may be thrown. 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        this.id = in.readInt();
+        this.maximumDisplacement = in.readInt();
+        this.party = in.readInt();
+        this.state = in.readInt();
+        this.position = in.readInt();
+        this.hasCanvas = in.readBoolean();
+    }
+    
+    /**
+     * Copy state from another thief instance.
+     * @param thief Thief to copy data from.
+     */
+    public void copyState(OrdinaryThief thief)
+    {
+        this.id = thief.id;
+        this.maximumDisplacement = thief.maximumDisplacement;
+        this.party = thief.party;
+        this.state = thief.state;
+        this.position = thief.position;
+        this.hasCanvas = thief.hasCanvas;
+    }
+    
     /**
      * Implements OrdinaryThief life cycle.
      */
     @Override
     public void run()
     {
-        //this.logger.debug("Thief " + this.id + " started (MD:" + this.maximumDisplacement + ")");
-        
         try
         {
             while(this.amINeeded())
@@ -367,11 +420,8 @@ public class OrdinaryThief extends Thread
         }
         catch(Exception e)
         {
-            //this.logger.debug("Thief " + this.id + " error");
             e.printStackTrace();
         }
-        
-        //this.logger.debug("Thief " + this.id + " terminated");
     }
 
     /**

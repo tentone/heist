@@ -1,6 +1,7 @@
-package heist.distributed.client;
+package heist.distributed.test.client;
 
 import heist.Configuration;
+import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
@@ -16,8 +17,8 @@ public class OrdinaryThiefClient
         Museum museum = null;
         ConcentrationSite concentration = null;
         ControlCollectionSite controlCollection = null;
-        
-        OrdinaryThief thief = new OrdinaryThief(0, controlCollection, concentration, museum, logger, configuration);
+        AssaultParty[] parties = null;
+        OrdinaryThief thief = new OrdinaryThief(0, controlCollection, concentration, museum, parties, logger, configuration);
         thief.start();
     }
 }

@@ -2,11 +2,12 @@ package heist.distributed.server.assaultparty;
 
 import heist.distributed.communication.Message;
 import heist.room.RoomStatus;
+import heist.thief.OrdinaryThief;
 import java.io.Serializable;
 
 public class AssaultPartyMessage extends Message implements Serializable
 {
-    private static final long serialVersionUID = 26523489490126L;
+    private static final long serialVersionUID = 265273489490126L;
 
     public static final int GET_ID = 1;
     
@@ -33,8 +34,10 @@ public class AssaultPartyMessage extends Message implements Serializable
     public static final int REMOVE_THIEF = 12;
     
     public int id, target, state;
-    public boolean partyFull;
+    public boolean partyFull, keepCrawling;
     public RoomStatus room;
+    public OrdinaryThief[] thieves;
+    public OrdinaryThief thief;
     
     /**
      * Simple constructor without any aditional data.

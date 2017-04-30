@@ -15,6 +15,16 @@ import heist.interfaces.ConcentrationSite;
 public class SharedConcentrationSite implements ConcentrationSite
 {
     /**
+     * AssaultParties
+     */
+    private final AssaultParty[] parties;
+    
+    /**
+     * Simulation configuration.
+     */
+    private final Configuration configuration;
+    
+    /**
      * List of thieves waiting to enter a team.
      */
     private final Queue<OrdinaryThief> waitingThieves;
@@ -24,12 +34,17 @@ public class SharedConcentrationSite implements ConcentrationSite
      */
     private final Queue<AssaultParty> waitingParties;
     
+    
+    
     /**
      * ConcentrationSite constructor.
      * @param configuration Configuration to be used.
      */
-    public SharedConcentrationSite(Configuration configuration)
+    public SharedConcentrationSite(AssaultParty[] parties, Configuration configuration)
     {   
+        this.parties = parties;
+        this.configuration = configuration;
+        
         this.waitingThieves = new ArrayQueue<>(configuration.numberThieves);
         this.waitingParties = new ArrayQueue<>(configuration.numberParties);
     }
@@ -42,12 +57,12 @@ public class SharedConcentrationSite implements ConcentrationSite
      * @throws Exception Exception
      */
     @Override
-    public synchronized void fillAssaultParty(AssaultParty party) throws Exception
+    public synchronized void fillAssaultParty(int party) throws Exception
     {
-        this.waitingParties.push(party);
+        this.waitingParties.push(this.parties[party]);
         this.notifyAll();
 
-        while(!party.partyFull())
+        while(!this.parties[party].partyFull())
         {
             this.wait();
         }

@@ -14,7 +14,7 @@ public class AssaultPartyServer extends Server
     {
         super(configuration.assaultPartiesServers[id].port);
         
-        //this.party = new SharedAssaultParty(id, ..., configuration);
+        this.party = new SharedAssaultParty(id, configuration);
     }
     
     @Override

@@ -217,7 +217,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
      * @throws Exception Exception
      */
     @Override
-    public synchronized AssaultParty prepareNewParty(RoomStatus room) throws Exception
+    public synchronized int prepareNewParty(RoomStatus room) throws Exception
     {
         AssaultParty party = null;
         
@@ -231,7 +231,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
             }
         }
         
-        return party;
+        return party.getID();
     }
     
     /**
@@ -325,7 +325,7 @@ public class SharedControlCollectionSite implements ControlCollectionSite
         if(!this.canvasDeliverQueue.isEmpty())
         {
             OrdinaryThief thief = this.canvasDeliverQueue.pop();
-            AssaultParty party = thief.getParty();
+            AssaultParty party = this.parties[thief.getParty()];
             
             try
             {
