@@ -231,15 +231,22 @@ public class SharedAssaultParty implements AssaultParty
             this.thieves.popPush();
         }
         
-        while(this.thieves.peek() != thief || this.state != SharedAssaultParty.CRAWLING)
+        System.out.println("A | " + this.thieves.peek().getID() + " | " + thief.getID());
+        
+        while(this.thieves.peek().getID() != thief.getID() || this.state != SharedAssaultParty.CRAWLING)
         {
+            System.out.println("B");
+            
             this.wait();
             
+            System.out.println("C");
             while(this.thieves.peek().getPosition() == this.room.getDistance())
             {
                 this.thieves.popPush();
             }
         }
+        
+        System.out.println("D");
         
         for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
@@ -347,7 +354,7 @@ public class SharedAssaultParty implements AssaultParty
             this.thieves.popPush();
         }
         
-        while(this.thieves.peek() != thief)
+        while(this.thieves.peek().getID() != thief.getID())
         {
             this.wait();
             

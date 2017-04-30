@@ -33,11 +33,10 @@ public class SharedConcentrationSite implements ConcentrationSite
      * List of parties waiting to be filled with thieves.
      */
     private final Queue<AssaultParty> waitingParties;
-    
-    
-    
+
     /**
      * ConcentrationSite constructor.
+     * @param parties AssaultParties
      * @param configuration Configuration to be used.
      */
     public SharedConcentrationSite(AssaultParty[] parties, Configuration configuration)
@@ -96,7 +95,7 @@ public class SharedConcentrationSite implements ConcentrationSite
         
         if(party.partyFull())
         {
-            this.notify();
+            this.notifyAll();
         }
     }
 }
