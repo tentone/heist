@@ -90,7 +90,7 @@ public class Configuration implements Serializable
         this.thiefDistance = 3;
         this.thiefDisplacement = new Range(2, 6);
         
-        this.partySize = 2;
+        this.partySize = 3;
         this.numberParties = this.numberThieves / this.partySize;
         
         this.numberRooms = 5;
