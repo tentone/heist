@@ -77,7 +77,8 @@ public class SharedLogger implements Logger
     private ControlCollectionSite controlCollection;
     
     /**
-     * Logger constructor from GeneralRepository and Configuration file.
+     * Logger constructor Configuration file.
+     * Before starting the simulation other elements need to be attached using the attachElements method.
      * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
      * @param configuration Configuration
      */
@@ -91,6 +92,7 @@ public class SharedLogger implements Logger
         this.parties = null;
         this.master = null;
         this.museum = null;
+        this.controlCollection = null;
         
         if(this.configuration.logToFile)
         {
@@ -102,7 +104,38 @@ public class SharedLogger implements Logger
             catch(FileNotFoundException e){}
         }
     }
-
+    /**
+     * Logger constructor Configuration file.
+     * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
+     * @param thieves OrdinaryThieves
+     * @param master MasterThief
+     * @param parties AssaultParties
+     * @param museum Museum
+     * @param controlCollection ControlCollectionSite
+     * @param configuration Configuration
+     */
+    public SharedLogger(OrdinaryThief[] thieves, MasterThief master, AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection, Configuration configuration)
+    {
+        this.configuration = configuration;
+ 
+        this.thieves = thieves;
+        this.master = master;
+        this.parties = parties;
+        this.museum = museum;
+        this.controlCollection = controlCollection;
+        
+        this.out = System.out;
+        if(this.configuration.logToFile)
+        {
+            try
+            {
+                PrintStream pw = new PrintStream(new File(this.configuration.logFile));
+                this.out = pw;
+            }
+            catch(FileNotFoundException e){}
+        }
+    }
+    
     /**
      * Change the elements to be logged using this logger.
      * @param thieves OrdinaryThieves

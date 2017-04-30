@@ -9,6 +9,8 @@ import heist.distributed.server.assaultparty.AssaultPartyClient;
 import heist.distributed.server.assaultparty.AssaultPartyServer;
 import heist.distributed.server.concentration.ConcentrationSiteClient;
 import heist.distributed.server.concentration.ConcentrationSiteServer;
+import heist.distributed.server.controlcollection.ControlCollectionSiteClient;
+import heist.distributed.server.controlcollection.ControlCollectionSiteServer;
 import heist.distributed.server.museum.MuseumClient;
 import heist.distributed.server.museum.MuseumServer;
 import heist.interfaces.AssaultParty;
@@ -42,18 +44,22 @@ public class HeistDistributed
         }
         
         //ConcentrationSite server
-        new ConcentrationSiteServer(parties, configuration).start();
+        //new ConcentrationSiteServer(parties, configuration).start();
         
         //Museum
         Museum museum = new MuseumClient(configuration);
         //Museum museum = new SharedMuseum(configuration);
         
+        //ControlCollectionSite server
+        new ControlCollectionSiteServer(parties, museum, configuration).start();
+        
         //Concetrantion
-        //ConcentrationSite concentration = new SharedConcentrationSite(parties, configuration);
-        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
+        ConcentrationSite concentration = new SharedConcentrationSite(parties, configuration);
+        //ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
         
         //Control and collection
-        ControlCollectionSite controlCollection = new SharedControlCollectionSite(parties, museum, configuration);
+        //ControlCollectionSite controlCollection = new SharedControlCollectionSite(parties, museum, configuration);
+        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
         
         //OrdinaryThieves
         OrdinaryThief[] thieves = new OrdinaryThief[configuration.numberThieves];
@@ -65,7 +71,7 @@ public class HeistDistributed
         //MasterThief
         MasterThief master = new MasterThief(controlCollection, concentration, parties, logger, configuration);
         
-        //Attach to logger
+        //Attach elements to shared logger
         logger.attachElements(thieves, master, parties, museum, controlCollection);
         
         //Start thieves

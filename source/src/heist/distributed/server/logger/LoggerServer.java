@@ -3,18 +3,24 @@ package heist.distributed.server.logger;
 import heist.concurrent.shared.SharedLogger;
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.communication.Server;
+import heist.interfaces.AssaultParty;
+import heist.interfaces.ControlCollectionSite;
+import heist.interfaces.Logger;
+import heist.interfaces.Museum;
+import heist.thief.MasterThief;
+import heist.thief.OrdinaryThief;
 import java.io.IOException;
 import java.net.Socket;
 
 public class LoggerServer extends Server
 {
-    private SharedLogger logger;
+    private Logger logger;
     
-    public LoggerServer(ConfigurationDistributed configuration) throws IOException
+    public LoggerServer(OrdinaryThief[] thieves, MasterThief master, AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection, ConfigurationDistributed configuration) throws IOException
     {
         super(configuration.loggerServer.port);
         
-        //logger = new SharedLogger(...);
+        logger = new SharedLogger(thieves, master, parties, museum, controlCollection, configuration);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package heist.distributed.server.controlcollection;
 
 import heist.distributed.communication.Message;
+import heist.room.RoomStatus;
+import heist.thief.OrdinaryThief;
 
 public class ControlCollectionSiteMessage extends Message
 {
@@ -23,6 +25,11 @@ public class ControlCollectionSiteMessage extends Message
     public static final int GET_PARTIES = 23;
     
     public static final int TOTAL_PAINTINGS_STOLEN = 24;
+    
+    public OrdinaryThief thief;
+    public boolean amINeeded;
+    public int state, partyID, paintings;
+    public RoomStatus room;
     
     public ControlCollectionSiteMessage(int type)
     {

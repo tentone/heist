@@ -6,7 +6,6 @@ import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
-import heist.queue.iterator.Iterator;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
