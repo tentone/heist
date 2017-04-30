@@ -97,9 +97,10 @@ public interface AssaultParty
     
     /**
      * Called by the OrdinaryThieves to reverse their direction after they reached the target room.
+     * @param thief Thief that is going to reverse direction
      * @throws java.lang.Exception A exception may be thrown depending on the implementation.
      */
-    public void reverseDirection() throws Exception;
+    public void reverseDirection(OrdinaryThief thief) throws Exception;
     
     /**
      * Called by the OrdinaryThief to crawl inside the museum.

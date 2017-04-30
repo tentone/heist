@@ -35,6 +35,11 @@ public class SharedAssaultParty implements AssaultParty
      * OrdinaryThieves in the party.
      */
     private final Queue<OrdinaryThief> thieves;
+
+    /**
+     * Crawling order
+     */
+    private final Queue<Integer> crawlingQueue;
     
     /**
      * Targeted room.
@@ -61,6 +66,7 @@ public class SharedAssaultParty implements AssaultParty
         this.id = id;
         
         this.thieves = new ArrayQueue<>(configuration.partySize);
+        this.crawlingQueue = new ArrayQueue<>(configuration.partySize);
         
         this.room = null;
         this.partySize = configuration.partySize;
@@ -121,6 +127,8 @@ public class SharedAssaultParty implements AssaultParty
     private synchronized void reset()
     {
         this.state = SharedAssaultParty.DISMISSED;
+        this.crawlingQueue.clear();
+        this.thieves.clear();
         this.room = null;
         this.waitingToReverse = 0;
     }
@@ -133,8 +141,8 @@ public class SharedAssaultParty implements AssaultParty
     public synchronized OrdinaryThief[] getThieves()
     {
         OrdinaryThief[] thieves = new OrdinaryThief[this.thieves.size()];
-        Iterator<OrdinaryThief> it = this.thieves.iterator();
         
+        Iterator<OrdinaryThief> it = this.thieves.iterator();
         for(int i = 0; i < thieves.length; i++)
         {
             thieves[i] = it.next();
@@ -174,6 +182,7 @@ public class SharedAssaultParty implements AssaultParty
         if(!this.partyFull())
         {
             this.thieves.push(thief);
+            this.crawlingQueue.push(thief.getID());
             thief.setParty(this.id);
         }
         else
@@ -221,32 +230,39 @@ public class SharedAssaultParty implements AssaultParty
     /**
      * Method used to update the position the thieves
      * @param thief Thief to update position of
-     * @throws java.lang.InterruptedException Exception
+     * @throws Exception Exception
      * @return True if was able to move the thief, false if thief arrived at the room
      */
-    public synchronized boolean crawlIn(OrdinaryThief thief) throws InterruptedException
+    public synchronized boolean crawlIn(OrdinaryThief thief) throws Exception
     {
-        while(this.thieves.peek().getPosition() == this.room.getDistance())
+        /*while(this.thieves.peek().getPosition() == this.room.getDistance())
         {
             this.thieves.popPush();
+        }*/
+        if(this.crawlingQueue.size() == 0)
+        {
+            throw new Exception("Crawling Queue size equals 0");
+        }
+        else if(this.crawlingQueue.peek() == null)
+        {
+            throw new Exception("Crawling peek returned null");
         }
         
-        System.out.println("A | " + this.thieves.peek().getID() + " | " + thief.getID());
+        System.out.println("A");
         
-        while(this.thieves.peek().getID() != thief.getID() || this.state != SharedAssaultParty.CRAWLING)
+        while(this.crawlingQueue.peek() != thief.getID() || this.state != SharedAssaultParty.CRAWLING)
         {
-            System.out.println("B");
-            
             this.wait();
-            
-            System.out.println("C");
-            while(this.thieves.peek().getPosition() == this.room.getDistance())
+
+            System.out.println("B");
+                    
+            /*while(this.thieves.peek().getPosition() == this.room.getDistance())
             {
                 this.thieves.popPush();
-            }
+            }*/
         }
         
-        System.out.println("D");
+        System.out.println("C");
         
         for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
@@ -311,22 +327,35 @@ public class SharedAssaultParty implements AssaultParty
             }
         }
         
-        this.thieves.popPush();
+        System.out.println("D");
+
+        boolean keepCrawling = thief.getPosition() != this.room.getDistance();
+        if(keepCrawling)
+        {
+            this.crawlingQueue.popPush();
+        }
+        else
+        {
+            this.crawlingQueue.pop();
+        }
+        
         this.notifyAll();
         
-        return thief.getPosition() != this.room.getDistance();
+        System.out.println("E | " + keepCrawling);
+        
+        return keepCrawling;
     }
     
     /**
      * Reverse assault party direction. Waits for all party members to arrive at the room and pick up a canvas.
      * The thieves wait for the last one to arrive. The last thieve to arrive wakes everybody.
-     * @throws java.lang.InterruptedException Exception
+     * @throws Exception Exception
      */
-    public synchronized void reverseDirection() throws InterruptedException
+    public synchronized void reverseDirection(OrdinaryThief thief) throws Exception
     {
         this.waitingToReverse++;
         
-        if(this.waitingToReverse != this.partySize)
+        if(this.waitingToReverse < this.partySize)
         {
             while(this.waitingToReverse != 0)
             {
@@ -338,30 +367,44 @@ public class SharedAssaultParty implements AssaultParty
             this.waitingToReverse = 0;
             this.notifyAll();
         }
-
+        
+        this.crawlingQueue.push(thief.getID());
+        
+        if(this.crawlingQueue.size() > this.partySize)
+        {
+            throw new Exception("CrawlingQueue bigger than partysize");
+        }
     }
     
     /**
      * Method used to update the position the thieves.
      * @param thief Thief to update position of.
-     * @throws java.lang.InterruptedException Exception
+     * @throws Exception Exception
      * @return True if was able to move the thief, false if thief arrived at the room.
      */
-    public synchronized boolean crawlOut(OrdinaryThief thief) throws InterruptedException
+    public synchronized boolean crawlOut(OrdinaryThief thief) throws Exception
     {
-        while(this.thieves.peek().getPosition() == 0)
+        /*while(this.thieves.peek().getPosition() == 0)
         {
             this.thieves.popPush();
+        }*/
+        if(this.crawlingQueue.size() == 0)
+        {
+            throw new Exception("Crawling Queue size equals 0");
+        }
+        else if(this.crawlingQueue.peek() == null)
+        {
+            throw new Exception("Crawling peek returned null");
         }
         
-        while(this.thieves.peek().getID() != thief.getID())
+        while(this.crawlingQueue.peek() != thief.getID())
         {
             this.wait();
             
-            while(this.thieves.peek().getPosition() == 0)
+            /*while(this.thieves.peek().getPosition() == 0)
             {
                 this.thieves.popPush();
-            }
+            }*/
         }
         
         for(int delta = thief.getDisplacement(); delta > 0; delta--)
@@ -426,11 +469,20 @@ public class SharedAssaultParty implements AssaultParty
                 }
             }
         }
+
+        boolean keepCrawling = thief.getPosition() != 0;
+        if(keepCrawling)
+        {
+            this.crawlingQueue.popPush();
+        }
+        else
+        {
+            this.crawlingQueue.pop();
+        }
         
-        this.thieves.popPush();
         this.notifyAll();
         
-        return thief.getPosition() != 0;
+        return keepCrawling;
     }
     
     /**
@@ -444,7 +496,6 @@ public class SharedAssaultParty implements AssaultParty
         if(object instanceof SharedAssaultParty)
         {
             SharedAssaultParty party = (SharedAssaultParty) object;
-            
             return party.id == this.id;
         }
         return false;

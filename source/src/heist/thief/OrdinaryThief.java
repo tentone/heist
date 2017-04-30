@@ -310,7 +310,7 @@ public class OrdinaryThief extends Thread implements Serializable
      */
     private void reverseDirection() throws Exception
     {      
-        this.parties[this.party].reverseDirection();
+        this.parties[this.party].reverseDirection(this);
         
         //this.logger.debug("Thief " + this.id + " reverse");
         this.logger.log();

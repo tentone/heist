@@ -24,8 +24,8 @@ public class AssaultPartyClientHandler extends ClientHandler
         AssaultPartyMessage response = new AssaultPartyMessage(Message.DEFAULT);
 
         int type = message.type;
-        
-        System.out.println("Party " + this.party.getID() + ": " + type);
+
+        System.out.println("Party Server " + this.party.getID() + ": " + type);
         
         if(type == AssaultPartyMessage.GET_ID)
         {
@@ -68,7 +68,7 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.REVERSE_DIRECTION)
         {
-            this.party.reverseDirection();
+            this.party.reverseDirection(message.thief);
         }
         else if(type == AssaultPartyMessage.CRAWL_OUT)
         {
@@ -79,7 +79,9 @@ public class AssaultPartyClientHandler extends ClientHandler
         {
             this.party.removeThief(message.id);
         }
-
+        
+        System.out.println("Party Server " + this.party.getID() + ": " + type + " ok");
+        
         this.sendMessage(response);
     }
 }

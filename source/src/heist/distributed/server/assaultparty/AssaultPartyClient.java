@@ -17,18 +17,21 @@ public class AssaultPartyClient extends Client implements AssaultParty
     @Override
     public Message sendMessage(Message message) throws Exception
     {
-        System.out.println("AssaultPartyClientMessage:" + message.type);
         
-        return super.sendMessage(message);
+        System.out.println("Party Client: " + message.type + " sent");
+        
+        Message response = super.sendMessage(message);
+        
+        System.out.println("Party Client: " + message.type + " ok");
+        
+        return response;
     }
     
     @Override
     public int getID() throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_ID);
-        
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-        
         return response.id;
     }
 
@@ -36,9 +39,7 @@ public class AssaultPartyClient extends Client implements AssaultParty
     public int getTarget() throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_TARGET);
-        
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-        
         return response.target;
     }
 
@@ -46,19 +47,15 @@ public class AssaultPartyClient extends Client implements AssaultParty
     public int getState() throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_STATE);
-        
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-        
         return response.state;
     }
 
     @Override
     public boolean partyFull() throws Exception
     {
-        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_TARGET);
-        
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.PARTY_FULL);
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-        
         return response.partyFull;
     }
     
@@ -67,18 +64,7 @@ public class AssaultPartyClient extends Client implements AssaultParty
     public OrdinaryThief[] getThieves() throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_THIEVES);
-        
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-
-        if(response.thieves != null)
-        {
-            System.out.println("GetThieves: " + response.thieves + " (" + response.thieves.length + ")");
-        }
-        else
-        {
-            System.out.println("GetThieves: " + response.thieves);
-        }
-        
         return response.thieves;
     }
 
@@ -115,16 +101,17 @@ public class AssaultPartyClient extends Client implements AssaultParty
         message.thief = thief;
         
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-        
         thief.copyState(response.thief);
         
         return response.keepCrawling;
     }
 
     @Override
-    public void reverseDirection() throws Exception
+    public void reverseDirection(OrdinaryThief thief) throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.REVERSE_DIRECTION);
+        message.thief = thief;
+        
         this.sendMessage(message);
     }
 
@@ -135,7 +122,6 @@ public class AssaultPartyClient extends Client implements AssaultParty
         message.thief = thief;
         
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
-        
         thief.copyState(response.thief);
         
         return response.keepCrawling;
