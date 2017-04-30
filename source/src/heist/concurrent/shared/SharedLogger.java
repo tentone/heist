@@ -260,13 +260,13 @@ public class SharedLogger implements Logger
                 {
                     out.printf("%2d   ", parties[i].getTarget());
 
-                    OrdinaryThief[] partyThieves = parties[i].getThieves();
+                    int[] thievesID = parties[i].getThieves();
                     
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        if(j < partyThieves.length)
+                        if(j < thievesID.length)
                         {
-                            OrdinaryThief thief = partyThieves[j];
+                            OrdinaryThief thief = this.thieves[thievesID[j]];
                             out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                         else

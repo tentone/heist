@@ -3,14 +3,15 @@ package heist.distributed.server.assaultparty;
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.distributed.communication.ClientHandler;
 import heist.distributed.communication.Message;
+import heist.interfaces.AssaultParty;
 import java.io.IOException;
 import java.net.Socket;
 
 public class AssaultPartyClientHandler extends ClientHandler
 {
-    private final SharedAssaultParty party;
+    private final AssaultParty party;
 
-    public AssaultPartyClientHandler(Socket socket, SharedAssaultParty party) throws IOException
+    public AssaultPartyClientHandler(Socket socket, AssaultParty party) throws IOException
     {
         super(socket);          
 

@@ -80,7 +80,7 @@ public class MasterThief extends Thread
      * @param logger Logger
      * @param configuration Simulation configuration
      */
-    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration,  AssaultParty[] parties, Logger logger, Configuration configuration)
+    public MasterThief(ControlCollectionSite controlCollection, ConcentrationSite concentration, AssaultParty[] parties, Logger logger, Configuration configuration)
     {
         this.state = MasterThief.PLANNING_THE_HEIST;
         
@@ -143,7 +143,6 @@ public class MasterThief extends Thread
     private int prepareAssaultParty() throws Exception
     {
         RoomStatus room = this.controlCollection.getRoomToAttack();
-        
         int partyID = this.controlCollection.prepareNewParty(room);
         this.concentration.fillAssaultParty(partyID);
         

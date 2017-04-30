@@ -52,21 +52,21 @@ public class SharedConcentrationSite implements ConcentrationSite
      * Fill a Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.
      * The MasterThief creates the party and adds it to the waiting party list and gets locked until all thieves join the party.
      * The last thief to join the party wakes up the MasterThief.
-     * @param party Party to be filled with thieves.
+     * @param partyID ID of the AssaultParty to be filled with thieves.
      * @throws Exception Exception
      */
     @Override
-    public synchronized void fillAssaultParty(int party) throws Exception
+    public synchronized void fillAssaultParty(int partyID) throws Exception
     {
-        if(this.waitingParties.contains(party))
+        if(this.waitingParties.contains(partyID))
         {
-            throw new Exception("Party already in the list " + this.waitingParties.toString() + " (" + party + ")");
+            throw new Exception("Party already in the list " + this.waitingParties.toString() + " (" + partyID + ")");
         }
         
-        this.waitingParties.push(party);
+        this.waitingParties.push(partyID);
         this.notifyAll();
 
-        while(!this.parties[party].partyFull())
+        while(!this.parties[partyID].partyFull())
         {
             this.wait();
         }

@@ -100,7 +100,7 @@ public class Configuration implements Serializable
         this.logFile = "log.txt";
         this.logToFile = false;
         this.debug = false;
-        this.log = false;
-        this.logHeader = false;
+        this.log = true;
+        this.logHeader = true;
     }
 }

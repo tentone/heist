@@ -12,7 +12,7 @@ public class ConcentrationSiteMessage extends Message implements Serializable
     
     public static final int PREPARE_EXCURSION = 14;
     
-    public int party;
+    public int partyID;
     public OrdinaryThief thief;
     
     public ConcentrationSiteMessage(int type)

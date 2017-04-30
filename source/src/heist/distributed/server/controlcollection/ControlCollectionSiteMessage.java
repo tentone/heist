@@ -6,6 +6,8 @@ import heist.thief.OrdinaryThief;
 
 public class ControlCollectionSiteMessage extends Message
 {
+    private static final long serialVersionUID = 1222277744666L;
+    
     public static final int AM_I_NEEDED = 15;
     
     public static final int APPRAISE_SITE = 16;

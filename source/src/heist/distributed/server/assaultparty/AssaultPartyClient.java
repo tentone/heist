@@ -53,10 +53,9 @@ public class AssaultPartyClient extends Client implements AssaultParty
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
         return response.partyFull;
     }
-    
 
     @Override
-    public OrdinaryThief[] getThieves() throws Exception
+    public int[] getThieves() throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.GET_THIEVES);
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
@@ -65,7 +64,7 @@ public class AssaultPartyClient extends Client implements AssaultParty
 
     @Override
     public void prepareParty(RoomStatus room) throws Exception
-    {
+    {                            
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.PREPARE_PARTY);
         message.room = room;
         

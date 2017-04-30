@@ -138,14 +138,14 @@ public class SharedAssaultParty implements AssaultParty
      * @return Array of thieves.
      */
     @Override
-    public synchronized OrdinaryThief[] getThieves()
+    public synchronized int[] getThieves()
     {
-        OrdinaryThief[] thieves = new OrdinaryThief[this.thieves.size()];
+        int[] thieves = new int[this.thieves.size()];
         
         Iterator<OrdinaryThief> it = this.thieves.iterator();
         for(int i = 0; i < thieves.length; i++)
         {
-            thieves[i] = it.next();
+            thieves[i] = it.next().getID();
         }
         
         return thieves;

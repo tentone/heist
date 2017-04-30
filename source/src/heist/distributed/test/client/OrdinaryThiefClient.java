@@ -1,6 +1,11 @@
 package heist.distributed.test.client;
 
-import heist.Configuration;
+import heist.distributed.ConfigurationDistributed;
+import heist.distributed.server.assaultparty.AssaultPartyClient;
+import heist.distributed.server.concentration.ConcentrationSiteClient;
+import heist.distributed.server.controlcollection.ControlCollectionSiteClient;
+import heist.distributed.server.logger.LoggerClient;
+import heist.distributed.server.museum.MuseumClient;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
@@ -12,12 +17,22 @@ public class OrdinaryThiefClient
 {
     public static void main(String[] args)
     {
-        Configuration configuration = null;
-        Logger logger = null;
-        Museum museum = null;
-        ConcentrationSite concentration = null;
-        ControlCollectionSite controlCollection = null;
-        AssaultParty[] parties = null;
+        ConfigurationDistributed configuration = new ConfigurationDistributed();
+
+        AssaultParty[] parties = new AssaultParty[configuration.numberParties];
+        for(int i = 0; i < parties.length; i++)
+        {
+            parties[i] = new AssaultPartyClient(i, configuration);
+        }
+
+        Museum museum = new MuseumClient(configuration);
+        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
+        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
+        
+        Logger logger = new LoggerClient(configuration);
+        
+        
+        
         OrdinaryThief thief = new OrdinaryThief(0, controlCollection, concentration, museum, parties, logger, configuration);
         thief.start();
     }

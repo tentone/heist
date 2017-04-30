@@ -27,7 +27,7 @@ public class ConcentrationSiteClientHandler extends ClientHandler
         
         if(type == ConcentrationSiteMessage.FILL_ASSAULT_PARTY)
         {
-            this.concentration.fillAssaultParty(message.party);
+            this.concentration.fillAssaultParty(message.partyID);
         }
         else if(type == ConcentrationSiteMessage.PREPARE_EXCURSION)
         {

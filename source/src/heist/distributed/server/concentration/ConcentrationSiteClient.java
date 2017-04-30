@@ -16,7 +16,7 @@ public class ConcentrationSiteClient extends Client implements ConcentrationSite
     public void fillAssaultParty(int party) throws Exception
     {
         ConcentrationSiteMessage message = new ConcentrationSiteMessage(ConcentrationSiteMessage.FILL_ASSAULT_PARTY);
-        message.party = party;
+        message.partyID = party;
         
         this.sendMessage(message);
     }
@@ -24,7 +24,7 @@ public class ConcentrationSiteClient extends Client implements ConcentrationSite
     @Override
     public void prepareExcursion(OrdinaryThief thief) throws Exception
     {
-        ConcentrationSiteMessage message = new ConcentrationSiteMessage(ConcentrationSiteMessage.FILL_ASSAULT_PARTY);
+        ConcentrationSiteMessage message = new ConcentrationSiteMessage(ConcentrationSiteMessage.PREPARE_EXCURSION);
         message.thief = thief;
         
         ConcentrationSiteMessage response = (ConcentrationSiteMessage) this.sendMessage(message);

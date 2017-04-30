@@ -1,21 +1,19 @@
 package heist.distributed;
 
-import heist.concurrent.shared.SharedAssaultParty;
-import heist.concurrent.shared.SharedConcentrationSite;
-import heist.concurrent.shared.SharedControlCollectionSite;
-import heist.concurrent.shared.SharedLogger;
-import heist.concurrent.shared.SharedMuseum;
 import heist.distributed.server.assaultparty.AssaultPartyClient;
 import heist.distributed.server.assaultparty.AssaultPartyServer;
 import heist.distributed.server.concentration.ConcentrationSiteClient;
 import heist.distributed.server.concentration.ConcentrationSiteServer;
 import heist.distributed.server.controlcollection.ControlCollectionSiteClient;
 import heist.distributed.server.controlcollection.ControlCollectionSiteServer;
+import heist.distributed.server.logger.LoggerClient;
+import heist.distributed.server.logger.LoggerServer;
 import heist.distributed.server.museum.MuseumClient;
 import heist.distributed.server.museum.MuseumServer;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
+import heist.interfaces.Logger;
 import heist.interfaces.Museum;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
@@ -32,34 +30,30 @@ public class HeistDistributed
         new AssaultPartyServer(1, configuration).start();
         new MuseumServer(configuration).start();
 
-        //Logger
-        SharedLogger logger = new SharedLogger(configuration);
-
-        //Party
+        //Assault Parties clients
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)
         {
-            //parties[i] = new SharedAssaultParty(i, configuration);
-            parties[i] = new AssaultPartyClient(i, configuration);
+            parties[i] = new AssaultPartyClient(i, configuration); //new SharedAssaultParty(i, configuration);
         }
         
         //ConcentrationSite server
-        //new ConcentrationSiteServer(parties, configuration).start();
+        new ConcentrationSiteServer(parties, configuration).start();
         
-        //Museum
-        Museum museum = new MuseumClient(configuration);
-        //Museum museum = new SharedMuseum(configuration);
-        
+        //Museum client
+        Museum museum = new MuseumClient(configuration); //new SharedMuseum(configuration);
+
         //ControlCollectionSite server
         new ControlCollectionSiteServer(parties, museum, configuration).start();
         
-        //Concetrantion
-        ConcentrationSite concentration = new SharedConcentrationSite(parties, configuration);
-        //ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
+        //Concetrantion client
+        ConcentrationSite concentration = new ConcentrationSiteClient(configuration); //new SharedConcentrationSite(parties, configuration);
         
-        //Control and collection
-        //ControlCollectionSite controlCollection = new SharedControlCollectionSite(parties, museum, configuration);
-        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
+        //ControlCollectionSite client
+        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration); //new SharedControlCollectionSite(parties, museum, configuration);
+        
+        //Logger
+        Logger logger = new LoggerClient(configuration);//new SharedLogger(configuration);
         
         //OrdinaryThieves
         OrdinaryThief[] thieves = new OrdinaryThief[configuration.numberThieves];
@@ -72,7 +66,8 @@ public class HeistDistributed
         MasterThief master = new MasterThief(controlCollection, concentration, parties, logger, configuration);
         
         //Attach elements to shared logger
-        logger.attachElements(thieves, master, parties, museum, controlCollection);
+        new LoggerServer(thieves, master, parties, museum, controlCollection, configuration).start();
+        //logger.attachElements(thieves, master, parties, museum, controlCollection);
         
         //Start thieves
         for(int i = 0; i < thieves.length; i++)

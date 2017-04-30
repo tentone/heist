@@ -15,7 +15,13 @@ public class Message implements Serializable
      * Default message.
      * Used for response messages.
      */
-    public final static int DEFAULT = 100;
+    public final static int DEFAULT = 1000;
+    
+    /**
+     * Ping message.
+     * Used for testing server connection.
+     */
+    public final static int PING = 2000;
     
     /**
      * Message OK state.

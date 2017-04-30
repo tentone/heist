@@ -104,6 +104,7 @@ public class OrdinaryThief extends Thread implements Serializable
      * @param controlCollection ControlCollectionSite
      * @param concentration ConcentrationSite
      * @param museum Museum
+     * @param parties AssaultParties
      * @param logger Logger
      * @param configuration Simulation configuration
      */
@@ -119,7 +120,6 @@ public class OrdinaryThief extends Thread implements Serializable
         this.logger = logger;
         
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
-        
         this.position = 0;
         this.hasCanvas = false;
         this.party = -1;
@@ -168,6 +168,7 @@ public class OrdinaryThief extends Thread implements Serializable
     
     /**
      * Leave party is called after handing the canvas to the MasterThief.
+     * @throws Exception An exception may be thrown.
      */
     public void leaveParty() throws Exception
     {
@@ -262,7 +263,7 @@ public class OrdinaryThief extends Thread implements Serializable
     /**
      * Prepare execution, assign party to thief and change state to crawling inwards and sets thief to sleep until the master thief or another thief wakes it up.
      * Enter the concentration site and wait until a party is assigned.
-     * @throws java.lang.Exception Exception     
+     * @throws Exception Exception     
      */
     private void prepareExecution() throws Exception
     {

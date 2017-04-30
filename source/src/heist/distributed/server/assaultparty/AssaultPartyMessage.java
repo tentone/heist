@@ -36,7 +36,7 @@ public class AssaultPartyMessage extends Message implements Serializable
     public int id, target, state;
     public boolean partyFull, keepCrawling;
     public RoomStatus room;
-    public OrdinaryThief[] thieves;
+    public int[] thieves;
     public OrdinaryThief thief;
     
     /**
