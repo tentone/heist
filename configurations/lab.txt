@@ -1,6 +1,0 @@
-l040101-ws01|23291|logger
-l040101-ws02|23292|controlCollection
-l040101-ws03|23293|concentration
-l040101-ws04|23294|museum
-l040101-ws05|23295|assaultParty0
-l040101-ws06|23296|assaultParty1
