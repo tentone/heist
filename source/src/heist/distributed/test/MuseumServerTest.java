@@ -7,6 +7,8 @@ public class MuseumServerTest
 {
     public static void main(String[] args) throws Exception
     {
-        new MuseumServer(ConfigurationDistributed.readFromFile()).start();
+        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile();
+        
+        new MuseumServer(configuration).start();
     }
 }

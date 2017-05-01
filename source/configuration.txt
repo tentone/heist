@@ -1,6 +1,6 @@
-localhost;23291;logger
-localhost;23292;controlCollection
-localhost;23293;concentration
-localhost;23294;museum
-localhost;23295;assaultParty0
-localhost;23296;assaultParty1
+localhost;22391;logger
+localhost;22392;controlCollection
+localhost;22393;concentration
+localhost;22394;museum
+localhost;22395;assaultParty0
+localhost;22396;assaultParty1
