@@ -48,6 +48,7 @@ public abstract class Server extends Thread
     
     /**
      * This method is used to shutdown the server instance.
+     * @throws java.io.IOException An exception may be thrown during execution.
      */
     public void shutdown() throws IOException
     {

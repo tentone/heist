@@ -18,12 +18,17 @@ import heist.interfaces.Museum;
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 
+/**
+ * Distributed version of the heist.
+ * Thieves communicate using TCP sockets.
+ * @author Jose Manuel
+ */
 public class HeistDistributed
 {
     public static void main(String[] args) throws Exception
     {
         //Configuration
-        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile(); //new ConfigurationDistributed();
+        ConfigurationDistributed configuration = new ConfigurationDistributed();
         
         //Museum server
         new MuseumServer(configuration).start();

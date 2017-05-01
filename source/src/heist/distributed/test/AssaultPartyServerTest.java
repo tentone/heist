@@ -7,7 +7,7 @@ public class AssaultPartyServerTest
 {
     public static void main(String[] args) throws Exception
     {
-        ConfigurationDistributed configuration = new ConfigurationDistributed();
+        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile();
         
         for(int i = 0; i < configuration.numberParties; i++)
         {

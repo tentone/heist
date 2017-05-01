@@ -9,7 +9,7 @@ public class ConcentrationSiteServerTest
 {
     public static void main(String[] args) throws Exception
     {
-        ConfigurationDistributed configuration = new ConfigurationDistributed();
+        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile();
 
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)

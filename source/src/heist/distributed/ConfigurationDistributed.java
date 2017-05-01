@@ -61,7 +61,8 @@ public class ConfigurationDistributed extends Configuration implements Serializa
     }
     
     /**
-     * Read configuration from file
+     * Read configuration from file.
+     * If file does not exist runs with local configuration.
      * @return ConfigurationDistributed instance with values from file.
      */
     public static ConfigurationDistributed readFromFile()
@@ -98,6 +99,7 @@ public class ConfigurationDistributed extends Configuration implements Serializa
             configuration.assaultPartiesServers[1].set(values[0], Integer.parseInt(values[1]), values[2]);
         }
         catch(Exception e){}
+        
         return configuration;
     }
 }

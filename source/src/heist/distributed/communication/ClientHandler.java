@@ -37,6 +37,7 @@ public abstract class ClientHandler extends Thread
     /**
      * ClientHandler constructor, the server creates Handlers for every incoming client connection.
      * @param socket Communication socket.
+     * @param server Server instance.
      * @throws IOException An exception may be thrown.
      */
     public ClientHandler(Socket socket, Server server) throws IOException
