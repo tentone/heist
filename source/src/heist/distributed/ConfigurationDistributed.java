@@ -75,30 +75,36 @@ public class ConfigurationDistributed extends Configuration implements Serializa
             Scanner scanner = new Scanner(file);
             
             String line = scanner.nextLine();
-            String[] values = line.split("|");
+            String[] values = line.split(";");
             configuration.loggerServer.set(values[0], Integer.parseInt(values[1]), values[2]);
             
             line = scanner.nextLine();
-            values = line.split("|");
+            values = line.split(";");
             configuration.controlCollectionServer.set(values[0], Integer.parseInt(values[1]), values[2]);
 
             line = scanner.nextLine();
-            values = line.split("|");
+            values = line.split(";");
             configuration.concentrationServer.set(values[0], Integer.parseInt(values[1]), values[2]);
             
             line = scanner.nextLine();
-            values = line.split("|");
+            values = line.split(";");
             configuration.museumServer.set(values[0], Integer.parseInt(values[1]), values[2]);
 
             line = scanner.nextLine();
-            values = line.split("|");
+            values = line.split(";");
             configuration.assaultPartiesServers[0].set(values[0], Integer.parseInt(values[1]), values[2]);
             
             line = scanner.nextLine();
-            values = line.split("|");
+            values = line.split(";");
             configuration.assaultPartiesServers[1].set(values[0], Integer.parseInt(values[1]), values[2]);
+            
+            System.out.println("configuration.txt loaded");
         }
-        catch(Exception e){}
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("configuration.txt not found");
+        }
         
         return configuration;
     }

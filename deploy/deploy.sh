@@ -1,11 +1,10 @@
 #Copy Heist.jar and configuration.txt to all computers
-#for i in 01 03 04 05 07 09 10
-#do
-#	echo "Copying Heist.jar and configuration.txt to sd0309@l040101-ws$i.ua.pt"
-#	#ssh sd0309@l040101-ws$i.ua.pt
-#	sshpass -p qwerty scp "Heist.jar" sd0309@l040101-ws$i.ua.pt:~
-#	sshpass -p qwerty scp "configuration.txt" sd0309@l040101-ws$i.ua.pt:~
-#done
+for i in 01 03 04 05 07 09 10
+do
+	echo "Copying Heist.jar and configuration.txt to sd0309@l040101-ws$i.ua.pt"
+	sshpass -p qwerty scp "Heist.jar" sd0309@l040101-ws$i.ua.pt:~
+	sshpass -p qwerty scp "configuration.txt" sd0309@l040101-ws$i.ua.pt:~
+done
 
 #l040101-ws05|23294|museum
 echo "Starting Museum Server"
@@ -35,7 +34,6 @@ sshpass -p qwerty ssh sd0309@l040101-ws09.ua.pt "nohup java -cp Heist.jar heist.
 #l040101-ws10 MasterThief
 echo "Lauching MasterThief"
 sshpass -p qwerty ssh sd0309@l040101-ws10.ua.pt "java -cp Heist.jar heist.distributed.test.client.MasterThiefClient > /dev/null 2>&1"
-
 
 echo "Getting log.txt file"
 sshpass -p qwerty scp sd0309@l040101-ws01.ua.pt:~/src/log.txt .

@@ -50,4 +50,14 @@ public class Address implements Serializable
         this.port = port;
         this.name = name;
     }
+    
+    /**
+     * Create string with address information
+     * @return Address information
+     */
+    @Override
+    public String toString()
+    {
+        return "Name:" + this.name + " IP: " + this.address + " Port:" + this.port;
+    }
 }

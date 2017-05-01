@@ -49,19 +49,26 @@ public class Client
      */
     public Message sendMessage(Message message) throws Exception
     {
-        Socket socket = new Socket(this.address, this.port);
-        
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-        
-        out.writeObject(message);
-        
-        Object received = in.readObject();
-        socket.close();
-        
-        if(received instanceof Message)
+        try
         {
-            return (Message) received;
+            Socket socket = new Socket(this.address, this.port);
+
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+            out.writeObject(message);
+
+            Object received = in.readObject();
+            socket.close();
+
+            if(received instanceof Message)
+            {
+                return (Message) received;
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Cant connect to " + this.address + ":" + this.port);
         }
         
         return null;
