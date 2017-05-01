@@ -36,5 +36,5 @@ echo "Lauching MasterThief"
 sshpass -p qwerty ssh sd0309@l040101-ws10.ua.pt "java -cp Heist.jar heist.distributed.test.client.MasterThiefClient > /dev/null 2>&1"
 
 echo "Getting log.txt file"
-sshpass -p qwerty scp sd0309@l040101-ws01.ua.pt:~/src/log.txt .
+sshpass -p qwerty scp sd0309@l040101-ws01.ua.pt:~/log.txt .
 
