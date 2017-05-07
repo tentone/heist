@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/server/controlcollection/ControlCollectionSiteServer.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/concurrent/shared/SharedControlCollectionSite.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/test/MuseumServerTest.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/HeistDistributed.java</file>
-            <file>file:/C:/Users/Tentone/Documents/Git/heist/source/src/heist/distributed/test/ControlCollectionSiteServerTest.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
