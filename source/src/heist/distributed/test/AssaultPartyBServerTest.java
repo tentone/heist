@@ -3,15 +3,12 @@ package heist.distributed.test;
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.server.assaultparty.AssaultPartyServer;
 
-public class AssaultPartyServerTest
+public class AssaultPartyBServerTest
 {
     public static void main(String[] args) throws Exception
     {
         ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile();
         
-        for(int i = 0; i < configuration.numberParties; i++)
-        {
-            new AssaultPartyServer(i, configuration).start();
-        }
+        new AssaultPartyServer(1, configuration).start();
     }
 }
