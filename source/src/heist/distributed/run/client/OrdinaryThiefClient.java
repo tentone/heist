@@ -1,4 +1,4 @@
-package heist.distributed.test.client;
+package heist.distributed.run.client;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.server.assaultparty.AssaultPartyClient;
@@ -17,7 +17,7 @@ public class OrdinaryThiefClient
 {
     public static void main(String[] args)
     {
-        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile();
+        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
 
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)
