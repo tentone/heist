@@ -69,8 +69,6 @@ public class GeneralRepository
     public GeneralRepository(Configuration configuration) throws Exception
     {
         this.configuration = configuration;
-        
-        this.logger = new SharedLogger(this.configuration);
 
         this.parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < this.parties.length; i++)
@@ -80,18 +78,16 @@ public class GeneralRepository
         
         this.museum = new SharedMuseum(this.configuration);
         this.concentration = new SharedConcentrationSite(this.parties, this.configuration);
-        
         this.controlCollection = new SharedControlCollectionSite(this.parties, this.museum, this.configuration);
+        
+        this.logger = new SharedLogger(this.parties, this.museum, this.controlCollection, this.configuration);
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         for(int i = 0; i < this.thieves.length; i++)
         {
             this.thieves[i] = new OrdinaryThief(i, this.controlCollection, this.concentration, this.museum,  this.parties, this.logger, this.configuration);
         }
-        
         this.master = new MasterThief(this.controlCollection, this.concentration, this.museum, this.parties, this.logger, this.configuration);
-        
-        this.logger.attachElements(this.parties, this.museum, this.controlCollection);
     }
     
     /**

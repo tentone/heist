@@ -78,36 +78,7 @@ public class SharedLogger implements Logger, Serializable
      * PrintStream used to output logging data.
      */
     //private PrintStream out;
-    
-    /**
-     * Logger constructor Configuration file.
-     * Before starting the simulation other elements need to be attached using the attachElements method.
-     * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
-     * @param configuration Configuration
-     */
-    public SharedLogger(Configuration configuration)
-    {
-        this.configuration = configuration;
-        this.thieves = new OrdinaryThief[configuration.numberThieves];
-        this.master = null;
-        this.parties = null;
-        this.museum = null;
-        this.controlCollection = null;
-        
-        /*if(this.configuration.logToFile)
-        {
-            try
-            {
-                this.out = new PrintStream(new File(this.configuration.logFile));
-            }
-            catch(FileNotFoundException e){}
-        }
-        else
-        {
-            this.out = System.out;
-        }*/
-    }
-    
+
     /**
      * Logger constructor Configuration file.
      * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
@@ -125,19 +96,19 @@ public class SharedLogger implements Logger, Serializable
         this.parties = parties;
         this.museum = museum;
         this.controlCollection = controlCollection;
-    }
-    
-    /**
-     * Change the elements to be logged using this logger.
-     * @param parties AssaultParties
-     * @param museum Museum
-     * @param controlCollection ControlCollectionSite
-     */
-    public void attachElements(AssaultParty[] parties, Museum museum, ControlCollectionSite controlCollection)
-    {
-        this.parties = parties;
-        this.museum = museum;
-        this.controlCollection = controlCollection;
+        
+        /*if(this.configuration.logToFile)
+        {
+            try
+            {
+                this.out = new PrintStream(new File(this.configuration.logFile));
+            }
+            catch(FileNotFoundException e){}
+        }
+        else
+        {
+            this.out = System.out;
+        }*/
     }
     
     /**
