@@ -6,14 +6,17 @@ import heist.queue.Queue;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
+import java.io.Serializable;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
  * ConcentrationSite is accessed by the MasterThief to get OrdinaryThieves to create and join AssaultParties.
  * @author Jose Manuel
  */
-public class SharedConcentrationSite implements ConcentrationSite
+public class SharedConcentrationSite implements ConcentrationSite, Serializable
 {
+    private static final long serialVersionUID = 4723935792666454L;
+
     /**
      * AssaultParties
      */

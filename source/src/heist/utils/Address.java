@@ -3,8 +3,8 @@ package heist.utils;
 import java.io.Serializable;
 
 /**
- * Address class is used to store an address and respective port for a socket connection.
- * @author Tentone
+ * Address class is used to store an address and respective port for connections.
+ * @author Jose Manuel
  */
 public class Address implements Serializable
 {
@@ -59,5 +59,17 @@ public class Address implements Serializable
     public String toString()
     {
         return "Name:" + this.name + " IP: " + this.address + " Port:" + this.port;
+    }
+    
+    /**
+     * Generate an address for RMI access
+     * @param address IP of the server.
+     * @param port Port being used.
+     * @param name RMI registry name.
+     * @return URL for RMI access.
+     */
+    public static String rmiAddress(String address, int port, String name)
+    {
+        return "rmi://" + address + ":" + port + "/" + name;
     }
 }

@@ -65,13 +65,13 @@ public class ConfigurationDistributed extends Configuration implements Serializa
      * If file does not exist runs with local configuration.
      * @return ConfigurationDistributed instance with values from file.
      */
-    public static ConfigurationDistributed readFromFile()
+    public static ConfigurationDistributed readFromFile(String fname)
     {
         ConfigurationDistributed configuration = new ConfigurationDistributed();
         
         try
         {
-            File file = new File("configuration.txt");
+            File file = new File(fname);
             Scanner scanner = new Scanner(file);
             
             String line = scanner.nextLine();

@@ -2,8 +2,9 @@ package heist.interfaces;
 
 import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
+import java.rmi.Remote;
 
-public interface AssaultParty
+public interface AssaultParty extends Remote
 {
     /**
      * Waiting state.

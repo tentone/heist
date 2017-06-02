@@ -7,6 +7,7 @@ import heist.interfaces.AssaultParty;
 import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
 import heist.queue.Queue;
+import java.io.Serializable;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
@@ -14,8 +15,10 @@ import heist.queue.Queue;
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
-public class SharedAssaultParty implements AssaultParty
-{    
+public class SharedAssaultParty implements AssaultParty, Serializable
+{
+    private static final long serialVersionUID = 643825635992375L;
+    
     /**
      * AssaultParty unique identifier.
      */

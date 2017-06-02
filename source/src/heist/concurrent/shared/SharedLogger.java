@@ -12,7 +12,11 @@ import heist.interfaces.Logger;
 import heist.interfaces.Museum;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 
 /**
  * Logger object is used to create a detailed log of everything inside a GeneralRepository.
@@ -29,8 +33,10 @@ import java.io.PrintStream;
  * Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30
  * @author Jose Manuel
  */
-public class SharedLogger implements Logger
+public class SharedLogger implements Logger, Serializable
 {
+    private static final long serialVersionUID = 46213846221194000L;
+    
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -40,11 +46,6 @@ public class SharedLogger implements Logger
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
-    
-    /**
-     * PrintStream used to write the log.
-     */
-    private PrintStream out;
     
     /**
      * Configuration object.
@@ -77,6 +78,11 @@ public class SharedLogger implements Logger
     private ControlCollectionSite controlCollection;
     
     /**
+     * PrintStream used to output logging data.
+     */
+    private PrintStream out;
+    
+    /**
      * Logger constructor Configuration file.
      * Before starting the simulation other elements need to be attached using the attachElements method.
      * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
@@ -86,11 +92,8 @@ public class SharedLogger implements Logger
     {
         this.configuration = configuration;
         
-        this.out = System.out;
-        
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         this.master = null;
-        
         this.parties = null;
         this.museum = null;
         this.controlCollection = null;
@@ -99,15 +102,19 @@ public class SharedLogger implements Logger
         {
             try
             {
-                PrintStream pw = new PrintStream(new File(this.configuration.logFile));
-                this.out = pw;
+                this.out = new PrintStream(new File(this.configuration.logFile));
             }
             catch(FileNotFoundException e){}
         }
+        else
+        {
+            this.out = System.out;
+        }
     }
+    
     /**
      * Logger constructor Configuration file.
-     * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
+     * Configuration file specifies where the log data is written to (can be written to this.out or to a file).
      * @param parties AssaultParties
      * @param museum Museum
      * @param controlCollection ControlCollectionSite
@@ -119,20 +126,21 @@ public class SharedLogger implements Logger
         
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         this.master = null;
-        
         this.parties = parties;
         this.museum = museum;
         this.controlCollection = controlCollection;
         
-        this.out = System.out;
         if(this.configuration.logToFile)
         {
             try
             {
-                PrintStream pw = new PrintStream(new File(this.configuration.logFile));
-                this.out = pw;
+                this.out = new PrintStream(new File(this.configuration.logFile));
             }
             catch(FileNotFoundException e){}
+        }
+        else
+        {
+            this.out = System.out;
         }
     }
     
@@ -148,17 +156,17 @@ public class SharedLogger implements Logger
         this.museum = museum;
         this.controlCollection = controlCollection;
     }
-
+    
     /**
      * Write message directly to the PrintStream.
      * Flushes the PrintStream after every message.
      * @param message Message to display.
      */
     public synchronized void debug(String message)
-    {
+    {                
         if(this.configuration.debug)
         {
-            out.println(message);
+            this.out.println(message);
         }
     }
     
@@ -181,8 +189,11 @@ public class SharedLogger implements Logger
     @Override
     public synchronized void log(OrdinaryThief thief) throws Exception
     {
-        this.thieves[thief.getID()] = thief;
+        System.out.println("THIEF:" + thief);
+        System.out.println("THIEF_ID:" + thief.getID());
+        System.out.println("THIEVES:" + this.thieves);
         
+        this.thieves[thief.getID()] = thief;
         this.log();
     }
     
@@ -201,26 +212,26 @@ public class SharedLogger implements Logger
             
             if(this.configuration.logHeader)
             {
-                out.print("\n\nMstT      ");
+                this.out.print("\n\nMstT      ");
                 for(int i = 0; i < thieves.length; i++)
                 {
-                    out.print("Thief " + i + "      ");
+                    this.out.print("Thief " + i + "      ");
                 }
 
-                out.print("\nStat     ");
+                this.out.print("\nStat     ");
                 for(int i = 0; i < thieves.length; i++)
                 {
-                    out.print("Stat S MD    ");
+                    this.out.print("Stat S MD    ");
                 }
             }
 
             if(master == null)
             {
-                out.print("\n----     ");
+                this.out.print("\n----     ");
             }
             else
             {
-                out.print("\n" + master.state() + "     ");//
+                this.out.print("\n" + master.state() + "     ");//
             }
             
             
@@ -228,56 +239,56 @@ public class SharedLogger implements Logger
             {
                 if(thieves[i] == null)
                 {
-                    out.printf("---- -- --    ");
+                    this.out.printf("---- -- --    ");
                 }
                 else
                 {
-                    out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
+                    this.out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
                 }
             }
-            out.print("\n");
+            this.out.print("\n");
 
             if(this.configuration.logHeader)
             {
-                out.print("\n");
+                this.out.print("\n");
                 for(int i = 0; i < parties.length; i++)
                 {
-                    out.print("              Assault party " + (parties[i] != null ? parties[i].getID() : "--") + "        ");
+                    this.out.print("              Assault party " + (parties[i] != null ? parties[i].getID() : "--") + "        ");
                 }
-                out.print("                 Museum");
+                this.out.print("                 Museum");
 
-                out.print("\n");
+                this.out.print("\n");
                 for(int i = 0; i < parties.length; i++)
                 {
-                    out.print("   ");
+                    this.out.print("   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        out.print("     Elem " + j);
+                        this.out.print("     Elem " + j);
                     }
                 }
                 
-                out.print("   ");
+                this.out.print("   ");
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    out.print("  Room " + j);
+                    this.out.print("  Room " + j);
                 }
 
-                out.print("\n");
+                this.out.print("\n");
                 for(int i = 0; i < parties.length; i++)
                 {
-                    out.print("RId  ");
+                    this.out.print("RId  ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        out.print("Id Pos Cv  ");
+                        this.out.print("Id Pos Cv  ");
                     }
                 }
 
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    out.print(" NP DT  ");
+                    this.out.print(" NP DT  ");
                 }
 
-                out.print("\n");
+                this.out.print("\n");
             }
 
 
@@ -285,15 +296,15 @@ public class SharedLogger implements Logger
             {
                 if(parties[i].getState() == SharedAssaultParty.DISMISSED)
                 {
-                    out.print("--   ");
+                    this.out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        out.print("-- --  --  ");
+                        this.out.print("-- --  --  ");
                     }
                 }
                 else
                 {
-                    out.printf("%2d   ", parties[i].getTarget());
+                    this.out.printf("%2d   ", parties[i].getTarget());
 
                     int[] thievesID = parties[i].getThieves();
                     
@@ -302,11 +313,11 @@ public class SharedLogger implements Logger
                         if(j < thievesID.length)
                         {
                             OrdinaryThief thief = this.thieves[thievesID[j]];
-                            out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                            this.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                         else
                         {
-                            out.print("-- --  --  "); 
+                            this.out.print("-- --  --  "); 
                         }
                     }
                 }
@@ -315,11 +326,11 @@ public class SharedLogger implements Logger
             Room[] rooms = this.museum.getRooms();
             for(int i = 0; i < rooms.length; i++)
             {
-                out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
+                this.out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
             }
-            out.println("");
             
-            out.flush();
+            this.out.println("");
+            this.out.flush();
         }
     }
     
@@ -329,8 +340,8 @@ public class SharedLogger implements Logger
      */
     public synchronized void end() throws Exception
     {
-        out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
-        out.close();
+        this.out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
+        this.out.close();
     }
     
     /**
@@ -366,4 +377,19 @@ public class SharedLogger implements Logger
         
         return array;
     }
+    
+    /**
+     * The writeObject method is called on serialization and is used to override the default java serialization.
+     * @param out ObjectOutputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException{}
+    
+    /**
+     * The writeObject method is called when rebuilding the object from serialized data.
+     * @param in ObjectInputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     * @throws ClassNotFoundException Exception may be thrown. 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{}
 }

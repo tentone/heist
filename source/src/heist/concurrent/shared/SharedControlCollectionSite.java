@@ -10,14 +10,17 @@ import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Museum;
+import java.io.Serializable;
 
 /**
  * The ControlCollection site is where the OrdinaryThieves deliver the canvas to the MasterThief.
  * It is also responsible for decisions taken by booth the MasterThief and the OrdinaryThieves.
  * @author Jose Manuel
  */
-public class SharedControlCollectionSite implements ControlCollectionSite
+public class SharedControlCollectionSite implements ControlCollectionSite, Serializable
 {
+    private static final long serialVersionUID = 457234977399923445L;
+    
     /**
      * Configuration used by this ControlCollectionSite.
      */

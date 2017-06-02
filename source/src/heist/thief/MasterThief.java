@@ -228,6 +228,7 @@ public class MasterThief extends Thread implements Serializable
         this.concentration.end();
         this.museum.end();
     }
+    
     /**
      * The writeObject method is called on serialization and is used to override the default java serialization.
      * @param out ObjectOutputStream used on serialization.

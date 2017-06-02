@@ -2,12 +2,13 @@ package heist.interfaces;
 
 import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
+import java.rmi.Remote;
 
 /**
  * Logger object is used to create a detailed log of everything inside the GeneralRepository.
  * @author Jose Manuel
  */
-public interface Logger
+public interface Logger extends Remote
 {
     /**
      * Write message directly to the PrintStream.

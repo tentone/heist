@@ -1,4 +1,4 @@
-package heist.distributed.test;
+package heist.distributed.run;
 
 import heist.distributed.ConfigurationDistributed;
 import heist.distributed.server.assaultparty.AssaultPartyClient;
@@ -11,7 +11,7 @@ public class ControlCollectionSiteServerDistributed
 {
     public static void main(String[] args) throws Exception
     {
-        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile();
+        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
 
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)

@@ -1,6 +1,7 @@
-package heist.rmi;
+package heist.rmi.test;
 
 import java.rmi.Naming;
+import static heist.utils.Address.rmiAddress;
 
 public class Server
 {
@@ -8,9 +9,9 @@ public class Server
     {
         try
         {
-            Naming.rebind("rmi://localhost:5000/adder", new Adder());
+            Naming.rebind(rmiAddress("localhost", 5000, "adder"), new Adder());
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             System.out.println(e);
         }

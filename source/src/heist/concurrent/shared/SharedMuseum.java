@@ -3,13 +3,16 @@ package heist.concurrent.shared;
 import heist.room.Room;
 import heist.Configuration;
 import heist.interfaces.Museum;
+import java.io.Serializable;
 
 /**
  * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
  * @author Jose Manuel
  */
-public class SharedMuseum implements Museum
+public class SharedMuseum implements Museum, Serializable
 {
+    private static final long serialVersionUID = 9932134632836L;
+    
     /**
      * Rooms inside the museum.
      */

@@ -1,8 +1,9 @@
 package heist.interfaces;
 
 import heist.room.Room;
+import java.rmi.Remote;
 
-public interface Museum
+public interface Museum extends Remote
 {
     /**
      * Called by the OrdinaryThieves to roll a canvas.

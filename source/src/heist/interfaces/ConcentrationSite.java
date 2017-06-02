@@ -1,8 +1,9 @@
 package heist.interfaces;
 
 import heist.thief.OrdinaryThief;
+import java.rmi.Remote;
 
-public interface ConcentrationSite
+public interface ConcentrationSite extends Remote
 {
     /**
      * Called by the MasterThief to fill a Party of OrdinaryThieves with the thieves waiting in this ConcentrationSite.

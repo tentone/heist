@@ -2,8 +2,9 @@ package heist.interfaces;
 
 import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
+import java.rmi.Remote;
 
-public interface ControlCollectionSite
+public interface ControlCollectionSite extends Remote
 {
     /**
      * Called by the OrdinaryThieves to check if they are still needed.

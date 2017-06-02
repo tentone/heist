@@ -1,6 +1,7 @@
 package heist.queue;
 
 import heist.queue.iterator.ArrayQueueIterator;
+import java.io.Serializable;
 
 /**
  * Generic array based FIFO structure.
@@ -8,8 +9,10 @@ import heist.queue.iterator.ArrayQueueIterator;
  * @param <T> Type of FIFO elements.
  */
 @SuppressWarnings("unchecked")
-public class ArrayQueue<T> implements Queue<T>
+public class ArrayQueue<T> implements Queue<T>, Serializable
 {
+    private static final long serialVersionUID = 3482001199233757399L;
+    
     /**
      * Max size for this ArrayQueue.
      * If the push method is called and the queue is already full a Exception is thrown.
