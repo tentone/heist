@@ -1,4 +1,4 @@
-package heist.concurrent.shared;
+package heist.rmi.implementation;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
@@ -8,6 +8,8 @@ import heist.room.RoomStatus;
 import heist.queue.iterator.Iterator;
 import heist.queue.Queue;
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * AssaultParty represents a group of OrdinaryThieves attacking the museum.
@@ -15,7 +17,7 @@ import java.io.Serializable;
  * AsaultParties are dynamically created and destructed during the simulation
  * Assault party is shared between thieves.
  */
-public class SharedAssaultParty implements AssaultParty, Serializable
+public class AssaultPartyRMI extends UnicastRemoteObject implements AssaultParty, Serializable
 {
     private static final long serialVersionUID = 643825635992375L;
     
@@ -64,8 +66,10 @@ public class SharedAssaultParty implements AssaultParty, Serializable
      * @param id AssaultParty id.
      * @param configuration Simulation configuration
      */
-    public SharedAssaultParty(int id, Configuration configuration)
+    public AssaultPartyRMI(int id, Configuration configuration) throws RemoteException
     {
+        super();
+        
         this.id = id;
         
         this.thieves = new ArrayQueue<>(configuration.partySize);
@@ -75,7 +79,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
         this.partySize = configuration.partySize;
         this.thiefDistance = configuration.thiefDistance;
         
-        this.state = SharedAssaultParty.DISMISSED;
+        this.state = AssaultPartyRMI.DISMISSED;
         this.waitingToReverse = 0;
     }
     
@@ -129,7 +133,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
      */
     private synchronized void reset()
     {
-        this.state = SharedAssaultParty.DISMISSED;
+        this.state = AssaultPartyRMI.DISMISSED;
         this.crawlingQueue.clear();
         this.thieves.clear();
         this.room = null;
@@ -171,7 +175,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
     public void prepareParty(RoomStatus room)
     {
         this.room = room;
-        this.state = SharedAssaultParty.WAITING;
+        this.state = AssaultPartyRMI.WAITING;
     }
     
     /**
@@ -186,6 +190,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
         {
             this.thieves.push(thief);
             this.crawlingQueue.push(thief.getID());
+            thief.setParty(this.id);
         }
         else
         {
@@ -225,7 +230,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
     @Override
     public synchronized void sendParty() throws InterruptedException
     {
-        this.state = SharedAssaultParty.CRAWLING;
+        this.state = AssaultPartyRMI.CRAWLING;
         this.notifyAll();
     }
     
@@ -246,7 +251,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
             throw new Exception("Crawling peek returned null");
         }
         
-        while(this.crawlingQueue.peek() != thief.getID() || this.state != SharedAssaultParty.CRAWLING)
+        while(this.crawlingQueue.peek() != thief.getID() || this.state != AssaultPartyRMI.CRAWLING)
         {
             this.wait();
         }
@@ -467,9 +472,9 @@ public class SharedAssaultParty implements AssaultParty, Serializable
     @Override
     public boolean equals(Object object)
     {
-        if(object instanceof SharedAssaultParty)
+        if(object instanceof AssaultPartyRMI)
         {
-            SharedAssaultParty party = (SharedAssaultParty) object;
+            AssaultPartyRMI party = (AssaultPartyRMI) object;
             return party.id == this.id;
         }
         return false;

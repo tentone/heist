@@ -36,6 +36,7 @@ public class RegisterRemoteObject implements Register
         {
             throw new NullPointerException("RegisterRemoteObject: null pointer parameter on instantiation!");
         }
+        
         this.rmiRegHostName = rmiRegHostName;
         if ((rmiRegPortNumb >= 4000) && (rmiRegPortNumb <= 65535))
         {

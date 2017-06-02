@@ -1,4 +1,4 @@
-package heist.concurrent.shared;
+package heist.rmi.implementation;
 
 import heist.Configuration;
 import heist.queue.ArrayQueue;
@@ -7,13 +7,15 @@ import heist.thief.OrdinaryThief;
 import heist.interfaces.AssaultParty;
 import heist.interfaces.ConcentrationSite;
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
  * ConcentrationSite is accessed by the MasterThief to get OrdinaryThieves to create and join AssaultParties.
  * @author Jose Manuel
  */
-public class SharedConcentrationSite implements ConcentrationSite, Serializable
+public class ConcentrationSiteRMI extends UnicastRemoteObject implements ConcentrationSite, Serializable
 {
     private static final long serialVersionUID = 4723935792666454L;
 
@@ -42,8 +44,10 @@ public class SharedConcentrationSite implements ConcentrationSite, Serializable
      * @param parties AssaultParties
      * @param configuration Configuration to be used.
      */
-    public SharedConcentrationSite(AssaultParty[] parties, Configuration configuration)
+    public ConcentrationSiteRMI(AssaultParty[] parties, Configuration configuration) throws RemoteException
     {   
+        super();
+        
         this.parties = parties;
         this.configuration = configuration;
         

@@ -23,8 +23,9 @@ public interface ConcentrationSite extends Remote
      * Called by the OrdinaryThieves to enter the concentration site and wait until a party is assigned to them.
      * @param thief OrdinaryThief that is entering the concentration site.
      * @throws Exception A exception may be thrown depending on the implementation.
+     * @return ID of the party attributed to the thief.
      */
-    public void prepareExcursion(OrdinaryThief thief) throws Exception;
+    public int prepareExcursion(OrdinaryThief thief) throws Exception;
     
     /**
      * Called by the MasterThief to end the simulation.

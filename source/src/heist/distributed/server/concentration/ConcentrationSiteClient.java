@@ -23,13 +23,15 @@ public class ConcentrationSiteClient extends Client implements ConcentrationSite
     }
 
     @Override
-    public void prepareExcursion(OrdinaryThief thief) throws Exception
+    public int prepareExcursion(OrdinaryThief thief) throws Exception
     {
         ConcentrationSiteMessage message = new ConcentrationSiteMessage(ConcentrationSiteMessage.PREPARE_EXCURSION);
         message.thief = thief;
         
         ConcentrationSiteMessage response = (ConcentrationSiteMessage) this.sendMessage(message);
         thief.copyState(response.thief);
+        
+        return response.partyID;
     }
     
     @Override

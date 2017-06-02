@@ -32,7 +32,7 @@ public class ConcentrationSiteClientHandler extends ClientHandler
         }
         else if(type == ConcentrationSiteMessage.PREPARE_EXCURSION)
         {
-            this.concentration.prepareExcursion(message.thief);
+            response.partyID = this.concentration.prepareExcursion(message.thief);
             response.thief = message.thief;
         }
         else

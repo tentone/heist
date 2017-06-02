@@ -268,8 +268,8 @@ public class OrdinaryThief extends Thread implements Serializable
     private void prepareExecution() throws Exception
     {
         //this.logger.debug("Thief " + this.id + " entered the concentration site");
-        
-        this.concentration.prepareExcursion(this);
+        int partyID = this.concentration.prepareExcursion(this);
+        this.setParty(partyID);
         
         //this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
         this.logger.log(this);
