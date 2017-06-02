@@ -3,6 +3,11 @@ package heist.interfaces;
 import heist.thief.OrdinaryThief;
 import java.rmi.Remote;
 
+/**
+ * The concentration site is where OrdinaryThieves wait for the MasterThief to assign them a AssaultParty.
+ * ConcentrationSite is accessed by the MasterThief to get OrdinaryThieves to create and join AssaultParties.
+ * @author Jose Manuel
+ */
 public interface ConcentrationSite extends Remote
 {
     /**

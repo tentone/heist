@@ -68,7 +68,7 @@ public class SharedConcentrationSite implements ConcentrationSite, Serializable
         
         this.waitingParties.push(partyID);
         this.notifyAll();
-
+        
         while(!this.parties[partyID].partyFull())
         {
             this.wait();

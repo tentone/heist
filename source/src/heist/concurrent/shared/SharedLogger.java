@@ -10,12 +10,9 @@ import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.Logger;
 import heist.interfaces.Museum;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.io.Serializable;
 
 /**
@@ -50,7 +47,7 @@ public class SharedLogger implements Logger, Serializable
     /**
      * Configuration object.
      */
-    private final Configuration configuration;
+    private Configuration configuration;
     
     /**
      * Museum to be assaulted by AssaultParties.
@@ -77,10 +74,10 @@ public class SharedLogger implements Logger, Serializable
      */
     private ControlCollectionSite controlCollection;
     
-    /**
+    /*
      * PrintStream used to output logging data.
      */
-    private PrintStream out;
+    //private PrintStream out;
     
     /**
      * Logger constructor Configuration file.
@@ -91,14 +88,13 @@ public class SharedLogger implements Logger, Serializable
     public SharedLogger(Configuration configuration)
     {
         this.configuration = configuration;
-        
         this.thieves = new OrdinaryThief[configuration.numberThieves];
         this.master = null;
         this.parties = null;
         this.museum = null;
         this.controlCollection = null;
         
-        if(this.configuration.logToFile)
+        /*if(this.configuration.logToFile)
         {
             try
             {
@@ -109,12 +105,12 @@ public class SharedLogger implements Logger, Serializable
         else
         {
             this.out = System.out;
-        }
+        }*/
     }
     
     /**
      * Logger constructor Configuration file.
-     * Configuration file specifies where the log data is written to (can be written to this.out or to a file).
+     * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
      * @param parties AssaultParties
      * @param museum Museum
      * @param controlCollection ControlCollectionSite
@@ -129,19 +125,6 @@ public class SharedLogger implements Logger, Serializable
         this.parties = parties;
         this.museum = museum;
         this.controlCollection = controlCollection;
-        
-        if(this.configuration.logToFile)
-        {
-            try
-            {
-                this.out = new PrintStream(new File(this.configuration.logFile));
-            }
-            catch(FileNotFoundException e){}
-        }
-        else
-        {
-            this.out = System.out;
-        }
     }
     
     /**
@@ -166,7 +149,7 @@ public class SharedLogger implements Logger, Serializable
     {                
         if(this.configuration.debug)
         {
-            this.out.println(message);
+            System.out.println(message);
         }
     }
     
@@ -178,7 +161,6 @@ public class SharedLogger implements Logger, Serializable
     public synchronized void log(MasterThief master) throws Exception
     {
         this.master = master;
-        
         this.log();
     }
     
@@ -188,11 +170,7 @@ public class SharedLogger implements Logger, Serializable
      */
     @Override
     public synchronized void log(OrdinaryThief thief) throws Exception
-    {
-        System.out.println("THIEF:" + thief);
-        System.out.println("THIEF_ID:" + thief.getID());
-        System.out.println("THIEVES:" + this.thieves);
-        
+    {        
         this.thieves[thief.getID()] = thief;
         this.log();
     }
@@ -205,119 +183,114 @@ public class SharedLogger implements Logger, Serializable
     private void log() throws Exception
     {        
         if(this.configuration.log)
-        {
-            MasterThief master = this.master;
-            OrdinaryThief[] thieves = this.thieves;
-            AssaultParty[] parties = this.parties;
-            
+        {            
             if(this.configuration.logHeader)
             {
-                this.out.print("\n\nMstT      ");
-                for(int i = 0; i < thieves.length; i++)
+                System.out.print("\n\nMstT      ");
+                for(int i = 0; i < this.thieves.length; i++)
                 {
-                    this.out.print("Thief " + i + "      ");
+                    System.out.print("Thief " + i + "      ");
                 }
 
-                this.out.print("\nStat     ");
-                for(int i = 0; i < thieves.length; i++)
+                System.out.print("\nStat     ");
+                for(int i = 0; i < this.thieves.length; i++)
                 {
-                    this.out.print("Stat S MD    ");
+                    System.out.print("Stat S MD    ");
                 }
             }
 
-            if(master == null)
+            if(this.master == null)
             {
-                this.out.print("\n----     ");
+                System.out.print("\n----     ");
             }
             else
             {
-                this.out.print("\n" + master.state() + "     ");//
+                System.out.print("\n" + this.master.state() + "     ");//
             }
             
             
-            for(int i = 0; i < thieves.length; i++)
+            for(int i = 0; i < this.thieves.length; i++)
             {
-                if(thieves[i] == null)
+                if(this.thieves[i] == null)
                 {
-                    this.out.printf("---- -- --    ");
+                    System.out.printf("---- -- --    ");
                 }
                 else
                 {
-                    this.out.printf("%4d %c %2d    ", thieves[i].state(), thieves[i].hasParty(), thieves[i].getDisplacement());
+                    System.out.printf("%4d %c %2d    ", this.thieves[i].state(), this.thieves[i].hasParty(), this.thieves[i].getDisplacement());
                 }
             }
-            this.out.print("\n");
+            System.out.print("\n");
 
             if(this.configuration.logHeader)
             {
-                this.out.print("\n");
-                for(int i = 0; i < parties.length; i++)
+                System.out.print("\n");
+                for(int i = 0; i < this.parties.length; i++)
                 {
-                    this.out.print("              Assault party " + (parties[i] != null ? parties[i].getID() : "--") + "        ");
+                    System.out.print("              Assault party " + (this.parties[i] != null ? this.parties[i].getID() : "--") + "        ");
                 }
-                this.out.print("                 Museum");
+                System.out.print("                 Museum");
 
-                this.out.print("\n");
-                for(int i = 0; i < parties.length; i++)
+                System.out.print("\n");
+                for(int i = 0; i < this.parties.length; i++)
                 {
-                    this.out.print("   ");
+                    System.out.print("   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        this.out.print("     Elem " + j);
+                        System.out.print("     Elem " + j);
                     }
                 }
                 
-                this.out.print("   ");
+                System.out.print("   ");
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    this.out.print("  Room " + j);
+                    System.out.print("  Room " + j);
                 }
 
-                this.out.print("\n");
-                for(int i = 0; i < parties.length; i++)
+                System.out.print("\n");
+                for(int i = 0; i < this.parties.length; i++)
                 {
-                    this.out.print("RId  ");
+                    System.out.print("RId  ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        this.out.print("Id Pos Cv  ");
+                        System.out.print("Id Pos Cv  ");
                     }
                 }
 
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    this.out.print(" NP DT  ");
+                    System.out.print(" NP DT  ");
                 }
 
-                this.out.print("\n");
+                System.out.print("\n");
             }
 
-
-            for(int i = 0; i < parties.length; i++)
+            for(int i = 0; i < this.parties.length; i++)
             {
-                if(parties[i].getState() == SharedAssaultParty.DISMISSED)
+                if(this.parties[i].getState() == SharedAssaultParty.DISMISSED)
                 {
-                    this.out.print("--   ");
+                    System.out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        this.out.print("-- --  --  ");
+                        System.out.print("-- --  --  ");
                     }
                 }
                 else
                 {
-                    this.out.printf("%2d   ", parties[i].getTarget());
+                    System.out.printf("%2d   ", this.parties[i].getTarget());
 
-                    int[] thievesID = parties[i].getThieves();
+                    int[] thievesID = this.parties[i].getThieves();
                     
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
                         if(j < thievesID.length)
                         {
                             OrdinaryThief thief = this.thieves[thievesID[j]];
-                            this.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                            System.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                         else
                         {
-                            this.out.print("-- --  --  "); 
+                            System.out.print("-- --  --  "); 
                         }
                     }
                 }
@@ -326,11 +299,11 @@ public class SharedLogger implements Logger, Serializable
             Room[] rooms = this.museum.getRooms();
             for(int i = 0; i < rooms.length; i++)
             {
-                this.out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
+                System.out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
             }
             
-            this.out.println("");
-            this.out.flush();
+            System.out.println("");
+            System.out.flush();
         }
     }
     
@@ -340,8 +313,8 @@ public class SharedLogger implements Logger, Serializable
      */
     public synchronized void end() throws Exception
     {
-        this.out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
-        this.out.close();
+        System.out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
+        System.out.close();
     }
     
     /**
@@ -383,7 +356,15 @@ public class SharedLogger implements Logger, Serializable
      * @param out ObjectOutputStream used on serialization.
      * @throws IOException Exception may be thrown. 
      */
-    private void writeObject(ObjectOutputStream out) throws IOException{}
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.writeObject(this.configuration);
+        out.writeObject(this.thieves);
+        out.writeObject(this.master);
+        out.writeObject(this.parties);
+        out.writeObject(this.museum);
+        out.writeObject(this.controlCollection);
+    }
     
     /**
      * The writeObject method is called when rebuilding the object from serialized data.
@@ -391,5 +372,13 @@ public class SharedLogger implements Logger, Serializable
      * @throws IOException Exception may be thrown. 
      * @throws ClassNotFoundException Exception may be thrown. 
      */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{}
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        this.configuration = (Configuration) in.readObject();
+        this.thieves = (OrdinaryThief[]) in.readObject();
+        this.master = (MasterThief) in.readObject();
+        this.parties = (AssaultParty[]) in.readObject();
+        this.museum = (Museum) in.readObject();
+        this.controlCollection = (ControlCollectionSite) in.readObject();
+    }
 }

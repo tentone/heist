@@ -3,6 +3,10 @@ package heist.interfaces;
 import heist.room.Room;
 import java.rmi.Remote;
 
+/**
+ * Museum has rooms inside of it, the OrdinaryThieves attack the Museum to stole the paintings hanging in those rooms.
+ * @author Jose Manuel
+ */
 public interface Museum extends Remote
 {
     /**

@@ -4,6 +4,11 @@ import heist.thief.OrdinaryThief;
 import heist.room.RoomStatus;
 import java.rmi.Remote;
 
+/**
+ * The ControlCollection site is where the OrdinaryThieves deliver the canvas to the MasterThief.
+ * It is also responsible for decisions taken by booth the MasterThief and the OrdinaryThieves.
+ * @author Jose Manuel
+ */
 public interface ControlCollectionSite extends Remote
 {
     /**

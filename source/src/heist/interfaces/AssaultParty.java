@@ -4,6 +4,12 @@ import heist.room.RoomStatus;
 import heist.thief.OrdinaryThief;
 import java.rmi.Remote;
 
+/**
+ * AssaultParty represents a group of OrdinaryThieves attacking the museum.
+ * Its used as a synchronization point between thieves.
+ * AsaultParties are dynamically created and destructed during the simulation
+ * Assault party is shared between thieves.
+ */
 public interface AssaultParty extends Remote
 {
     /**

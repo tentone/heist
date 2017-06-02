@@ -30,7 +30,7 @@ public class HeistRMI
         System.out.println("Assault parties clients");
         AssaultParty[] parties = new AssaultParty[2];
         parties[0] = (AssaultParty) Naming.lookup(rmiAddress("localhost", 5000, "assaultParty0"));
-        parties[0] = (AssaultParty) Naming.lookup(rmiAddress("localhost", 5000, "assaultParty1"));
+        parties[1] = (AssaultParty) Naming.lookup(rmiAddress("localhost", 5000, "assaultParty1"));
         
         Naming.rebind(rmiAddress("localhost", 5000, "controlCollection"), new SharedControlCollectionSite(parties, museum, configuration));
         Naming.rebind(rmiAddress("localhost", 5000, "concentration"), new SharedConcentrationSite(parties, configuration));
