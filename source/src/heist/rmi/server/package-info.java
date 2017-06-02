@@ -4,4 +4,4 @@
  *  Communication is based in Java RMI.
  */
 
-package heist.rmi.test.server;
+package heist.rmi.server;
