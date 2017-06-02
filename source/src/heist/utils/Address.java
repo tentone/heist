@@ -52,6 +52,15 @@ public class Address implements Serializable
     }
     
     /**
+     * Get RMI URL from address, port and name.
+     * @return URL.
+     */
+    public String rmiURL()
+    {
+        return Address.rmiAddress(this.address, this.port, this.name);
+    }
+    
+    /**
      * Create string with address information
      * @return Address information
      */
