@@ -9,18 +9,27 @@ import heist.interfaces.Museum;
 
 public class ControlCollectionSiteServerDistributed
 {
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args)
     {
-        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
-
-        AssaultParty[] parties = new AssaultParty[configuration.numberParties];
-        for(int i = 0; i < parties.length; i++)
+        try
         {
-            parties[i] = new AssaultPartyClient(i, configuration);
-        }
+            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
 
-        Museum museum = new MuseumClient(configuration);      
-        
-        new ControlCollectionSiteServer(parties, museum, configuration).start();
+            AssaultParty[] parties = new AssaultParty[configuration.numberParties];
+            for(int i = 0; i < parties.length; i++)
+            {
+                parties[i] = new AssaultPartyClient(i, configuration);
+            }
+
+            Museum museum = new MuseumClient(configuration);      
+
+            new ControlCollectionSiteServer(parties, museum, configuration).start();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error: Error in ControlCollectionSiteServer");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }

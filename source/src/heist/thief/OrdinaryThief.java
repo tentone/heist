@@ -273,7 +273,10 @@ public class OrdinaryThief extends Thread implements Serializable
     {
         this.clock.increment();
         boolean amINeeded = this.controlCollection.amINeeded(this);
-        this.logger.log(this);
+        if(amINeeded)
+        {
+            this.logger.log(this);
+        }
         
         //this.logger.debug("Thief " + this.id + " amINeeded " + amINeeded);
         
@@ -341,9 +344,9 @@ public class OrdinaryThief extends Thread implements Serializable
     {      
         this.clock.increment();
         this.parties[this.party].reverseDirection(this);
+        this.logger.log(this);
         
         //this.logger.debug("Thief " + this.id + " reverse");
-        this.logger.log(this);
     }
     
     /**
@@ -353,18 +356,17 @@ public class OrdinaryThief extends Thread implements Serializable
     private void crawlOut() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
-        //this.logger.log(this);
         
         while(this.parties[this.party].keepCrawling(this))
         {
             this.clock.increment();
             this.position = this.parties[this.party].crawlOut(this);
-            //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
             this.logger.log(this);
+            
+            //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
         }
 
         //this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
-        //this.logger.log(this);
     }
     
     /**
@@ -473,9 +475,11 @@ public class OrdinaryThief extends Thread implements Serializable
         }
         catch(Exception e)
         {
+            System.out.println("Error: OrdinaryThief " + this.id);
             e.printStackTrace();
+            System.exit(1);
         }
         
-        //System.out.println("Thief " + this.id + " terminated");
+        System.out.println("Info: OrdinaryThief " + this.id + " terminated");
     }
 }

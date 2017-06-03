@@ -11,19 +11,28 @@ import heist.interfaces.Museum;
 
 public class LoggerServerDistributed
 {
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args)
     {
-        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
-        
-        AssaultParty[] parties = new AssaultParty[configuration.numberParties];
-        for(int i = 0; i < parties.length; i++)
+        try
         {
-            parties[i] = new AssaultPartyClient(i, configuration);
-        }
+            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
 
-        Museum museum = new MuseumClient(configuration);  
-        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
-        
-        new LoggerServer(parties, museum, controlCollection, configuration).start();
+            AssaultParty[] parties = new AssaultParty[configuration.numberParties];
+            for(int i = 0; i < parties.length; i++)
+            {
+                parties[i] = new AssaultPartyClient(i, configuration);
+            }
+
+            Museum museum = new MuseumClient(configuration);  
+            ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
+
+            new LoggerServer(parties, museum, controlCollection, configuration).start();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error: Error in LoggerServer");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }

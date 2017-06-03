@@ -50,7 +50,7 @@ public class SharedMuseum implements Museum, Serializable
             this.rooms[i] = new Room(i, distance, paintings);
         }
         
-        System.out.println("Museum has " + this.countPaintings() + " paintings!");
+        System.out.println("Info: Museum has " + this.countPaintings() + " paintings!");
     }
     
     /**

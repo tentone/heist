@@ -298,7 +298,7 @@ public class SharedLogger implements Logger, Serializable
                     
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        if(j < thievesID.length)
+                        if(j < thievesID.length && this.thieves[thievesID[j]] != null)
                         {
                             OrdinaryThief thief = this.thieves[thievesID[j]];
                             this.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
@@ -329,7 +329,11 @@ public class SharedLogger implements Logger, Serializable
      */
     public synchronized void end() throws Exception
     {
-        this.out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
+        int paintings = this.controlCollection.totalPaintingsStolen();
+        
+        System.out.println("Info: My friends, tonight's effort produced " + paintings + " priceless paintings!");
+        
+        this.out.println("\nMy friends, tonight's effort produced " + paintings + " priceless paintings!");
         this.out.close();
     }
     

@@ -242,9 +242,6 @@ public class MasterThief extends Thread implements Serializable
     {
         this.clock.increment();
         this.controlCollection.sumUpResults();
-        this.logger.log(this);
-        
-        
         this.logger.end();
         
         this.controlCollection.end();
@@ -309,9 +306,11 @@ public class MasterThief extends Thread implements Serializable
         }
         catch(Exception e)
         {
+            System.out.println("Error: MasterThief");
             e.printStackTrace();
+            System.exit(1);
         }
         
-        //System.out.println("MasterThief terminated");
+        System.out.println("Info: MasterThief terminated");
     }
 }

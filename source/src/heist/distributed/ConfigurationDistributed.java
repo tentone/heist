@@ -89,21 +89,20 @@ public class ConfigurationDistributed extends Configuration implements Serializa
             line = scanner.nextLine();
             values = line.split(";");
             configuration.museumServer.set(values[0], Integer.parseInt(values[1]), values[2]);
-
-            line = scanner.nextLine();
-            values = line.split(";");
-            configuration.assaultPartiesServers[0].set(values[0], Integer.parseInt(values[1]), values[2]);
             
-            line = scanner.nextLine();
-            values = line.split(";");
-            configuration.assaultPartiesServers[1].set(values[0], Integer.parseInt(values[1]), values[2]);
+            for(int i = 0; i < configuration.assaultPartiesServers.length; i++)
+            {
+                line = scanner.nextLine();
+                values = line.split(";");
+                configuration.assaultPartiesServers[i].set(values[0], Integer.parseInt(values[1]), values[2]);
+            }
             
-            System.out.println("configuration.txt loaded");
+            System.out.println("Info: configuration.txt loaded");
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            System.out.println("configuration.txt not found");
+            System.out.println("Info: configuration.txt not found");
         }
         
         return configuration;
