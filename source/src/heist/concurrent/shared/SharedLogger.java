@@ -17,6 +17,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.LinkedList;
+import heist.utils.Log;
 
 /**
  * Logger object is used to create a detailed log of everything inside a GeneralRepository.
@@ -81,7 +83,12 @@ public class SharedLogger implements Logger, Serializable
      * PrintStream used to output logging data.
      */
     private PrintStream out;
-
+    
+    /**
+     * Queue with all messages waiting to be sorted.
+     */
+    private LinkedList<Log> list;
+    
     /**
      * Logger constructor Configuration file.
      * Configuration file specifies where the log data is written to (can be written to this.out or to a file).
@@ -99,6 +106,8 @@ public class SharedLogger implements Logger, Serializable
         this.parties = parties;
         this.museum = museum;
         this.controlCollection = controlCollection;
+        
+        this.list = new LinkedList<>();
         
         if(this.configuration.logToFile)
         {
@@ -157,7 +166,8 @@ public class SharedLogger implements Logger, Serializable
     private void log() throws Exception
     {        
         if(this.configuration.log)
-        {            
+        {
+            //Thieves header
             if(this.configuration.logHeader)
             {
                 this.out.print("\n\nMstT      ");
@@ -165,14 +175,22 @@ public class SharedLogger implements Logger, Serializable
                 {
                     this.out.print("Thief " + i + "      ");
                 }
-
+                this.out.print("              VCk");
+                
+                
                 this.out.print("\nStat     ");
                 for(int i = 0; i < this.thieves.length; i++)
                 {
                     this.out.print("Stat S MD    ");
                 }
+                this.out.print("M");
+                for(int i = 0; i < this.thieves.length; i++)
+                {
+                    this.out.print("    " + i);
+                }
             }
-
+            
+            //Master thief state
             if(this.master == null)
             {
                 this.out.print("\n----     ");
@@ -182,20 +200,42 @@ public class SharedLogger implements Logger, Serializable
                 this.out.print("\n" + this.master.state() + "     ");//
             }
             
-            
+            //Ordinary thieves state
             for(int i = 0; i < this.thieves.length; i++)
             {
                 if(this.thieves[i] == null)
                 {
-                    this.out.printf("---- -- --    ");
+                    this.out.printf("---- - --    ");
                 }
                 else
                 {
                     this.out.printf("%4d %c %2d    ", this.thieves[i].state(), this.thieves[i].hasParty(), this.thieves[i].getDisplacement());
                 }
             }
+            
+            //Vectorial clocks
+            if(this.master == null)
+            {
+                this.out.print("---");
+            }
+            else
+            {
+                this.out.printf("%3d", this.master.getTime());
+            }
+            for(int i = 0; i < this.thieves.length; i++)
+            {
+                if(this.thieves[i] == null)
+                {
+                    this.out.printf("  ---");
+                }
+                else
+                {
+                    this.out.printf("  %3d", this.thieves[i].getTime());
+                }
+            }
             this.out.print("\n");
-
+            
+            //Assault party header
             if(this.configuration.logHeader)
             {
                 this.out.print("\n");
@@ -238,7 +278,8 @@ public class SharedLogger implements Logger, Serializable
 
                 this.out.print("\n");
             }
-
+            
+            //Assault party state
             for(int i = 0; i < this.parties.length; i++)
             {
                 if(this.parties[i].getState() == SharedAssaultParty.DISMISSED)
@@ -269,7 +310,8 @@ public class SharedLogger implements Logger, Serializable
                     }
                 }
             }
-
+            
+            //Museum state
             Room[] rooms = this.museum.getRooms();
             for(int i = 0; i < rooms.length; i++)
             {

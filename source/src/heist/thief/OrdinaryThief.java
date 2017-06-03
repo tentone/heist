@@ -6,6 +6,7 @@ import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
 import heist.interfaces.Museum;
+import heist.utils.VectorialClock;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -99,6 +100,11 @@ public class OrdinaryThief extends Thread implements Serializable
     private boolean hasCanvas;
     
     /**
+     * Vectorial clock.
+     */
+    private VectorialClock clock;
+    
+    /**
      * OrdinaryThief constructor.
      * @param id Thief id.
      * @param controlCollection ControlCollectionSite
@@ -118,6 +124,8 @@ public class OrdinaryThief extends Thread implements Serializable
         this.museum = museum;
         this.parties = parties;
         this.logger = logger;
+        
+        this.clock = new VectorialClock();
         
         this.maximumDisplacement = configuration.thiefDisplacement.generateInRange();
         this.position = 0;
@@ -174,6 +182,7 @@ public class OrdinaryThief extends Thread implements Serializable
     {
         if(this.party != -1)
         {
+            this.clock.increment();
             this.parties[this.party].removeThief(this.id);
             this.party = -1;
         }
@@ -206,6 +215,15 @@ public class OrdinaryThief extends Thread implements Serializable
         return this.id;
     }
 
+    /**
+     * Get timestamp from vectorialClock
+     * @return Vectorial clock time
+     */
+    public int getTime()
+    {
+        return this.clock.getTime();
+    }
+    
     /**
      * Check if thieve has a canvas.
      * @return Return 1 if thief has a canvas 0 otherwise.
@@ -243,8 +261,7 @@ public class OrdinaryThief extends Thread implements Serializable
      */
     private void setState(int state)
     {
-        this.state = state;
-        
+        this.state = state; 
         //this.logger.debug("Thief " + this.id + " change state " + this.state);
     }
     
@@ -254,10 +271,13 @@ public class OrdinaryThief extends Thread implements Serializable
      */
     private boolean amINeeded() throws Exception
     {
-        //this.logger.debug("Thief " + this.id + " amINeeded");
+        this.clock.increment();
+        boolean amINeeded = this.controlCollection.amINeeded(this);
         this.logger.log(this);
         
-        return this.controlCollection.amINeeded(this);
+        //this.logger.debug("Thief " + this.id + " amINeeded " + amINeeded);
+        
+        return amINeeded;
     }
     
     /**
@@ -268,11 +288,12 @@ public class OrdinaryThief extends Thread implements Serializable
     private void prepareExecution() throws Exception
     {
         //this.logger.debug("Thief " + this.id + " entered the concentration site");
-        int partyID = this.concentration.prepareExcursion(this);
-        this.setParty(partyID);
+        
+        this.clock.increment();
+        this.setParty(this.concentration.prepareExcursion(this));
+        this.logger.log(this);
         
         //this.logger.debug("Thief " + this.id + " party assigned " + this.party.getID());
-        this.logger.log(this);
     }
     
     /**
@@ -282,17 +303,17 @@ public class OrdinaryThief extends Thread implements Serializable
     private void crawlIn() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_INWARDS);
-        this.logger.log(this);
-        
+
         while(this.parties[this.party].keepCrawling(this))
         {
+            this.clock.increment();
             this.position = this.parties[this.party].crawlIn(this);
-            //this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
             this.logger.log(this);
+            
+            //this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
         }
         
         //this.logger.debug("Thief " + this.id + " reached room (Position:" + this.position + ")");
-        this.logger.log(this);
     }
     
     /**
@@ -301,10 +322,16 @@ public class OrdinaryThief extends Thread implements Serializable
     private void rollACanvas() throws Exception
     {
         this.setState(OrdinaryThief.AT_A_ROOM);
-        this.hasCanvas = this.museum.rollACanvas(this.parties[this.party].getTarget());
-
-        //this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
+        
+        this.clock.increment();
+        int target = this.parties[this.party].getTarget();
         this.logger.log(this);
+        
+        this.clock.increment();
+        this.hasCanvas = this.museum.rollACanvas(target);
+        this.logger.log(this);
+        
+        //this.logger.debug("Thief " + this.id + " rollACanvas (HasCanvas:" + this.hasCanvas + ")");
     }
     
     /**
@@ -312,6 +339,7 @@ public class OrdinaryThief extends Thread implements Serializable
      */
     private void reverseDirection() throws Exception
     {      
+        this.clock.increment();
         this.parties[this.party].reverseDirection(this);
         
         //this.logger.debug("Thief " + this.id + " reverse");
@@ -325,17 +353,18 @@ public class OrdinaryThief extends Thread implements Serializable
     private void crawlOut() throws Exception
     {
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
-        this.logger.log(this);
+        //this.logger.log(this);
         
         while(this.parties[this.party].keepCrawling(this))
         {
+            this.clock.increment();
             this.position = this.parties[this.party].crawlOut(this);
             //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
             this.logger.log(this);
         }
 
         //this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
-        this.logger.log(this);
+        //this.logger.log(this);
     }
     
     /**
@@ -346,12 +375,13 @@ public class OrdinaryThief extends Thread implements Serializable
         this.setState(OrdinaryThief.OUTSIDE);
         
         //this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
-        this.logger.log(this);
+        //this.logger.log(this);
         
+        this.clock.increment();
         this.controlCollection.handACanvas(this);
-        this.leaveParty();
-        
         this.logger.log(this);
+        
+        this.leaveParty();
     }
     
     /**
@@ -367,6 +397,7 @@ public class OrdinaryThief extends Thread implements Serializable
         out.writeInt(this.state);
         out.writeInt(this.position);
         out.writeBoolean(this.hasCanvas);
+        out.writeObject(this.clock);
     }
     
     /**
@@ -383,6 +414,7 @@ public class OrdinaryThief extends Thread implements Serializable
         this.state = in.readInt();
         this.position = in.readInt();
         this.hasCanvas = in.readBoolean();
+        this.clock = (VectorialClock) in.readObject();
     }
     
     /**
@@ -397,6 +429,7 @@ public class OrdinaryThief extends Thread implements Serializable
         this.state = thief.state;
         this.position = thief.position;
         this.hasCanvas = thief.hasCanvas;
+        this.clock = thief.clock;
     }
     
     /**

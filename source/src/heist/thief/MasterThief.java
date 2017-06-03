@@ -7,6 +7,7 @@ import heist.interfaces.ConcentrationSite;
 import heist.interfaces.ControlCollectionSite;
 import heist.interfaces.Logger;
 import heist.interfaces.Museum;
+import heist.utils.VectorialClock;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -86,6 +87,11 @@ public class MasterThief extends Thread implements Serializable
     private int state;
 
     /**
+     * Vectorial clock.
+     */
+    private VectorialClock clock;
+    
+    /**
      * MasterThief constructor
      * @param controlCollection ControlCollectionSite
      * @param concentration ConcentrationSite
@@ -105,6 +111,8 @@ public class MasterThief extends Thread implements Serializable
         this.logger = logger;
         
         this.configuration = configuration;
+        
+        this.clock = new VectorialClock();
     }
     
     /**
@@ -125,6 +133,15 @@ public class MasterThief extends Thread implements Serializable
     {
         return this.state;
     }
+
+    /**
+     * Get timestamp from vectorialClock
+     * @return Vectorial clock time
+     */
+    public int getTime()
+    {
+        return this.clock.getTime();
+    }
     
     /**
      * This is the first state change in the MasterThief life cycle it changes the MasterThief state to deciding what to do. 
@@ -132,10 +149,9 @@ public class MasterThief extends Thread implements Serializable
      */
     private void startOperations() throws Exception
     {
+        this.clock.increment();
         this.controlCollection.startOperations();
-        
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
-        
         this.logger.log(this);
     }
     
@@ -147,9 +163,7 @@ public class MasterThief extends Thread implements Serializable
     private void appraiseSit() throws Exception
     {
         this.setState(this.controlCollection.appraiseSit());
-        
         //this.logger.debug("Master appraiseSit");
-        this.logger.log(this);
     }
     
     /**
@@ -159,12 +173,19 @@ public class MasterThief extends Thread implements Serializable
      */
     private int prepareAssaultParty() throws Exception
     {
+        this.clock.increment();
         RoomStatus room = this.controlCollection.getRoomToAttack();
+        this.logger.log(this);
+        
+        this.clock.increment();
         int partyID = this.controlCollection.prepareNewParty(room);
+        this.logger.log(this);
+        
+        this.clock.increment();
         this.concentration.fillAssaultParty(partyID);
+        this.logger.log(this);
         
         //this.logger.debug("Master prepareAssaultParty (ID:" + party.getID() + " TargetID:" + party.getTarget() + " TargetTA" + room.getThievesAttacking() + " Members:" + party.toString() + ")");
-        this.logger.log(this);
         
         return partyID;
     }
@@ -177,11 +198,12 @@ public class MasterThief extends Thread implements Serializable
      */
     private void sendAssaultParty(int partyID) throws Exception
     {
+        this.clock.increment();
         this.parties[partyID].sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
+        this.logger.log(this);
         
         //this.logger.debug("Master sendAssaultParty " + party.getID());
-        this.logger.log(this);
     }
     
     /**
@@ -192,8 +214,8 @@ public class MasterThief extends Thread implements Serializable
     {
         //this.logger.debug("Master takeARest");
         
+        this.clock.increment();
         this.controlCollection.takeARest();
-        
         this.logger.log(this);
     }
     
@@ -204,11 +226,12 @@ public class MasterThief extends Thread implements Serializable
      */
     private void collectCanvas() throws Exception
     {
+        this.clock.increment();
         this.controlCollection.collectCanvas();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
+        this.logger.log(this);
         
         //this.logger.debug("Master collectCanvas (Total:" + this.collection.totalPaintingsStolen() + ")");
-        this.logger.log(this);
     }
     
     /**
@@ -217,8 +240,11 @@ public class MasterThief extends Thread implements Serializable
      */
     private void sumUpResults() throws Exception
     {
+        this.clock.increment();
         this.controlCollection.sumUpResults();
         this.logger.log(this);
+        
+        
         this.logger.end();
         
         this.controlCollection.end();
@@ -239,6 +265,7 @@ public class MasterThief extends Thread implements Serializable
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         out.writeInt(this.state);
+        out.writeObject(this.clock);
     }
     
     /**
@@ -250,6 +277,7 @@ public class MasterThief extends Thread implements Serializable
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         this.state = in.readInt();
+        this.clock = (VectorialClock) in.readObject();
     }
     
     /**
