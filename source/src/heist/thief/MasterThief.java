@@ -132,6 +132,8 @@ public class MasterThief extends Thread implements Serializable
      */
     private void startOperations() throws Exception
     {
+        this.controlCollection.startOperations();
+        
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         
         this.logger.log(this);

@@ -25,11 +25,11 @@ public class SharedControlCollectionSite implements ControlCollectionSite, Seria
      * Configuration used by this ControlCollectionSite.
      */
     private final Configuration configuration;
-    
+
     /**
-     * RoomStatus array, used to store information about who are assaulting rooms, how many paintings where stolen from each room and if the room is empty.
+     * Museum used to get information about rooms distance.
      */
-    private final RoomStatus[] rooms;
+    private final Museum museum;
     
     /**
      * AssaultParties used for the simulation.
@@ -48,6 +48,11 @@ public class SharedControlCollectionSite implements ControlCollectionSite, Seria
     private final Queue<OrdinaryThief> amINeededQueue;
     
     /**
+     * RoomStatus array, used to store information about who are assaulting rooms, how many paintings where stolen from each room and if the room is empty.
+     */
+    private RoomStatus[] rooms;
+    
+    /**
      * Flag to indicate if the heist has been terminated.
      * True when the MasterThieve decides that the Museum is clear.
      */
@@ -64,18 +69,13 @@ public class SharedControlCollectionSite implements ControlCollectionSite, Seria
     {   
         this.configuration = configuration;        
         this.parties = parties;
+        this.museum = museum;
         
         this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
         this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
         
+        this.rooms = null;
         this.heistTerminated = false;
-        
-        Room[] museumRooms = museum.getRooms();
-        this.rooms = new RoomStatus[museumRooms.length];
-        for(int i = 0; i < museumRooms.length; i++)
-        {
-            this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
-        }
     }
     
     /**
@@ -95,7 +95,21 @@ public class SharedControlCollectionSite implements ControlCollectionSite, Seria
     {
         return this.parties;
     }
-
+    
+    /**
+     * Called by the master thief to verify where are the rooms inside the museum.
+     * @throws Exception A exception may be thrown depending on the implementation.
+     */
+    public synchronized void startOperations() throws Exception
+    {
+        Room[] museumRooms = this.museum.getRooms();
+        this.rooms = new RoomStatus[museumRooms.length];
+        for(int i = 0; i < museumRooms.length; i++)
+        {
+            this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
+        }
+    }
+    
     /**
      * Check if there is some party available to be prepared and sent.
      * @return True if there is some party in DISMISSED state.

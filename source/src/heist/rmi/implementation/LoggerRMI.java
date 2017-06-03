@@ -10,9 +10,12 @@ import heist.thief.MasterThief;
 import heist.thief.OrdinaryThief;
 import heist.interfaces.Logger;
 import heist.interfaces.Museum;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -76,14 +79,14 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
      */
     private ControlCollectionSite controlCollection;
     
-    /*
+    /**
      * PrintStream used to output logging data.
      */
-    //private PrintStream out;
+    private PrintStream out;
 
     /**
      * Logger constructor Configuration file.
-     * Configuration file specifies where the log data is written to (can be written to System.out or to a file).
+     * Configuration file specifies where the log data is written to (can be written to this.out or to a file).
      * @param parties AssaultParties
      * @param museum Museum
      * @param controlCollection ControlCollectionSite
@@ -101,7 +104,7 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
         this.museum = museum;
         this.controlCollection = controlCollection;
         
-        /*if(this.configuration.logToFile)
+        if(this.configuration.logToFile)
         {
             try
             {
@@ -112,7 +115,7 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
         else
         {
             this.out = System.out;
-        }*/
+        }
     }
     
     /**
@@ -124,7 +127,7 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
     {                
         if(this.configuration.debug)
         {
-            System.out.println(message);
+            this.out.println(message);
         }
     }
     
@@ -161,26 +164,26 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
         {            
             if(this.configuration.logHeader)
             {
-                System.out.print("\n\nMstT      ");
+                this.out.print("\n\nMstT      ");
                 for(int i = 0; i < this.thieves.length; i++)
                 {
-                    System.out.print("Thief " + i + "      ");
+                    this.out.print("Thief " + i + "      ");
                 }
 
-                System.out.print("\nStat     ");
+                this.out.print("\nStat     ");
                 for(int i = 0; i < this.thieves.length; i++)
                 {
-                    System.out.print("Stat S MD    ");
+                    this.out.print("Stat S MD    ");
                 }
             }
 
             if(this.master == null)
             {
-                System.out.print("\n----     ");
+                this.out.print("\n----     ");
             }
             else
             {
-                System.out.print("\n" + this.master.state() + "     ");//
+                this.out.print("\n" + this.master.state() + "     ");//
             }
             
             
@@ -188,71 +191,71 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
             {
                 if(this.thieves[i] == null)
                 {
-                    System.out.printf("---- -- --    ");
+                    this.out.printf("---- -- --    ");
                 }
                 else
                 {
-                    System.out.printf("%4d %c %2d    ", this.thieves[i].state(), this.thieves[i].hasParty(), this.thieves[i].getDisplacement());
+                    this.out.printf("%4d %c %2d    ", this.thieves[i].state(), this.thieves[i].hasParty(), this.thieves[i].getDisplacement());
                 }
             }
-            System.out.print("\n");
+            this.out.print("\n");
 
             if(this.configuration.logHeader)
             {
-                System.out.print("\n");
+                this.out.print("\n");
                 for(int i = 0; i < this.parties.length; i++)
                 {
-                    System.out.print("              Assault party " + (this.parties[i] != null ? this.parties[i].getID() : "--") + "        ");
+                    this.out.print("              Assault party " + (this.parties[i] != null ? this.parties[i].getID() : "--") + "        ");
                 }
-                System.out.print("                 Museum");
+                this.out.print("                 Museum");
 
-                System.out.print("\n");
+                this.out.print("\n");
                 for(int i = 0; i < this.parties.length; i++)
                 {
-                    System.out.print("   ");
+                    this.out.print("   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        System.out.print("     Elem " + j);
+                        this.out.print("     Elem " + j);
                     }
                 }
                 
-                System.out.print("   ");
+                this.out.print("   ");
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    System.out.print("  Room " + j);
+                    this.out.print("  Room " + j);
                 }
 
-                System.out.print("\n");
+                this.out.print("\n");
                 for(int i = 0; i < this.parties.length; i++)
                 {
-                    System.out.print("RId  ");
+                    this.out.print("RId  ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        System.out.print("Id Pos Cv  ");
+                        this.out.print("Id Pos Cv  ");
                     }
                 }
 
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    System.out.print(" NP DT  ");
+                    this.out.print(" NP DT  ");
                 }
 
-                System.out.print("\n");
+                this.out.print("\n");
             }
 
             for(int i = 0; i < this.parties.length; i++)
             {
                 if(this.parties[i].getState() == AssaultPartyRMI.DISMISSED)
                 {
-                    System.out.print("--   ");
+                    this.out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        System.out.print("-- --  --  ");
+                        this.out.print("-- --  --  ");
                     }
                 }
                 else
                 {
-                    System.out.printf("%2d   ", this.parties[i].getTarget());
+                    this.out.printf("%2d   ", this.parties[i].getTarget());
 
                     int[] thievesID = this.parties[i].getThieves();
                     
@@ -261,11 +264,11 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
                         if(j < thievesID.length)
                         {
                             OrdinaryThief thief = this.thieves[thievesID[j]];
-                            System.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                            this.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                         else
                         {
-                            System.out.print("-- --  --  "); 
+                            this.out.print("-- --  --  "); 
                         }
                     }
                 }
@@ -274,11 +277,11 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
             Room[] rooms = this.museum.getRooms();
             for(int i = 0; i < rooms.length; i++)
             {
-                System.out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
+                this.out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
             }
             
-            System.out.println("");
-            System.out.flush();
+            this.out.println("");
+            this.out.flush();
         }
     }
     
@@ -288,8 +291,8 @@ public class LoggerRMI extends UnicastRemoteObject implements Logger, Serializab
      */
     public synchronized void end() throws Exception
     {
-        System.out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
-        System.out.close();
+        this.out.println("\nMy friends, tonight's effort produced " + this.controlCollection.totalPaintingsStolen() + " priceless paintings!");
+        this.out.close();
     }
     
     /**

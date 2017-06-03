@@ -1,4 +1,4 @@
 /**
- * This package contains concurrent implementations with thread locking for all shared regions.
+ * This package contains RMI implementation for RMI based clients and servers.
  */
 package heist.rmi.implementation;

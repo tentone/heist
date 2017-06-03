@@ -26,7 +26,11 @@ public class ControlCollectionSiteClientHandler extends ClientHandler
         
         int type = message.type;
         
-        if(type == ControlCollectionSiteMessage.AM_I_NEEDED)
+        if(type == ControlCollectionSiteMessage.START_OPERATIONS)
+        {
+            this.controlCollection.startOperations();
+        }
+        else if(type == ControlCollectionSiteMessage.AM_I_NEEDED)
         {
             response.amINeeded = this.controlCollection.amINeeded(message.thief);
             response.thief = message.thief;

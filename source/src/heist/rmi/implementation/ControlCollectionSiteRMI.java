@@ -21,16 +21,21 @@ import java.rmi.server.UnicastRemoteObject;
 public class ControlCollectionSiteRMI extends UnicastRemoteObject implements ControlCollectionSite, Serializable
 {
     private static final long serialVersionUID = 457234977399923445L;
-    
+        
     /**
      * Configuration used by this ControlCollectionSite.
      */
     private final Configuration configuration;
+
+    /**
+     * Museum used to get information about rooms distance.
+     */
+    private final Museum museum;
     
     /**
      * RoomStatus array, used to store information about who are assaulting rooms, how many paintings where stolen from each room and if the room is empty.
      */
-    private final RoomStatus[] rooms;
+    private RoomStatus[] rooms;
     
     /**
      * AssaultParties used for the simulation.
@@ -67,18 +72,13 @@ public class ControlCollectionSiteRMI extends UnicastRemoteObject implements Con
         
         this.configuration = configuration;        
         this.parties = parties;
+        this.museum = museum;
         
         this.canvasDeliverQueue = new ArrayQueue<>(configuration.numberThieves);
         this.amINeededQueue = new ArrayQueue<>(configuration.numberThieves);
         
+        this.rooms = null;
         this.heistTerminated = false;
-        
-        Room[] museumRooms = museum.getRooms();
-        this.rooms = new RoomStatus[museumRooms.length];
-        for(int i = 0; i < museumRooms.length; i++)
-        {
-            this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
-        }
     }
     
     /**
@@ -98,7 +98,21 @@ public class ControlCollectionSiteRMI extends UnicastRemoteObject implements Con
     {
         return this.parties;
     }
-
+    
+    /**
+     * Called by the master thief to verify where are the rooms inside the museum.
+     * @throws Exception A exception may be thrown depending on the implementation.
+     */
+    public synchronized void startOperations() throws Exception
+    {
+        Room[] museumRooms = this.museum.getRooms();
+        this.rooms = new RoomStatus[museumRooms.length];
+        for(int i = 0; i < museumRooms.length; i++)
+        {
+            this.rooms[i] = new RoomStatus(museumRooms[i].getID(), museumRooms[i].getDistance());
+        }
+    }
+    
     /**
      * Check if there is some party available to be prepared and sent.
      * @return True if there is some party in DISMISSED state.

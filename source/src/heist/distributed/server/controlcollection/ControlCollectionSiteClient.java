@@ -15,6 +15,12 @@ public class ControlCollectionSiteClient extends Client implements ControlCollec
     }
 
     @Override
+    public void startOperations() throws Exception
+    {
+        this.sendMessage(new ControlCollectionSiteMessage(ControlCollectionSiteMessage.START_OPERATIONS));
+    }
+    
+    @Override
     public boolean amINeeded(OrdinaryThief thief) throws Exception
     {
         ControlCollectionSiteMessage message = new ControlCollectionSiteMessage(ControlCollectionSiteMessage.AM_I_NEEDED);

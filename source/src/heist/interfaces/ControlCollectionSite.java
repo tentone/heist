@@ -12,6 +12,12 @@ import java.rmi.Remote;
 public interface ControlCollectionSite extends Remote
 {
     /**
+     * Called by the master thief to verify where are the rooms inside the museum.
+     * @throws Exception A exception may be thrown depending on the implementation.
+     */
+    public void startOperations() throws Exception;
+    
+    /**
      * Called by the OrdinaryThieves to check if they are still needed.
      * @param thief Thief checking if he is needed.
      * @throws Exception A exception may be thrown depending on the implementation.

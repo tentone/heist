@@ -28,40 +28,29 @@ public class HeistDistributed
     public static void main(String[] args) throws Exception
     {
         //Configuration
-        ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
-        
-        //Museum server
-        new MuseumServer(configuration).start();
+        ConfigurationDistributed configuration = new ConfigurationDistributed();
 
-        //AssaultParty servers and clients
+        //Clients
+        Museum museum = new MuseumClient(configuration);
+        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
+        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
+        Logger logger = new LoggerClient(configuration);
         AssaultParty[] parties = new AssaultParty[configuration.numberParties];
         for(int i = 0; i < parties.length; i++)
         {
-            new AssaultPartyServer(i, configuration).start();
             parties[i] = new AssaultPartyClient(i, configuration);
         }
-        
-        //ConcentrationSite server
-        new ConcentrationSiteServer(parties, configuration).start();
-        
-        //Museum client
-        Museum museum = new MuseumClient(configuration);
 
-        //ControlCollectionSite server
+        //Servers
+        new MuseumServer(configuration).start();
+        new ConcentrationSiteServer(parties, configuration).start();
         new ControlCollectionSiteServer(parties, museum, configuration).start();
-        
-        //Concetrantion client
-        ConcentrationSite concentration = new ConcentrationSiteClient(configuration);
-        
-        //ControlCollectionSite client
-        ControlCollectionSite controlCollection = new ControlCollectionSiteClient(configuration);
-        
-        //Logger server
         new LoggerServer(parties, museum, controlCollection, configuration).start();
-       
-        //Logger client
-        Logger logger = new LoggerClient(configuration);
-        
+        for(int i = 0; i < parties.length; i++)
+        {
+            new AssaultPartyServer(i, configuration).start();
+        }
+
         //OrdinaryThieves
         for(int i = 0; i < configuration.numberThieves; i++)
         {
