@@ -81,7 +81,19 @@ public class AssaultPartyClient extends Client implements AssaultParty
     }
 
     @Override
-    public boolean crawlIn(OrdinaryThief thief) throws Exception
+    public boolean keepCrawling(OrdinaryThief thief) throws Exception
+    {
+        AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.KEEP_CRAWLING);
+        message.thief = thief;
+        
+        AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
+        thief.copyState(response.thief);
+        
+        return response.keepCrawling;
+    }
+    
+    @Override
+    public int crawlIn(OrdinaryThief thief) throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.CRAWL_IN);
         message.thief = thief;
@@ -89,7 +101,7 @@ public class AssaultPartyClient extends Client implements AssaultParty
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
         thief.copyState(response.thief);
         
-        return response.keepCrawling;
+        return response.position;
     }
 
     @Override
@@ -102,7 +114,7 @@ public class AssaultPartyClient extends Client implements AssaultParty
     }
 
     @Override
-    public boolean crawlOut(OrdinaryThief thief) throws Exception
+    public int crawlOut(OrdinaryThief thief) throws Exception
     {
         AssaultPartyMessage message = new AssaultPartyMessage(AssaultPartyMessage.CRAWL_OUT);
         message.thief = thief;
@@ -110,7 +122,7 @@ public class AssaultPartyClient extends Client implements AssaultParty
         AssaultPartyMessage response = (AssaultPartyMessage) this.sendMessage(message);
         thief.copyState(response.thief);
         
-        return response.keepCrawling;
+        return response.position;
     }
 
     @Override

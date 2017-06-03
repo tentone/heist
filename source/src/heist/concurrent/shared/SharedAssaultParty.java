@@ -225,17 +225,17 @@ public class SharedAssaultParty implements AssaultParty, Serializable
     @Override
     public synchronized void sendParty() throws InterruptedException
     {
-        this.state = SharedAssaultParty.CRAWLING;
+        this.state = SharedAssaultParty.CRAWLING_IN;
         this.notifyAll();
     }
-    
+
     /**
      * Method used to update the position the thieves
      * @param thief Thief to update position of
-     * @throws Exception Exception
+     * @throws Exception A exception may be thrown depending on the implementation.
      * @return True if was able to move the thief, false if thief arrived at the room
      */
-    public synchronized boolean crawlIn(OrdinaryThief thief) throws Exception
+    public synchronized int crawlIn(OrdinaryThief thief) throws Exception
     {
         if(this.crawlingQueue.size() == 0)
         {
@@ -246,14 +246,16 @@ public class SharedAssaultParty implements AssaultParty, Serializable
             throw new Exception("Crawling peek returned null");
         }
         
-        while(this.crawlingQueue.peek() != thief.getID() || this.state != SharedAssaultParty.CRAWLING)
+        while(this.crawlingQueue.peek() != thief.getID() || this.state != SharedAssaultParty.CRAWLING_IN)
         {
             this.wait();
         }
         
+        int updatedPosition = thief.getPosition();
+        
         for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
-            int position = thief.getPosition() + delta;
+            int position = updatedPosition + delta;
             boolean emptyPosition = true, distanceOk = true;
             
             //Check if position is valid
@@ -303,18 +305,18 @@ public class SharedAssaultParty implements AssaultParty, Serializable
             {
                 if(position >= this.room.getDistance())
                 {
-                    thief.setPosition(this.room.getDistance());
+                    updatedPosition = this.room.getDistance();
                     break;
                 }
                 else if(emptyPosition)
                 {
-                    thief.setPosition(position);
+                    updatedPosition = position;
                     break;
                 }
             }
         }
         
-        boolean keepCrawling = thief.getPosition() != this.room.getDistance();
+        boolean keepCrawling = updatedPosition != this.room.getDistance();
         if(keepCrawling)
         {
             this.crawlingQueue.popPush();
@@ -326,7 +328,33 @@ public class SharedAssaultParty implements AssaultParty, Serializable
         
         this.notifyAll();
 
-        return keepCrawling;
+        return updatedPosition;
+    }
+    
+    /**
+     * Check if the OrdinaryThief needs to keep crawling.
+     * @throws Exception A exception may be thrown depending on the implementation.
+     * @param thief Thief Crawling
+     * @return True if the thief still did not reach its destination.
+     */
+    public boolean keepCrawling(OrdinaryThief thief) throws Exception
+    {
+        if(this.state == SharedAssaultParty.CRAWLING_IN)
+        {
+            if(thief.getPosition() == this.room.getDistance())
+            {
+                return false;
+            }
+        }
+        else if(this.state == SharedAssaultParty.CRAWLING_OUT)
+        {
+            if(thief.getPosition() == 0)
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     /**
@@ -347,6 +375,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
         }
         else
         {
+            this.state = SharedAssaultParty.CRAWLING_OUT;
             this.waitingToReverse = 0;
             this.notifyAll();
         }
@@ -365,7 +394,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
      * @throws Exception Exception
      * @return True if was able to move the thief, false if thief arrived at the room.
      */
-    public synchronized boolean crawlOut(OrdinaryThief thief) throws Exception
+    public synchronized int crawlOut(OrdinaryThief thief) throws Exception
     {
         if(this.crawlingQueue.size() == 0)
         {
@@ -375,15 +404,21 @@ public class SharedAssaultParty implements AssaultParty, Serializable
         {
             throw new Exception("Crawling peek returned null");
         }
+        else if(this.state != SharedAssaultParty.CRAWLING_OUT)
+        {
+            throw new Exception("Thief reached crawling out but state is not CRAWLING_OUT");
+        }
         
         while(this.crawlingQueue.peek() != thief.getID())
         {
             this.wait();
         }
         
+        int updatedPosition = thief.getPosition();
+        
         for(int delta = thief.getDisplacement(); delta > 0; delta--)
         {
-            int position = thief.getPosition() - delta;
+            int position = updatedPosition - delta;
             boolean emptyPosition = true, distanceOk = true;
             
             //Check if position is valid
@@ -433,18 +468,18 @@ public class SharedAssaultParty implements AssaultParty, Serializable
             {
                 if(position <= 0)
                 {
-                    thief.setPosition(0);
+                    updatedPosition = 0;
                     break;
                 }
                 else if(emptyPosition)
                 {
-                    thief.setPosition(position);
+                    updatedPosition = position;
                     break;
                 }
             }
         }
 
-        boolean keepCrawling = thief.getPosition() != 0;
+        boolean keepCrawling = updatedPosition != 0;
         if(keepCrawling)
         {
             this.crawlingQueue.popPush();
@@ -456,7 +491,7 @@ public class SharedAssaultParty implements AssaultParty, Serializable
         
         this.notifyAll();
         
-        return keepCrawling;
+        return updatedPosition;
     }
     
     /**

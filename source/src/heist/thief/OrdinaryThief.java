@@ -284,8 +284,9 @@ public class OrdinaryThief extends Thread implements Serializable
         this.setState(OrdinaryThief.CRAWLING_INWARDS);
         this.logger.log(this);
         
-        while(this.parties[this.party].crawlIn(this))
+        while(this.parties[this.party].keepCrawling(this))
         {
+            this.position = this.parties[this.party].crawlIn(this);
             //this.logger.debug("Thief " + this.id + " crawlIn (Position:" + this.position + ")");
             this.logger.log(this);
         }
@@ -326,12 +327,13 @@ public class OrdinaryThief extends Thread implements Serializable
         this.setState(OrdinaryThief.CRAWLING_OUTWARDS);
         this.logger.log(this);
         
-        while(this.parties[this.party].crawlOut(this))
+        while(this.parties[this.party].keepCrawling(this))
         {
+            this.position = this.parties[this.party].crawlOut(this);
             //this.logger.debug("Thief " + this.id + " crawlOut (Position:" + this.position + ")");
             this.logger.log(this);
         }
-        
+
         //this.logger.debug("Thief " + this.id + " reached outside (Position:" + this.position + ")");
         this.logger.log(this);
     }

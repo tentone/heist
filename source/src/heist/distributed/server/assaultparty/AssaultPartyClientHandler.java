@@ -62,7 +62,12 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.CRAWL_IN)
         {
-            response.keepCrawling = this.party.crawlIn(message.thief);
+            response.position = this.party.crawlIn(message.thief);
+            response.thief = message.thief;
+        }
+        else if(type == AssaultPartyMessage.KEEP_CRAWLING)
+        {
+            response.keepCrawling = this.party.keepCrawling(message.thief);
             response.thief = message.thief;
         }
         else if(type == AssaultPartyMessage.REVERSE_DIRECTION)
@@ -71,7 +76,7 @@ public class AssaultPartyClientHandler extends ClientHandler
         }
         else if(type == AssaultPartyMessage.CRAWL_OUT)
         {
-            response.keepCrawling = this.party.crawlOut(message.thief);
+            response.position = this.party.crawlOut(message.thief);
             response.thief = message.thief;
         }
         else if(type == AssaultPartyMessage.REMOVE_THIEF)

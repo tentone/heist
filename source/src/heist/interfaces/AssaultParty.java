@@ -22,13 +22,19 @@ public interface AssaultParty extends Remote
      * Crawling state.
      * When the party is in this state the OrdinaryThieves are crawling, or inside the room.
      */
-    public static final int CRAWLING = 2000;
+    public static final int CRAWLING_IN = 2000;
+    
+    /**
+     * Crawling out state.
+     * When the party is in this state the OrdinaryThieves are crawling out.
+     */
+    public static final int CRAWLING_OUT = 3000;
     
     /**
      * Dismissed state.
      * The party is set to this state after the last OrdinaryThieve delivers the canvas (or notifies the MasterThieve that he arrived empty handed).
      */
-    public static final int DISMISSED = 3000;
+    public static final int DISMISSED = 4000;
     
     /**
      * Get party id
@@ -98,9 +104,17 @@ public interface AssaultParty extends Remote
      * Called by the OrdinaryThief to crawl inside the museum.
      * @throws Exception A exception may be thrown depending on the implementation.
      * @param thief Thief Crawling
-     * @return False if the thief has reached its destination True otherwise
+     * @return Position of the thief to be updated
      */
-    public boolean crawlIn(OrdinaryThief thief) throws Exception;
+    public int crawlIn(OrdinaryThief thief) throws Exception;
+    
+    /**
+     * Check if the OrdinaryThief needs to keep crawling.
+     * @throws Exception A exception may be thrown depending on the implementation.
+     * @param thief Thief Crawling
+     * @return True if the thief still did not reach its destination.
+     */
+    public boolean keepCrawling(OrdinaryThief thief) throws Exception;
     
     /**
      * Called by the OrdinaryThieves to reverse their direction after they reached the target room.
@@ -113,9 +127,9 @@ public interface AssaultParty extends Remote
      * Called by the OrdinaryThief to crawl inside the museum.
      * @throws Exception A exception may be thrown depending on the implementation.
      * @param thief Thief Crawling
-     * @return False if the thief has reached its destination True otherwise
+     * @return Position of the thief to be updated
      */
-    public boolean crawlOut(OrdinaryThief thief) throws Exception;
+    public int crawlOut(OrdinaryThief thief) throws Exception;
     
     /**
      * Called by the MasterThief to end the simulation.

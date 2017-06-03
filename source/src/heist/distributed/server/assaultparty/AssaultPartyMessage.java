@@ -33,7 +33,9 @@ public class AssaultPartyMessage extends Message implements Serializable
 
     public static final int REMOVE_THIEF = 12;
     
-    public int id, target, state;
+    public static final int KEEP_CRAWLING = 50;
+    
+    public int id, target, state, position;
     public boolean partyFull, keepCrawling;
     public RoomStatus room;
     public int[] thieves;
