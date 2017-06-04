@@ -29,6 +29,7 @@ public class ConfigurationRMI extends ConfigurationDistributed
      * Read configuration from file.
      * If file does not exist runs with local configuration.
      * @return ConfigurationDistributed instance with values from file.
+     * @param fname Configuration file name.
      */
     public static ConfigurationRMI readFromFile(String fname)
     {

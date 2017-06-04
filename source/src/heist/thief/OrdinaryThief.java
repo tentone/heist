@@ -216,6 +216,14 @@ public class OrdinaryThief extends Thread implements Serializable
     }
 
     /**
+     * Update time on vectorial clock
+     */
+    public void updateClock()
+    {
+        this.clock.increment();
+    }
+    
+    /**
      * Get timestamp from vectorialClock
      * @return Vectorial clock time
      */

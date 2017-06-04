@@ -40,4 +40,13 @@ public class VectorialClock implements Serializable
     {
         time++;
     }
+    
+    /**
+     * Set new time value to the clock.
+     * @param time New time for the clock
+     */
+    public void synchronize(int time)
+    {
+        this.time = time;
+    }
 }

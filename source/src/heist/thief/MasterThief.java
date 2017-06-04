@@ -133,7 +133,15 @@ public class MasterThief extends Thread implements Serializable
     {
         return this.state;
     }
-
+    
+    /**
+     * Update time on vectorial clock
+     */
+    public void updateClock()
+    {
+        this.clock.increment();
+    }
+    
     /**
      * Get timestamp from vectorialClock
      * @return Vectorial clock time

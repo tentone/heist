@@ -15,15 +15,6 @@ package="heist.rmi.run"
 registryport="22399"
 
 #Server configuration
-museum="05"
-museumport="22394"
-
-assaulta="07"
-assaultaport="22395"
-
-assaultb="10"
-assaultbport="22396"
-
 logger="01"
 loggerport="22391"
 
@@ -32,6 +23,15 @@ controlport="22392"
 
 concentration="04"
 concentrationport="22393"
+
+museum="05"
+museumport="22394"
+
+assaulta="07"
+assaultaport="22395"
+
+assaultb="10"
+assaultbport="22396"
 
 #Client configuration
 master="02"
@@ -42,7 +42,7 @@ echo "           Distributed Systems"
 echo "        University of Aveiro 2017"
 echo "           Deploy and Run RMI"
 echo "----------------------------------------"
-echo "              Copy files"
+echo "            Prepare files"
 echo "----------------------------------------"
 
 #Copy $jar and configuration.txt to all servers
@@ -56,62 +56,61 @@ do
 	sshpass -p $pw ssh $user@l040101-ws$i.ua.pt "unzip -o -q Heist.jar -d ."
 done
 
-#echo "----------------------------------------"
-#echo "           RMI Registry Test"
-#echo "----------------------------------------"
-#echo "Registry"
-#sshpass -p $pw ssh $user@l040101-ws$registry.ua.pt "rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport"
-
 echo "----------------------------------------"
 echo "               Servers"
 echo "----------------------------------------"
 
-#echo "Starting Museum Server"
-#sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport"
-#sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar $package.MuseumServerDistributed > museum.txt &"
-#sleep 1
+echo "Starting Museum Server"
+sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar $package.MuseumServerDistributed > museum.txt &"
+sleep 1
 
-#echo "Starting AssaultParty 0 Server"
-#sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 0 > assaultparty0.txt &"
-#sleep 1
+echo "Starting AssaultParty 0 Server"
+sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 0 > assaultparty0.txt &"
+sleep 1
 
-#echo "Starting AssaultParty 1 Server"
-#sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 1 > assaultparty1.txt &"
-#sleep 1
+echo "Starting AssaultParty 1 Server"
+sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 1 > assaultparty1.txt &"
+sleep 1
 
-#echo "Starting Logger Server"
-#sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar $package.LoggerServerDistributed > logger.txt &"
-#sleep 1
+echo "Starting Logger Server"
+sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar $package.LoggerServerDistributed > logger.txt &"
+sleep 1
 
-#echo "Starting ControlCollection Site Server"
-#sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar $package.ControlCollectionSiteServerDistributed > controlcollectonsite.txt &"
-#sleep 1
+echo "Starting ControlCollection Site Server"
+sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar $package.ControlCollectionSiteServerDistributed > controlcollectonsite.txt &"
+sleep 1
 
-#echo "Starting Concetration Site Server"
-#sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp $jar $package.ConcentrationSiteServerDistributed > concentration.txt &"
-#sleep 1
+echo "Starting Concetration Site Server"
+sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp $jar $package.ConcentrationSiteServerDistributed > concentration.txt &"
+sleep 1
 
-#echo "----------------------------------------"
-#echo "               Clients"
-#echo "----------------------------------------"
+echo "----------------------------------------"
+echo "               Clients"
+echo "----------------------------------------"
 
-#echo "Lauching OrdinaryThieves"
-#sshpass -p $pw ssh $user@l040101-ws$thieves.ua.pt "nohup java -cp $jar $package.client.OrdinaryThiefClient > ordinary.txt &"
-#sleep 1
+echo "Lauching OrdinaryThieves"
+sshpass -p $pw ssh $user@l040101-ws$thieves.ua.pt "nohup java -cp $jar $package.client.OrdinaryThiefClient > ordinary.txt &"
+sleep 1
 
-#echo "Lauching MasterThief"
-#sshpass -p $pw ssh $user@l040101-ws$master.ua.pt "java -cp $jar $package.client.MasterThiefClient > master.txt"
-#sleep 1
+echo "Lauching MasterThief"
+sshpass -p $pw ssh $user@l040101-ws$master.ua.pt "java -cp $jar $package.client.MasterThiefClient > master.txt"
+sleep 1
 
-#echo "----------------------------------------"
-#echo "                 Get log"
-#echo "----------------------------------------"
+echo "----------------------------------------"
+echo "                 Get log"
+echo "----------------------------------------"
 
-#echo "Getting log.txt file"
-#sshpass -p $pw scp $user@l040101-ws$logger.ua.pt:~/log.txt .
+echo "Getting log.txt file"
+sshpass -p $pw scp $user@l040101-ws$logger.ua.pt:~/log.txt .
 
-#echo "Getting museum.txt stdout file"
-#sshpass -p $pw scp $user@l040101-ws$museum.ua.pt:~/museum.txt .
+echo "Getting museum.txt stdout file"
+sshpass -p $pw scp $user@l040101-ws$museum.ua.pt:~/museum.txt .
 
 echo "----------------------------------------"
 echo "               Done"
