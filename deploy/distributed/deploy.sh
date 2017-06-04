@@ -18,7 +18,6 @@ assaultb="10"
 logger="01"
 control="03"
 concentration="04"
-
 master="02"
 thief="09"
 
@@ -42,32 +41,26 @@ echo "----------------------------------------"
 echo "               Servers"
 echo "----------------------------------------"
 
-#l040101-ws05|23294|museum
 echo "Starting Museum Server"
 sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar $package.MuseumServerDistributed > museum.txt &"
 sleep 1
 
-#l040101-ws07|23295|assaultParty0
 echo "Starting AssaultParty 0 Server"
 sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 0 > assaultparty0.txt &"
 sleep 1
 
-#l040101-ws10|23296|assaultParty1
 echo "Starting AssaultParty 1 Server"
 sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 1 > assaultparty1.txt &"
 sleep 1
 
-#l040101-ws01|23291|logger
 echo "Starting Logger Server"
 sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar $package.LoggerServerDistributed > logger.txt &"
 sleep 1
 
-#l040101-ws03|23292|controlCollection
 echo "Starting ControlCollection Site Server"
 sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar $package.ControlCollectionSiteServerDistributed > controlcollectonsite.txt &"
 sleep 1
 
-#l040101-ws04|23293|concentration
 echo "Starting Concetration Site Server"
 sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp $jar $package.ConcentrationSiteServerDistributed > concentration.txt &"
 sleep 1

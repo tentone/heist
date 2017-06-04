@@ -15,7 +15,6 @@ echo "----------------------------------------"
 echo "               Servers"
 echo "----------------------------------------"
 
-#l040101-ws05|23294|museum
 echo "Starting Museum Server"
 nohup java -cp $jar $package.MuseumServerDistributed > museum.txt &
 sleep 1

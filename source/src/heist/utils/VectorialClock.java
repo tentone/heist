@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Vectorial clock is a one way counter to keep track of the message order.
+ * The clock is serializable and should be updated every time a message is sent, and can be used as a timestamp to sort messages.
  * @author Jose Manuel
  */
 public class VectorialClock implements Serializable
