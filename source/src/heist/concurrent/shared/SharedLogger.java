@@ -19,6 +19,8 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.LinkedList;
 import heist.utils.Log;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Logger object is used to create a detailed log of everything inside a GeneralRepository.
@@ -155,39 +157,43 @@ public class SharedLogger implements Logger, Serializable
      */
     private void log() throws Exception
     {        
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(stream);
+        int timestamp = 0;
+
         if(this.configuration.log)
         {
             //Thieves header
             if(this.configuration.logHeader)
             {
-                this.out.print("\n\nMstT      ");
+                out.print("\n\nMstT      ");
                 for(int i = 0; i < this.thieves.length; i++)
                 {
-                    this.out.print("Thief " + i + "      ");
+                    out.print("Thief " + i + "      ");
                 }
-                this.out.print("              VCk");
+                out.print("              VCk");
                 
                 
-                this.out.print("\nStat     ");
+                out.print("\nStat     ");
                 for(int i = 0; i < this.thieves.length; i++)
                 {
-                    this.out.print("Stat S MD    ");
+                    out.print("Stat S MD    ");
                 }
-                this.out.print("M");
+                out.print("M");
                 for(int i = 0; i < this.thieves.length; i++)
                 {
-                    this.out.print("    " + i);
+                    out.print("    " + i);
                 }
             }
             
             //Master thief state
             if(this.master == null)
             {
-                this.out.print("\n----     ");
+                out.print("\n----     ");
             }
             else
             {
-                this.out.print("\n" + this.master.state() + "     ");//
+                out.print("\n" + this.master.state() + "     ");//
             }
             
             //Ordinary thieves state
@@ -195,78 +201,82 @@ public class SharedLogger implements Logger, Serializable
             {
                 if(this.thieves[i] == null)
                 {
-                    this.out.printf("---- - --    ");
+                    out.printf("---- - --    ");
                 }
                 else
                 {
-                    this.out.printf("%4d %c %2d    ", this.thieves[i].state(), this.thieves[i].hasParty(), this.thieves[i].getDisplacement());
+                    out.printf("%4d %c %2d    ", this.thieves[i].state(), this.thieves[i].hasParty(), this.thieves[i].getDisplacement());
                 }
             }
             
             //Vectorial clocks
             if(this.master == null)
             {
-                this.out.print("---");
+                out.print("---");
             }
             else
             {
-                this.out.printf("%3d", this.master.getTime());
+                int time = this.master.getTime();
+                timestamp += time;
+                out.printf("%3d", time);
             }
             for(int i = 0; i < this.thieves.length; i++)
             {
                 if(this.thieves[i] == null)
                 {
-                    this.out.printf("  ---");
+                    out.printf("  ---");
                 }
                 else
                 {
-                    this.out.printf("  %3d", this.thieves[i].getTime());
+                    int time = this.thieves[i].getTime();
+                    timestamp += time;
+                    out.printf("  %3d", time);
                 }
             }
-            this.out.print("\n");
+            out.print("\n");
             
             //Assault party header
             if(this.configuration.logHeader)
             {
-                this.out.print("\n");
+                out.print("\n");
                 for(int i = 0; i < this.parties.length; i++)
                 {
-                    this.out.print("              Assault party " + (this.parties[i] != null ? this.parties[i].getID() : "--") + "        ");
+                    out.print("              Assault party " + (this.parties[i] != null ? this.parties[i].getID() : "--") + "        ");
                 }
-                this.out.print("                 Museum");
+                out.print("                 Museum");
 
-                this.out.print("\n");
+                out.print("\n");
                 for(int i = 0; i < this.parties.length; i++)
                 {
-                    this.out.print("   ");
+                    out.print("   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        this.out.print("     Elem " + j);
+                        out.print("     Elem " + j);
                     }
                 }
                 
-                this.out.print("   ");
+                out.print("   ");
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    this.out.print("  Room " + j);
+                    out.print("  Room " + j);
                 }
 
-                this.out.print("\n");
+                out.print("\n");
                 for(int i = 0; i < this.parties.length; i++)
                 {
-                    this.out.print("RId  ");
+                    out.print("RId  ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        this.out.print("Id Pos Cv  ");
+                        out.print("Id Pos Cv  ");
                     }
                 }
 
                 for(int j = 0; j < this.configuration.numberRooms; j++)
                 {
-                    this.out.print(" NP DT  ");
+                    out.print(" NP DT  ");
                 }
 
-                this.out.print("\n");
+                out.print("\n");
             }
             
             //Assault party state
@@ -274,15 +284,15 @@ public class SharedLogger implements Logger, Serializable
             {
                 if(this.parties[i].getState() == SharedAssaultParty.DISMISSED)
                 {
-                    this.out.print("--   ");
+                    out.print("--   ");
                     for(int j = 0; j < this.configuration.partySize; j++)
                     {
-                        this.out.print("-- --  --  ");
+                        out.print("-- --  --  ");
                     }
                 }
                 else
                 {
-                    this.out.printf("%2d   ", this.parties[i].getTarget());
+                    out.printf("%2d   ", this.parties[i].getTarget());
 
                     int[] thievesID = this.parties[i].getThieves();
                     
@@ -291,11 +301,11 @@ public class SharedLogger implements Logger, Serializable
                         if(j < thievesID.length && this.thieves[thievesID[j]] != null)
                         {
                             OrdinaryThief thief = this.thieves[thievesID[j]];
-                            this.out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
+                            out.printf("%2d %2d  %2d  ", thief.getID(), thief.getPosition(), thief.hasCanvas());
                         }
                         else
                         {
-                            this.out.print("-- --  --  "); 
+                            out.print("-- --  --  "); 
                         }
                     }
                 }
@@ -305,11 +315,21 @@ public class SharedLogger implements Logger, Serializable
             Room[] rooms = this.museum.getRooms();
             for(int i = 0; i < rooms.length; i++)
             {
-                this.out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
+                out.printf(" %2d %2d  ", rooms[i].getPaintings(), rooms[i].getDistance());
             }
             
-            this.out.println("");
-            this.out.flush();
+            out.println("");
+            out.flush();
+        }
+        
+        if(this.configuration.logImmediate)
+        {
+            this.out.println(new String(stream.toByteArray(), StandardCharsets.UTF_8));
+        }
+        else
+        {
+            Log log = new Log(new String(stream.toByteArray(), StandardCharsets.UTF_8), timestamp);
+            this.list.push(log);
         }
     }
     
@@ -320,6 +340,18 @@ public class SharedLogger implements Logger, Serializable
     public synchronized void end() throws Exception
     {
         int paintings = this.controlCollection.totalPaintingsStolen();
+        
+        //Sort and print log entries
+        if(!this.configuration.logImmediate)
+        {
+            this.list.sort(null);
+
+            java.util.Iterator<Log> it = this.list.iterator();
+            while(it.hasNext())
+            {
+                this.out.println(it.next().message);
+            }
+        }
         
         System.out.println("Info: My friends, tonight's effort produced " + paintings + " priceless paintings!");
         

@@ -82,6 +82,11 @@ public class Configuration implements Serializable
     public boolean logHeader;
     
     /**
+     * If true the log is printed on receive, else the log is store and printed at the end sorted.
+     */
+    public boolean logImmediate;
+    
+    /**
      * Default constructor for Configuration with default values.
      */
     public Configuration()
@@ -102,5 +107,6 @@ public class Configuration implements Serializable
         this.debug = false;
         this.log = true;
         this.logHeader = false;
+        this.logImmediate = false;
     }
 }
