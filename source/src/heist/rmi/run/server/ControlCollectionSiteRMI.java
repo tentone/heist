@@ -1,7 +1,7 @@
 package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedControlCollectionSite;
-import heist.distributed.ConfigurationDistributed;
+import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,7 +16,7 @@ public class ControlCollectionSiteRMI
     {
         try
         {
-            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
+            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             
             Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL());
             

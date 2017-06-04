@@ -1,7 +1,7 @@
 package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedAssaultParty;
-import heist.distributed.ConfigurationDistributed;
+import heist.rmi.ConfigurationRMI;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -21,7 +21,7 @@ public class AssaultPartyRMI
         
         try
         {
-            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
+            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             Naming.rebind(configuration.assaultPartiesServers[id].rmiURL(), UnicastRemoteObject.exportObject(new SharedAssaultParty(id, configuration), configuration.assaultPartiesServers[id].port));
         }
         catch(Exception e)

@@ -2,6 +2,7 @@ package heist.rmi.local;
 
 import heist.Configuration;
 import heist.interfaces.*;
+import heist.rmi.ConfigurationRMI;
 import heist.thief.*;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
@@ -19,7 +20,7 @@ public class HeistClientsRMI
         
         try
         {
-            Configuration configuration = new Configuration();
+            ConfigurationRMI configuration = new ConfigurationRMI();
             
             Museum museum = (Museum) Naming.lookup(rmiAddress(address, port, "museum"));
 

@@ -11,7 +11,10 @@ pw="qwerty"
 jar="Heist.jar"
 package="heist.rmi.run"
 
-#Configuration
+#Registry configuration
+registryport="22399"
+
+#Server configuration
 museum="05"
 museumport="22394"
 
@@ -30,6 +33,7 @@ controlport="22392"
 concentration="04"
 concentrationport="22393"
 
+#Client configuration
 master="02"
 thieves="09"
 
@@ -38,16 +42,11 @@ echo "           Distributed Systems"
 echo "        University of Aveiro 2017"
 echo "           Deploy and Run RMI"
 echo "----------------------------------------"
-echo "          Generating confiration"
-echo "----------------------------------------"
-
-
-echo "----------------------------------------"
 echo "              Copy files"
 echo "----------------------------------------"
 
 #Copy $jar and configuration.txt to all servers
-for i in "01" #"02" "03" "04" "05" "06" "07" "08" "09" "10"
+for i in "01" "02" "03" "04" "05" "06" "07" "08" "09" "10"
 do
 	echo "Copying files to $user@l040101-ws$i.ua.pt"
 	sshpass -p $pw scp "$jar" $user@l040101-ws$i.ua.pt:~
@@ -57,15 +56,18 @@ do
 	sshpass -p $pw ssh $user@l040101-ws$i.ua.pt "unzip -o -q Heist.jar -d ."
 done
 
+#echo "----------------------------------------"
+#echo "           RMI Registry Test"
+#echo "----------------------------------------"
+#echo "Registry"
+#sshpass -p $pw ssh $user@l040101-ws$registry.ua.pt "rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport"
+
 echo "----------------------------------------"
 echo "               Servers"
 echo "----------------------------------------"
 
-echo "Starting all servers"
-sshpass -p $pw ssh $user@l040101-ws01.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false 22391 > rmireg.txt &"
-sshpass -p $pw ssh $user@l040101-ws01.ua.pt "java -cp $jar heist.rmi.local.HeistServersRMI"
-
 #echo "Starting Museum Server"
+#sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport"
 #sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar $package.MuseumServerDistributed > museum.txt &"
 #sleep 1
 

@@ -1,6 +1,6 @@
 package heist.rmi.run.client;
 
-import heist.distributed.ConfigurationDistributed;
+import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
 import heist.thief.*;
 import java.rmi.Naming;
@@ -15,7 +15,7 @@ public class MasterThiefRMI
     {
         try
         {
-            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
+            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
 
             AssaultParty[] parties = new AssaultParty[2];
             parties[0] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[0].rmiURL());

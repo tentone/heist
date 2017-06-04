@@ -5,7 +5,7 @@ import heist.concurrent.shared.SharedConcentrationSite;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedLogger;
 import heist.concurrent.shared.SharedMuseum;
-import heist.distributed.ConfigurationDistributed;
+import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
@@ -20,7 +20,7 @@ public class LoggerRMI
     {
         try
         {
-            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
+            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             
             Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL());
             AssaultParty[] parties = new AssaultParty[2];

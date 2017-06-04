@@ -17,7 +17,7 @@ public class HeistRMI
     public static void main(String[] args) throws Exception
     {
         String address = (args.length > 0) ?  args[0] : "localhost" ;
-        int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22391;
+        int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
         
         ConfigurationDistributed configuration = new ConfigurationDistributed();
 

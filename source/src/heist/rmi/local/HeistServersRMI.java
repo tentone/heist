@@ -5,8 +5,8 @@ import heist.concurrent.shared.SharedConcentrationSite;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedLogger;
 import heist.concurrent.shared.SharedMuseum;
-import heist.distributed.ConfigurationDistributed;
 import heist.interfaces.*;
+import heist.rmi.ConfigurationRMI;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,7 +24,7 @@ public class HeistServersRMI
         
         try
         {
-            ConfigurationDistributed configuration = new ConfigurationDistributed();
+            ConfigurationRMI configuration = new ConfigurationRMI();
 
             Naming.rebind(rmiAddress(address, port, "museum"), UnicastRemoteObject.exportObject(new SharedMuseum(configuration), configuration.museumServer.port));
    

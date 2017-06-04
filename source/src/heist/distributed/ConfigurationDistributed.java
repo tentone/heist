@@ -47,12 +47,12 @@ public class ConfigurationDistributed extends Configuration implements Serializa
     {
         super();
         
-        this.loggerServer = new Address("localhost", 23291, "logger");
-        this.controlCollectionServer = new Address("localhost", 23292, "controlCollection");
-        this.concentrationServer = new Address("localhost", 23293, "concentration");
-        this.museumServer = new Address("localhost", 23294, "museum");
+        this.loggerServer = new Address("localhost", 22391, "logger");
+        this.controlCollectionServer = new Address("localhost", 22392, "controlCollection");
+        this.concentrationServer = new Address("localhost", 22393, "concentration");
+        this.museumServer = new Address("localhost", 22394, "museum");
         
-        int port = 23295;
+        int port = 22395;
         this.assaultPartiesServers = new Address[this.numberParties];
         for(int i = 0; i < this.assaultPartiesServers.length; i++)
         {

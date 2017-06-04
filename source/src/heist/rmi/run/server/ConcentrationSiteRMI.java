@@ -1,7 +1,7 @@
 package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedConcentrationSite;
-import heist.distributed.ConfigurationDistributed;
+import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,7 +16,7 @@ public class ConcentrationSiteRMI
     {
         try
         {
-            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
+            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
 
             AssaultParty[] parties = new AssaultParty[2];
             parties[0] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[0].rmiURL());

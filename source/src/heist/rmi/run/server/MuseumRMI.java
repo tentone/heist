@@ -1,7 +1,7 @@
 package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedMuseum;
-import heist.distributed.ConfigurationDistributed;
+import heist.rmi.ConfigurationRMI;
 import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -15,7 +15,7 @@ public class MuseumRMI
     {
         try
         {
-            ConfigurationDistributed configuration = ConfigurationDistributed.readFromFile("configuration.txt");
+            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             Naming.rebind(configuration.museumServer.rmiURL(), UnicastRemoteObject.exportObject(new SharedMuseum(configuration), configuration.museumServer.port));
         }
         catch(Exception e)

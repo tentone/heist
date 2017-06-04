@@ -1,6 +1,0 @@
-l040101-ws01.ua.pt;22391;logger
-l040101-ws03.ua.pt;22392;controlCollection
-l040101-ws04.ua.pt;22393;concentration
-l040101-ws05.ua.pt;22394;museum
-l040101-ws07.ua.pt;22395;assaultParty0
-l040101-ws10.ua.pt;22396;assaultParty1
