@@ -1,6 +1,5 @@
 package heist.rmi.local;
 
-import heist.Configuration;
 import heist.interfaces.*;
 import heist.rmi.ConfigurationRMI;
 import heist.thief.*;

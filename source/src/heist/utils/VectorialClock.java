@@ -1,5 +1,8 @@
 package heist.utils;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -49,4 +52,28 @@ public class VectorialClock implements Serializable
     {
         this.time = time;
     }
+    
+    /**
+     * The writeObject method is called on serialization and is used to override the default java serialization.
+     * @param out ObjectOutputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        this.time++;
+        
+        out.writeInt(this.time);
+    }
+    
+    /**
+     * The writeObject method is called when rebuilding the object from serialized data.
+     * @param in ObjectInputStream used on serialization.
+     * @throws IOException Exception may be thrown. 
+     * @throws ClassNotFoundException Exception may be thrown. 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        this.time = in.readInt();
+    }
+    
 }
