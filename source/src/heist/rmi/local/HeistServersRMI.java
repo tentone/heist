@@ -48,5 +48,7 @@ public class HeistServersRMI
             e.printStackTrace();
             System.exit(1);
         }
+        
+        System.out.println("Info: Servers running");
     }
 }

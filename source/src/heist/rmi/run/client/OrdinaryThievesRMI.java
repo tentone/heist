@@ -18,12 +18,14 @@ public class OrdinaryThievesRMI
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
 
             AssaultParty[] parties = new AssaultParty[2];
-            parties[0] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[0].rmiURL());
-            parties[1] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[1].rmiURL());
-            Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL());
-            ConcentrationSite concentration = (ConcentrationSite) Naming.lookup(configuration.concentrationServer.rmiURL());
-            ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(configuration.controlCollectionServer.rmiURL());
-            Logger logger = (Logger) Naming.lookup(configuration.loggerServer.rmiURL());
+            for(int i = 0; i < parties.length; i++)
+            {
+                parties[i] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[i].rmiURL(configuration.rmiPort));
+            }
+            Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL(configuration.rmiPort));
+            ConcentrationSite concentration = (ConcentrationSite) Naming.lookup(configuration.concentrationServer.rmiURL(configuration.rmiPort));
+            ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(configuration.controlCollectionServer.rmiURL(configuration.rmiPort));
+            Logger logger = (Logger) Naming.lookup(configuration.loggerServer.rmiURL(configuration.rmiPort));
 
             for(int i = 0; i < configuration.numberThieves; i++)
             {

@@ -2,7 +2,9 @@ package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedMuseum;
 import heist.rmi.ConfigurationRMI;
+import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
+import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -13,10 +15,16 @@ public class MuseumRMI
 {
     public static void main(String[] args)
     {
+        String address = "localhost";
+                
         try
         {
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
-            Naming.rebind(configuration.museumServer.rmiURL(), UnicastRemoteObject.exportObject(new SharedMuseum(configuration), configuration.museumServer.port));
+            
+            //Server
+            String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.museumServer.name);
+            Remote stub = UnicastRemoteObject.exportObject(new SharedMuseum(configuration), configuration.museumServer.port);
+            Naming.rebind(rmiURL, stub);
         }
         catch(Exception e)
         {

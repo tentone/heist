@@ -1,13 +1,11 @@
 package heist.rmi.run.server;
 
-import heist.concurrent.shared.SharedAssaultParty;
-import heist.concurrent.shared.SharedConcentrationSite;
-import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.concurrent.shared.SharedLogger;
-import heist.concurrent.shared.SharedMuseum;
 import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
+import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
+import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -18,17 +16,25 @@ public class LoggerRMI
 {
     public static void main(String[] args)
     {
+        String address = "localhost";
+        
         try
         {
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             
-            Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL());
+            //Clients
             AssaultParty[] parties = new AssaultParty[2];
-            parties[0] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[0].rmiURL());
-            parties[1] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[1].rmiURL());
-            ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(configuration.controlCollectionServer.rmiURL());
+            for(int i = 0; i < parties.length; i++)
+            {
+                parties[i] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[i].rmiURL(configuration.rmiPort));
+            }
+            Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL(configuration.rmiPort));
+            ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(configuration.controlCollectionServer.rmiURL(configuration.rmiPort));
             
-            Naming.rebind(configuration.loggerServer.rmiURL(), UnicastRemoteObject.exportObject(new SharedLogger(parties, museum, controlCollection, configuration), configuration.loggerServer.port));
+            //Server
+            String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.loggerServer.name);
+            Remote stub = UnicastRemoteObject.exportObject(new SharedLogger(parties, museum, controlCollection, configuration), configuration.loggerServer.port);
+            Naming.rebind(rmiURL, stub);
         }
         catch(Exception e)
         {

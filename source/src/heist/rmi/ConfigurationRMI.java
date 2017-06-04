@@ -6,17 +6,12 @@ import java.util.Scanner;
 
 /**
  * Configuration for RMI based implementation.
- * @author Tentone
+ * @author Jose Manuel
  */
 public class ConfigurationRMI extends ConfigurationDistributed
 {
     /**
-     * Address for RMI registry server
-     */
-    public String rmiAddress;
-    
-    /**
-     * Port for RMI registry server
+     * Port for RMI registry servers.
      */
     public int rmiPort;
     
@@ -26,8 +21,7 @@ public class ConfigurationRMI extends ConfigurationDistributed
     public ConfigurationRMI()
     {
         super();
-        
-        this.rmiAddress = "localhost";
+
         this.rmiPort = 22399;
     }
     
@@ -72,8 +66,7 @@ public class ConfigurationRMI extends ConfigurationDistributed
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            System.out.println("Info: configuration.txt not found");
+            System.out.println("Info: configuration.txt not found (" + e + ")");
         }
         
         return configuration;
