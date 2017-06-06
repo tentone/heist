@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#-Djava.security.policy=java.policy
+
 #Install sshpass
 #sudo apt-get install sshpass
 

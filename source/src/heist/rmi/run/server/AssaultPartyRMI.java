@@ -5,6 +5,7 @@ import heist.rmi.ConfigurationRMI;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.Remote;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -22,7 +23,28 @@ public class AssaultPartyRMI
         }
         
         int id = Integer.parseInt(args[0]);
-        String address = "localhost";
+        String address = (args.length > 1) ?  args[1] : "localhost";
+        int port = (args.length > 2) ?  Integer.parseInt(args[2]) : 22399;
+        boolean createRegistry = (args.length > 3) ?  Boolean.parseBoolean(args[3]) : false;
+        
+        System.setProperty("java.security.policy", "java.policy");
+        System.setProperty("java.rmi.server.hostname", address);
+        
+        if(createRegistry)
+        {
+            try
+            {
+                LocateRegistry.createRegistry(port);
+                
+                String hostname = System.getProperty("java.rmi.server.hostname");
+                System.out.println("Info: RMI registry started on " + hostname + ":" + port);
+            }
+            catch(Exception e)
+            {
+                System.out.println("Error: Failed to create RMI registry (" + e + ")");
+                System.exit(1);
+            }
+        }
         
         try
         {

@@ -14,8 +14,10 @@ public class HeistClientsRMI
 {
     public static void main(String[] args)
     {
-        String address = (args.length > 0) ?  args[0] : "localhost" ;
+        String address = (args.length > 0) ?  args[0] : "localhost";
         int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
+        
+        System.setProperty("java.security.policy", "java.policy");
         
         try
         {
