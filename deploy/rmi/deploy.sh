@@ -14,7 +14,7 @@ jar="Heist.jar"
 package="heist.rmi.run"
 
 #Registry configuration
-registryport="22399"
+registryport="22398"
 
 #Server configuration
 logger="01"
@@ -30,10 +30,10 @@ museum="05"
 museumport="22394"
 
 assaulta="07"
-assaultaport="22395"
+assaultaport="22396"
 
 assaultb="10"
-assaultbport="22396"
+assaultbport="22397"
 
 #Client configuration
 master="02"
@@ -44,6 +44,15 @@ echo "           Distributed Systems"
 echo "        University of Aveiro 2017"
 echo "           Deploy and Run RMI"
 echo "----------------------------------------"
+echo "         Generating configuration"
+echo "----------------------------------------"
+echo "l040101-ws$logger.ua.pt;$loggerport;logger" >> configuration.txt
+echo "l040101-ws$control.ua.pt;$controlport;controlCollection" >> configuration.txt
+echo "l040101-ws$concentration.ua.pt;$concentrationport;concentration" >> configuration.txt
+echo "l040101-ws$museum.ua.pt;$museumport;museum" >> configuration.txt
+echo "l040101-ws$assaultb.ua.pt;$assaultaport;assaultParty0" >> configuration.txt
+echo "l040101-ws$assaulta.ua.pt;$assaultbport;assaultParty1" >> configuration.txt
+echo "----------------------------------------" 
 echo "            Prepare files"
 echo "----------------------------------------"
 
@@ -65,32 +74,32 @@ echo "----------------------------------------"
 
 echo "Starting Museum Server"
 #sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.MuseumRMI l040101-ws$museum.ua.pt $registryport true > museum.txt &"
+sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.server.MuseumRMI l040101-ws$museum.ua.pt $registryport true > museum.txt &"
 sleep 1
 
 echo "Starting AssaultParty 0 Server"
 #sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.AssaultPartyRMI 0 l040101-ws$assaulta.ua.pt $registryport true > assaultparty0.txt &"
+sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.server.AssaultPartyRMI 0 l040101-ws$assaulta.ua.pt $registryport true > assaultparty0.txt &"
 sleep 1
 
 echo "Starting AssaultParty 1 Server"
 #sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.AssaultPartyRMI 1 l040101-ws$assaultb.ua.pt $registryport true > assaultparty1.txt &"
+sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.server.AssaultPartyRMI 1 l040101-ws$assaultb.ua.pt $registryport true > assaultparty1.txt &"
 sleep 1
 
 echo "Starting Logger Server"
 #sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.LoggerRMI l040101-ws$logger.ua.pt $registryport true > logger.txt &"
+sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.server.LoggerRMI l040101-ws$logger.ua.pt $registryport true > logger.txt &"
 sleep 1
 
 echo "Starting ControlCollection Site Server"
 #sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.ControlCollectionSiteRMI l040101-ws$control.ua.pt $registryport true > controlcollectonsite.txt &"
+sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.server.ControlCollectionSiteRMI l040101-ws$control.ua.pt $registryport true > control.txt &"
 sleep 1
 
 echo "Starting Concetration Site Server"
 #sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp -Djava.security.policy=java.policy $jar $package.ConcentrationSiteRMI l040101-ws$concentration.ua.pt $registryport true > concentration.txt &"
+sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp -Djava.security.policy=java.policy $jar $package.server.ConcentrationSiteRMI l040101-ws$concentration.ua.pt $registryport true > concentration.txt &"
 sleep 1
 
 echo "----------------------------------------"
@@ -121,6 +130,15 @@ sshpass -p $pw scp $user@l040101-ws$assaultb.ua.pt:~/assaultparty1.txt out
 
 echo "Getting Museum stdout file"
 sshpass -p $pw scp $user@l040101-ws$museum.ua.pt:~/museum.txt out
+
+echo "Getting ControlCollectionSite stdout file"
+sshpass -p $pw scp $user@l040101-ws$control.ua.pt:~/control.txt out
+
+echo "Getting ConcetrationSite stdout file"
+sshpass -p $pw scp $user@l040101-ws$concentration.ua.pt:~/concentration.txt out
+
+echo "Getting Logger stdout file"
+sshpass -p $pw scp $user@l040101-ws$logger.ua.pt:~/logger.txt out
 
 echo "Getting Thieves stdout files"
 sshpass -p $pw scp $user@l040101-ws$thieves.ua.pt:~/ordinary.txt out

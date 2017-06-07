@@ -22,7 +22,7 @@ public class ConfigurationRMI extends ConfigurationDistributed
     {
         super();
 
-        this.rmiPort = 22399;
+        this.rmiPort = 22398;
     }
     
     /**

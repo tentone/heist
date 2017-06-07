@@ -24,7 +24,7 @@ public class AssaultPartyRMI
         
         int id = Integer.parseInt(args[0]);
         String address = (args.length > 1) ?  args[1] : "localhost";
-        int port = (args.length > 2) ?  Integer.parseInt(args[2]) : 22399;
+        int port = (args.length > 2) ?  Integer.parseInt(args[2]) : 22398;
         boolean createRegistry = (args.length > 3) ?  Boolean.parseBoolean(args[3]) : false;
         
         System.setProperty("java.security.policy", "java.policy");

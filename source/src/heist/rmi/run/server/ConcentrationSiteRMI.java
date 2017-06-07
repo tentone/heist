@@ -18,7 +18,7 @@ public class ConcentrationSiteRMI
     public static void main(String[] args)
     {
        String address = (args.length > 0) ?  args[0] : "localhost";
-        int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
+        int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22398;
         boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : false;
         
         System.setProperty("java.security.policy", "java.policy");
