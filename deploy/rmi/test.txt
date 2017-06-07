@@ -1,6 +1,0 @@
-Server 
-java -cp Heist.jar -Djava.security.policy=java.policy heist.rmi.local.HeistServersRMI l040101-ws01.ua.pt 22399 true
-
-
-Client
-java -cp Heist.jar heist.rmi.local.HeistClientsRMI l040101-ws01.ua.pt 22399

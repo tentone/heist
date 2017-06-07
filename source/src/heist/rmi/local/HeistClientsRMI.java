@@ -42,7 +42,7 @@ public class HeistClientsRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in RMI thieves");
+            System.out.println("Error: Error in RMI thieves (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

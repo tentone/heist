@@ -31,7 +31,7 @@ public class MasterThiefRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in MasterThief");
+            System.out.println("Error: Error in MasterThief (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

@@ -59,7 +59,7 @@ public class ControlCollectionSiteRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in ControlCollectionSite RMI");
+            System.out.println("Error: Error in ControlCollectionSite RMI (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

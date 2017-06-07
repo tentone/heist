@@ -53,7 +53,7 @@ public class AssaultPartiesRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in RMI AssaultParty");
+            System.out.println("Error: Error in RMI AssaultParty (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

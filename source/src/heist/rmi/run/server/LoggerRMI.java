@@ -60,7 +60,7 @@ public class LoggerRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in RMI logger");
+            System.out.println("Error: Error in RMI logger (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

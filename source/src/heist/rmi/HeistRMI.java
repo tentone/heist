@@ -19,7 +19,7 @@ public class HeistRMI
     {
         String address = (args.length > 0) ?  args[0] : "localhost";
         int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
-        boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : false;
+        boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : true;
         
         System.setProperty("java.security.policy", "java.policy");
         System.setProperty("java.rmi.server.hostname", address);

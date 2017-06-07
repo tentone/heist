@@ -34,7 +34,7 @@ public class OrdinaryThievesRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in OrdinaryThieves");
+            System.out.println("Error: Error in OrdinaryThieves (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

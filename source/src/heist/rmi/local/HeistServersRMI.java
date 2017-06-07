@@ -65,7 +65,7 @@ public class HeistServersRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in RMI servers");
+            System.out.println("Error: Error in RMI servers (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

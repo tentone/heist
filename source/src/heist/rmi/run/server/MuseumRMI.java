@@ -50,7 +50,7 @@ public class MuseumRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in RMI museum");
+            System.out.println("Error: Error in RMI museum (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

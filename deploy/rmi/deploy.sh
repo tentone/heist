@@ -53,9 +53,10 @@ do
 	echo "Copying files to $user@l040101-ws$i.ua.pt"
 	sshpass -p $pw scp "$jar" $user@l040101-ws$i.ua.pt:~
 	sshpass -p $pw scp "configuration.txt" $user@l040101-ws$i.ua.pt:~
+	sshpass -p $pw scp "java.policy" $user@l040101-ws$i.ua.pt:~
 
-	echo "Extracting files to $user@l040101-ws$i.ua.pt"
-	sshpass -p $pw ssh $user@l040101-ws$i.ua.pt "unzip -o -q Heist.jar -d ."
+	#echo "Extracting files to $user@l040101-ws$i.ua.pt"
+	#sshpass -p $pw ssh $user@l040101-ws$i.ua.pt "unzip -o -q Heist.jar -d ."
 done
 
 echo "----------------------------------------"
@@ -63,33 +64,33 @@ echo "               Servers"
 echo "----------------------------------------"
 
 echo "Starting Museum Server"
-sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar $package.MuseumServerDistributed > museum.txt &"
+#sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$museum.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.MuseumRMI l040101-ws$museum.ua.pt $registryport true > museum.txt &"
 sleep 1
 
 echo "Starting AssaultParty 0 Server"
-sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 0 > assaultparty0.txt &"
+#sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$assaulta.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.AssaultPartyRMI 0 l040101-ws$assaulta.ua.pt $registryport true > assaultparty0.txt &"
 sleep 1
 
 echo "Starting AssaultParty 1 Server"
-sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar $package.AssaultPartyServerDistributed 1 > assaultparty1.txt &"
+#sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$assaultb.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.AssaultPartyRMI 1 l040101-ws$assaultb.ua.pt $registryport true > assaultparty1.txt &"
 sleep 1
 
 echo "Starting Logger Server"
-sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar $package.LoggerServerDistributed > logger.txt &"
+#sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$logger.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.LoggerRMI l040101-ws$logger.ua.pt $registryport true > logger.txt &"
 sleep 1
 
 echo "Starting ControlCollection Site Server"
-sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar $package.ControlCollectionSiteServerDistributed > controlcollectonsite.txt &"
+#sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$control.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy $package.ControlCollectionSiteRMI l040101-ws$control.ua.pt $registryport true > controlcollectonsite.txt &"
 sleep 1
 
 echo "Starting Concetration Site Server"
-sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
-sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp $jar $package.ConcentrationSiteServerDistributed > concentration.txt &"
+#sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$concentration.ua.pt "nohup java -cp -Djava.security.policy=java.policy $jar $package.ConcentrationSiteRMI l040101-ws$concentration.ua.pt $registryport true > concentration.txt &"
 sleep 1
 
 echo "----------------------------------------"
@@ -97,11 +98,11 @@ echo "               Clients"
 echo "----------------------------------------"
 
 echo "Lauching OrdinaryThieves"
-sshpass -p $pw ssh $user@l040101-ws$thieves.ua.pt "nohup java -cp $jar $package.client.OrdinaryThiefClient > ordinary.txt &"
+sshpass -p $pw ssh $user@l040101-ws$thieves.ua.pt "nohup java -cp $jar $package.client.OrdinaryThiefRMI > ordinary.txt &"
 sleep 1
 
 echo "Lauching MasterThief"
-sshpass -p $pw ssh $user@l040101-ws$master.ua.pt "java -cp $jar $package.client.MasterThiefClient > master.txt"
+sshpass -p $pw ssh $user@l040101-ws$master.ua.pt "java -cp $jar $package.client.MasterThiefRMI > master.txt"
 sleep 1
 
 echo "----------------------------------------"
@@ -111,8 +112,19 @@ echo "----------------------------------------"
 echo "Getting log.txt file"
 sshpass -p $pw scp $user@l040101-ws$logger.ua.pt:~/log.txt .
 
-echo "Getting museum.txt stdout file"
-sshpass -p $pw scp $user@l040101-ws$museum.ua.pt:~/museum.txt .
+echo "Creating out dir"
+mkdir out
+
+echo "Getting AssutltParties stdout file"
+sshpass -p $pw scp $user@l040101-ws$assaulta.ua.pt:~/assaultparty0.txt out
+sshpass -p $pw scp $user@l040101-ws$assaultb.ua.pt:~/assaultparty1.txt out
+
+echo "Getting Museum stdout file"
+sshpass -p $pw scp $user@l040101-ws$museum.ua.pt:~/museum.txt out
+
+echo "Getting Thieves stdout files"
+sshpass -p $pw scp $user@l040101-ws$thieves.ua.pt:~/ordinary.txt out
+sshpass -p $pw scp $user@l040101-ws$master.ua.pt:~/master.txt out
 
 echo "----------------------------------------"
 echo "               Done"

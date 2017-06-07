@@ -58,7 +58,7 @@ public class ConcentrationSiteRMI
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in ConcentrationSite RMI");
+            System.out.println("Error: Error in ConcentrationSite RMI (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }
