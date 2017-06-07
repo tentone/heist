@@ -1,7 +1,5 @@
-package heist.rmi.run.server;
+package heist.rmi.register;
 
-import heist.concurrent.shared.SharedAssaultParty;
-import heist.rmi.ConfigurationRMI;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -9,16 +7,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- * Simulation implementation using RMI.
+ * The registry service is used to register external remote objects into the RMI registry.
  * @author Jose Manuel
  */
-public class AssaultPartiesRMI
+public class RegistryServer
 {
-    public static void main(String[] args)
+public static void main(String[] args)
     {
         String address = (args.length > 0) ?  args[0] : "localhost";
         int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
-        boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : false;
+        int portstub = (args.length > 2) ?  Integer.parseInt(args[2]) : 22398;
+        boolean createRegistry = (args.length > 3) ?  Boolean.parseBoolean(args[3]) : false;
         
         System.setProperty("java.security.policy", "java.policy");
 
@@ -41,21 +40,15 @@ public class AssaultPartiesRMI
         
         try
         {
-            ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
-            
-            //Server
-            for(int id = 0; id < configuration.numberParties; id++)
-            {
-                String rmiURL = rmiAddress(address, port, configuration.assaultPartiesServers[id].name);
-                Remote stub = UnicastRemoteObject.exportObject(new SharedAssaultParty(id, configuration), configuration.assaultPartiesServers[id].port);
-                Naming.rebind(rmiURL, stub);
-            }
-            
-            System.out.println("Info: AssaultParties running");
+            String url = rmiAddress(address, port, "registry");
+            Remote stub = UnicastRemoteObject.exportObject(new RegistryService(address, port), portstub);
+            Naming.rebind(url, stub);
+
+            System.out.println("Info: Registry Server running");
         }
         catch(Exception e)
         {
-            System.out.println("Error: Error in RMI AssaultParty (" + e + ")");
+            System.out.println("Error: Error in Registry server (" + e + ")");
             e.printStackTrace();
             System.exit(1);
         }

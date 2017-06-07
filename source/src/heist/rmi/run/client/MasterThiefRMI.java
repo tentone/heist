@@ -3,6 +3,7 @@ package heist.rmi.run.client;
 import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
 import heist.thief.*;
+import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 
 /**
@@ -15,18 +16,18 @@ public class MasterThiefRMI
     {
         try
         {
+            String address = (args.length > 0) ?  args[0] : "localhost";
+            int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;            
+            
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
 
+            Museum museum = (Museum) Naming.lookup(rmiAddress(address, port, "museum"));
             AssaultParty[] parties = new AssaultParty[2];
-            for(int i = 0; i < parties.length; i++)
-            {
-                parties[i] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[i].rmiURL(configuration.rmiPort));
-            }
-            Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL(configuration.rmiPort));
-            ConcentrationSite concentration = (ConcentrationSite) Naming.lookup(configuration.concentrationServer.rmiURL(configuration.rmiPort));
-            ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(configuration.controlCollectionServer.rmiURL(configuration.rmiPort));
-            Logger logger = (Logger) Naming.lookup(configuration.loggerServer.rmiURL(configuration.rmiPort));
-            
+            parties[0] = (AssaultParty) Naming.lookup(rmiAddress(address, port, "assaultParty0"));
+            parties[1] = (AssaultParty) Naming.lookup(rmiAddress(address, port, "assaultParty1"));
+            ConcentrationSite concentration = (ConcentrationSite) Naming.lookup(rmiAddress(address, port, "concentration"));
+            ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(rmiAddress(address, port, "controlCollection"));
+            Logger logger = (Logger) Naming.lookup(rmiAddress(address, port, "logger"));
             
             new MasterThief(controlCollection, concentration, museum, parties, logger, configuration).start();
             System.out.println("Info: MasterThief running");

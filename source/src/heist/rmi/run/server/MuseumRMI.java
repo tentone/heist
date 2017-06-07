@@ -21,12 +21,12 @@ public class MuseumRMI
         boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : false;
         
         System.setProperty("java.security.policy", "java.policy");
-        System.setProperty("java.rmi.server.hostname", address);
         
         if(createRegistry)
         {
             try
             {
+                System.setProperty("java.rmi.server.hostname", address);
                 LocateRegistry.createRegistry(port);
                 
                 String hostname = System.getProperty("java.rmi.server.hostname");

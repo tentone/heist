@@ -22,12 +22,12 @@ public class ControlCollectionSiteRMI
         boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : false;
         
         System.setProperty("java.security.policy", "java.policy");
-        System.setProperty("java.rmi.server.hostname", address);
-        
+
         if(createRegistry)
         {
             try
             {
+                System.setProperty("java.rmi.server.hostname", address);
                 LocateRegistry.createRegistry(port);
                 
                 String hostname = System.getProperty("java.rmi.server.hostname");
@@ -45,12 +45,10 @@ public class ControlCollectionSiteRMI
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             
             //Clients
+            Museum museum = (Museum) Naming.lookup(rmiAddress(address, port, "museum"));
             AssaultParty[] parties = new AssaultParty[2];
-            for(int i = 0; i < parties.length; i++)
-            {
-                parties[i] = (AssaultParty) Naming.lookup(configuration.assaultPartiesServers[i].rmiURL(configuration.rmiPort));
-            }
-            Museum museum = (Museum) Naming.lookup(configuration.museumServer.rmiURL(configuration.rmiPort));
+            parties[0] = (AssaultParty) Naming.lookup(rmiAddress(address, port, "assaultParty0"));
+            parties[1] = (AssaultParty) Naming.lookup(rmiAddress(address, port, "assaultParty1"));
            
             //Server
             String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.controlCollectionServer.name);
