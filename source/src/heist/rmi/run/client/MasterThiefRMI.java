@@ -26,8 +26,10 @@ public class MasterThiefRMI
             ConcentrationSite concentration = (ConcentrationSite) Naming.lookup(configuration.concentrationServer.rmiURL(configuration.rmiPort));
             ControlCollectionSite controlCollection = (ControlCollectionSite) Naming.lookup(configuration.controlCollectionServer.rmiURL(configuration.rmiPort));
             Logger logger = (Logger) Naming.lookup(configuration.loggerServer.rmiURL(configuration.rmiPort));
-
+            
+            
             new MasterThief(controlCollection, concentration, museum, parties, logger, configuration).start();
+            System.out.println("Info: MasterThief running");
         }
         catch(Exception e)
         {

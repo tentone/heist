@@ -30,6 +30,7 @@ public class OrdinaryThievesRMI
             for(int i = 0; i < configuration.numberThieves; i++)
             {
                 new OrdinaryThief(i, controlCollection, concentration, museum, parties, logger, configuration).start();
+                System.out.println("Info: OrdinaryThief " + i + " running");
             }
         }
         catch(Exception e)

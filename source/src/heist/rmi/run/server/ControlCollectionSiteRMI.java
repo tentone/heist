@@ -18,7 +18,7 @@ public class ControlCollectionSiteRMI
     public static void main(String[] args)
     {
         String address = (args.length > 0) ?  args[0] : "localhost";
-        int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22398;
+        int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
         boolean createRegistry = (args.length > 2) ?  Boolean.parseBoolean(args[2]) : false;
         
         System.setProperty("java.security.policy", "java.policy");
@@ -56,6 +56,8 @@ public class ControlCollectionSiteRMI
             String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.controlCollectionServer.name);
             Remote stub = UnicastRemoteObject.exportObject(new SharedControlCollectionSite(parties, museum, configuration), configuration.controlCollectionServer.port);
             Naming.rebind(rmiURL, stub);
+            
+            System.out.println("Info: ControlCollectionSite running");
         }
         catch(Exception e)
         {

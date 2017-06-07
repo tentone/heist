@@ -182,7 +182,7 @@ public class OrdinaryThief extends Thread implements Serializable
     {
         if(this.party != -1)
         {
-            //this.clock.increment();
+            this.clock.increment();
             this.parties[this.party].removeThief(this.id);
             this.party = -1;
         }
@@ -271,7 +271,7 @@ public class OrdinaryThief extends Thread implements Serializable
      */
     private boolean amINeeded() throws Exception
     {
-        //this.clock.increment();
+        this.clock.increment();
         boolean amINeeded = this.controlCollection.amINeeded(this);
         if(amINeeded)
         {
@@ -292,7 +292,7 @@ public class OrdinaryThief extends Thread implements Serializable
     {
         //this.logger.debug("Thief " + this.id + " entered the concentration site");
         
-        //this.clock.increment();
+        this.clock.increment();
         this.setParty(this.concentration.prepareExcursion(this));
         this.logger.log(this);
         
@@ -309,7 +309,7 @@ public class OrdinaryThief extends Thread implements Serializable
 
         while(this.parties[this.party].keepCrawling(this))
         {
-            //this.clock.increment();
+            this.clock.increment();
             this.position = this.parties[this.party].crawlIn(this);
             this.logger.log(this);
             
@@ -326,11 +326,11 @@ public class OrdinaryThief extends Thread implements Serializable
     {
         this.setState(OrdinaryThief.AT_A_ROOM);
         
-        //this.clock.increment();
+        this.clock.increment();
         int target = this.parties[this.party].getTarget();
         this.logger.log(this);
         
-        //this.clock.increment();
+        this.clock.increment();
         this.hasCanvas = this.museum.rollACanvas(target);
         this.logger.log(this);
         
@@ -342,7 +342,7 @@ public class OrdinaryThief extends Thread implements Serializable
      */
     private void reverseDirection() throws Exception
     {      
-        //this.clock.increment();
+        this.clock.increment();
         this.parties[this.party].reverseDirection(this);
         this.logger.log(this);
         
@@ -359,7 +359,7 @@ public class OrdinaryThief extends Thread implements Serializable
         
         while(this.parties[this.party].keepCrawling(this))
         {
-            //this.clock.increment();
+            this.clock.increment();
             this.position = this.parties[this.party].crawlOut(this);
             this.logger.log(this);
             
@@ -379,7 +379,7 @@ public class OrdinaryThief extends Thread implements Serializable
         //this.logger.debug("Thief " + this.id + " handACanvas (HasCanvas:" + this.hasCanvas + ")");
         //this.logger.log(this);
         
-        //this.clock.increment();
+        this.clock.increment();
         this.controlCollection.handACanvas(this);
         this.logger.log(this);
         

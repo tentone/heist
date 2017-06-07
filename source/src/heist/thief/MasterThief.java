@@ -149,7 +149,7 @@ public class MasterThief extends Thread implements Serializable
      */
     private void startOperations() throws Exception
     {
-        //this.clock.increment();
+        this.clock.increment();
         this.controlCollection.startOperations();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         this.logger.log(this);
@@ -173,15 +173,15 @@ public class MasterThief extends Thread implements Serializable
      */
     private int prepareAssaultParty() throws Exception
     {
-        //this.clock.increment();
+        this.clock.increment();
         RoomStatus room = this.controlCollection.getRoomToAttack();
         this.logger.log(this);
         
-        //this.clock.increment();
+        this.clock.increment();
         int partyID = this.controlCollection.prepareNewParty(room);
         this.logger.log(this);
         
-        //this.clock.increment();
+        this.clock.increment();
         this.concentration.fillAssaultParty(partyID);
         this.logger.log(this);
         
@@ -198,7 +198,7 @@ public class MasterThief extends Thread implements Serializable
      */
     private void sendAssaultParty(int partyID) throws Exception
     {
-        //this.clock.increment();
+        this.clock.increment();
         this.parties[partyID].sendParty();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         this.logger.log(this);
@@ -214,7 +214,7 @@ public class MasterThief extends Thread implements Serializable
     {
         //this.logger.debug("Master takeARest");
         
-        //this.clock.increment();
+        this.clock.increment();
         this.controlCollection.takeARest();
         this.logger.log(this);
     }
@@ -226,7 +226,7 @@ public class MasterThief extends Thread implements Serializable
      */
     private void collectCanvas() throws Exception
     {
-        //this.clock.increment();
+        this.clock.increment();
         this.controlCollection.collectCanvas();
         this.setState(MasterThief.DECIDING_WHAT_TO_DO);
         this.logger.log(this);
@@ -240,7 +240,7 @@ public class MasterThief extends Thread implements Serializable
      */
     private void sumUpResults() throws Exception
     {
-        //this.clock.increment();
+        this.clock.increment();
         this.controlCollection.sumUpResults();
         this.logger.end();
         
