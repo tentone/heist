@@ -12,7 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class RegistryServer
 {
-public static void main(String[] args)
+    public static void main(String[] args)
     {
         String address = (args.length > 0) ?  args[0] : "localhost";
         int port = (args.length > 1) ?  Integer.parseInt(args[1]) : 22399;
@@ -40,6 +40,8 @@ public static void main(String[] args)
         
         try
         {
+            System.out.println("Info: Trying to register");
+            
             String url = rmiAddress(address, port, "registry");
             Remote stub = UnicastRemoteObject.exportObject(new RegistryService(address, port), portstub);
             Naming.rebind(url, stub);

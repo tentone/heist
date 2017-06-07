@@ -2,6 +2,7 @@ package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedMuseum;
 import heist.rmi.ConfigurationRMI;
+import heist.rmi.register.RegistryServiceInterface;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -42,12 +43,16 @@ public class MuseumRMI
         try
         {
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
-            
+         
+            //Register
+            RegistryServiceInterface registry = (RegistryServiceInterface) Naming.lookup(rmiAddress(address, port, "registry"));
+
             //Server
             String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.museumServer.name);
             Remote stub = UnicastRemoteObject.exportObject(new SharedMuseum(configuration), configuration.museumServer.port);
-            Naming.rebind(rmiURL, stub);
-            
+            //Naming.rebind(rmiURL, stub);
+            registry.rebind(configuration.museumServer.name, stub);
+                    
             System.out.println("Info: Museum running");
         }
         catch(Exception e)

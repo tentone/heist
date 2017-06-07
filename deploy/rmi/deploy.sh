@@ -28,7 +28,7 @@ concentrationport="22393"
 museum="04"
 museumport="22394"
 
-assaulta="05"
+assaulta="09"
 assaultaport="22396"
 
 assaultb="06"
@@ -62,7 +62,7 @@ echo "            Prepare files"
 echo "----------------------------------------"
 
 #Copy $jar and configuration.txt to all servers
-for i in "01" "02" "03" "04" "05" "06" "07" "08" "09" "10"
+for i in "01" "02" "03" "04" "06" "07" "08" "09" "10" #"05"
 do
 	echo "Copying files to $user@l040101-ws$i.ua.pt"
 	sshpass -p $pw scp "$jar" $user@l040101-ws$i.ua.pt:~
@@ -80,6 +80,7 @@ echo "Decompressing jar file"
 sshpass -p $pw ssh $user@l040101-ws$registry.ua.pt "unzip -o -q Heist.jar -d ."
 echo "Lauching RMI registry on $registry port $registryport"
 sshpass -p $pw ssh $user@l040101-ws$registry.ua.pt "nohup rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false -J-Djava.security.policy=java.policy -J-Djava.rmi.server.hostname=l040101-ws$registry.ua.pt $registryport > reg.txt &"
+sshpass -p $pw ssh $user@l040101-ws$registry.ua.pt "nohup java -cp $jar -Djava.security.policy=java.policy heist.rmi.register.RegistryServer l040101-ws$registry.ua.pt $registryport > regserver.txt &"
 sleep 1
 
 echo "----------------------------------------"

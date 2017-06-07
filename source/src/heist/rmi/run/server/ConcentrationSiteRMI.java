@@ -3,6 +3,7 @@ package heist.rmi.run.server;
 import heist.concurrent.shared.SharedConcentrationSite;
 import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
+import heist.rmi.register.RegistryServiceInterface;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -43,6 +44,8 @@ public class ConcentrationSiteRMI
         try
         {
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
+            //Register
+            RegistryServiceInterface registry = (RegistryServiceInterface) Naming.lookup(rmiAddress(address, port, "registry"));
 
             //Clients
             AssaultParty[] parties = new AssaultParty[2];
@@ -52,7 +55,8 @@ public class ConcentrationSiteRMI
             //Server
             String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.concentrationServer.name);
             Remote stub = UnicastRemoteObject.exportObject(new SharedConcentrationSite(parties, configuration), configuration.concentrationServer.port);
-            Naming.rebind(rmiURL, stub);
+            //Naming.rebind(rmiURL, stub);
+            registry.rebind(configuration.concentrationServer.name, stub);
             
             System.out.println("Info: ConcentrationSite running");
         }

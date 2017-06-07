@@ -3,6 +3,7 @@ package heist.rmi.run.server;
 import heist.concurrent.shared.SharedControlCollectionSite;
 import heist.rmi.ConfigurationRMI;
 import heist.interfaces.*;
+import heist.rmi.register.RegistryServiceInterface;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -44,6 +45,9 @@ public class ControlCollectionSiteRMI
         {
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             
+            //Register
+            RegistryServiceInterface registry = (RegistryServiceInterface) Naming.lookup(rmiAddress(address, port, "registry"));
+
             //Clients
             Museum museum = (Museum) Naming.lookup(rmiAddress(address, port, "museum"));
             AssaultParty[] parties = new AssaultParty[2];
@@ -53,7 +57,8 @@ public class ControlCollectionSiteRMI
             //Server
             String rmiURL = rmiAddress(address, configuration.rmiPort, configuration.controlCollectionServer.name);
             Remote stub = UnicastRemoteObject.exportObject(new SharedControlCollectionSite(parties, museum, configuration), configuration.controlCollectionServer.port);
-            Naming.rebind(rmiURL, stub);
+            //Naming.rebind(rmiURL, stub);
+            registry.rebind(configuration.controlCollectionServer.name, stub);
             
             System.out.println("Info: ControlCollectionSite running");
         }

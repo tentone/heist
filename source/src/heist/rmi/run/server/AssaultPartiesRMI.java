@@ -2,6 +2,7 @@ package heist.rmi.run.server;
 
 import heist.concurrent.shared.SharedAssaultParty;
 import heist.rmi.ConfigurationRMI;
+import heist.rmi.register.RegistryServiceInterface;
 import static heist.utils.Address.rmiAddress;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -43,12 +44,17 @@ public class AssaultPartiesRMI
         {
             ConfigurationRMI configuration = ConfigurationRMI.readFromFile("configuration.txt");
             
+            //Register
+            RegistryServiceInterface registry = (RegistryServiceInterface) Naming.lookup(rmiAddress(address, port, "registry"));
+
             //Server
             for(int id = 0; id < configuration.numberParties; id++)
             {
                 String rmiURL = rmiAddress(address, port, configuration.assaultPartiesServers[id].name);
                 Remote stub = UnicastRemoteObject.exportObject(new SharedAssaultParty(id, configuration), configuration.assaultPartiesServers[id].port);
-                Naming.rebind(rmiURL, stub);
+ 
+                //Naming.rebind(rmiURL, stub);
+                registry.rebind(configuration.assaultPartiesServers[id].name, stub);
             }
             
             System.out.println("Info: AssaultParties running");
