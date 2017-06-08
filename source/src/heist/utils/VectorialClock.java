@@ -31,7 +31,7 @@ public class VectorialClock implements Serializable
      * Get current time.
      * @return Current time.
      */
-    public int getTime()
+    public synchronized int getTime()
     {
         return time;
     }
@@ -39,7 +39,7 @@ public class VectorialClock implements Serializable
     /**
      * Increment time counter by one.
      */
-    public void increment()
+    public synchronized void increment()
     {
         time++;
     }
@@ -48,7 +48,7 @@ public class VectorialClock implements Serializable
      * Set new time value to the clock.
      * @param time New time for the clock
      */
-    public void synchronize(int time)
+    public synchronized void synchronize(int time)
     {
         this.time = time;
     }
